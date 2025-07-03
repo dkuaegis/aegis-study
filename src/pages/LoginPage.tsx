@@ -13,9 +13,11 @@ function LoginPage() {
     ];
 
     useEffect(() => {
+        const animations: gsap.core.Tween[] = [];
+
         iconRefs.forEach((ref, i) => {
             if (ref.current) {
-                gsap.fromTo(
+                const animation = gsap.fromTo(
                     ref.current,
                     { x: -100, opacity: 0 },
                     {
@@ -26,8 +28,12 @@ function LoginPage() {
                         ease: "power2.out",
                     }
                 );
+                animations.push(animation);
             }
         });
+        return () => {
+            animations.forEach(animation => animation.kill());
+        };
     }, []);
 
     return (
@@ -47,21 +53,21 @@ function LoginPage() {
 
             <main className="flex flex-col items-center justify-center px-8 py-16 min-h-[80vh]">
                 <div className="flex flex-col items-center max-w-2xl mx-auto text-center space-y-8">
-                    <div className="flex flex-row gap-8 mb-15">
+                    <div className="flex flex-row gap-8 mb-8">
                         <div ref={iconRefs[0]}>
-                            <Lock size={80} color="#6366f1" />
+                            <Lock size={80} color="#6366f1" aria-hidden="true" />
                         </div>
                         <div ref={iconRefs[1]}>
-                            <Globe size={80} color="#10b981" />
+                            <Globe size={80} color="#10b981" aria-hidden="true" />
                         </div>
                         <div ref={iconRefs[2]}>
-                            <CodeXml size={80} color="#f59e42" />
+                            <CodeXml size={80} color="#f59e42" aria-hidden="true" />
                         </div>
                         <div ref={iconRefs[3]}>
-                            <Gamepad2 size={80} color="#ef4444" />
+                            <Gamepad2 size={80} color="#ef4444" aria-hidden="true" />
                         </div>
                         <div ref={iconRefs[4]}>
-                            <BrainCircuit size={80} color="#a855f7" />
+                            <BrainCircuit size={80} color="#a855f7" aria-hidden="true" />
                         </div>
                     </div>
 
