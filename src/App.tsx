@@ -1,5 +1,5 @@
-import LoginPage from "./pages/LoginPage";
 import useAuth, { AuthStatus } from "./hooks/useAuth";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
     const { isAuthenticated } = useAuth();
