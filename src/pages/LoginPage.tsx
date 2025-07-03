@@ -53,7 +53,7 @@ function LoginPage() {
 
             <main className="flex flex-col items-center justify-center px-8 py-16 min-h-[80vh]">
                 <div className="flex flex-col items-center max-w-2xl mx-auto text-center space-y-8">
-                    <div className="flex flex-row gap-8 mb-15">
+                    <div className="flex flex-row gap-8 mb-8">
                         <div ref={iconRefs[0]}>
                             <Lock size={80} color="#6366f1" aria-hidden="true" />
                         </div>
