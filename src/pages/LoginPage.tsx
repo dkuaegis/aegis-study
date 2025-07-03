@@ -13,9 +13,11 @@ function LoginPage() {
     ];
 
     useEffect(() => {
+        const animations: gsap.core.Tween[] = [];
+
         iconRefs.forEach((ref, i) => {
             if (ref.current) {
-                gsap.fromTo(
+                const animation = gsap.fromTo(
                     ref.current,
                     { x: -100, opacity: 0 },
                     {
@@ -26,8 +28,12 @@ function LoginPage() {
                         ease: "power2.out",
                     }
                 );
+                animations.push(animation);
             }
         });
+        return () => {
+            animations.forEach(animation => animation.kill());
+        };
     }, []);
 
     return (
