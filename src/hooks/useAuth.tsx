@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 export enum AuthStatus {
     UNAUTHORIZED = "UNAUTHORIZED",
     LOADING = "LOADING",
+    NOT_COMPLETED = "NOT_COMPLETED", // 가입 완료 안됨
+    COMPLETED = "COMPLETED", // 가입 완료
 }
 
 export default function useAuth() {
@@ -16,7 +18,7 @@ export default function useAuth() {
                 const response = await fetch(
                     `${import.meta.env.VITE_API_URL}/auth/check`,
                     {
-                        credentials: "include",
+                        // credentials: "include",
                     }
                 );
 
@@ -26,6 +28,12 @@ export default function useAuth() {
                 }
                 if (!response.ok) {
                     throw new Error("알 수 없는 에러 발생.");
+                }
+                const data = await response.json();
+                if (data.status === "COMPLETED" || data.status === "OVERPAID") {
+                    setAuthenticated(AuthStatus.COMPLETED);
+                } else {
+                    setAuthenticated(AuthStatus.NOT_COMPLETED);
                 }
             } catch (error) {
                 console.log("로그인 인증 에러:", error);
