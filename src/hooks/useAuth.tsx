@@ -2,23 +2,22 @@ import { useEffect, useState } from "react";
 
 export enum AuthStatus {
     UNAUTHORIZED = "UNAUTHORIZED",
-    LOADING = "LOADING",
     NOT_COMPLETED = "NOT_COMPLETED", // 가입 완료 안됨
     COMPLETED = "COMPLETED", // 가입 완료
 }
 
 export default function useAuth() {
     const [isAuthenticated, setAuthenticated] = useState<AuthStatus>(
-        AuthStatus.LOADING
+        AuthStatus.UNAUTHORIZED
     );
 
     useEffect(() => {
         const checkAuth = async () => {
             try {
                 const response = await fetch(
-                    `${import.meta.env.VITE_API_URL}/auth/check`,
+                    `${import.meta.env.VITE_API_URL}/payments/status`,
                     {
-                        credentials: "include",
+                        // credentials: "include",
                     }
                 );
 

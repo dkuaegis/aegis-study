@@ -9,9 +9,7 @@ import StudyList from "./pages/StudyList";
 function App() {
     const { isAuthenticated } = useAuth();
 
-    if (isAuthenticated === AuthStatus.LOADING) {
-        return null;
-    }
+    return null;
     if (isAuthenticated !== AuthStatus.COMPLETED) {
         return <LoginPage />;
     }
