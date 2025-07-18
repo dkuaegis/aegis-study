@@ -125,7 +125,6 @@ const LoginPage = () => {
                                 개발에 쉽게 입문할 수 있는 기회를 제공해요.
                             </p>
                         </div>
-
                         <div className="flex justify-center gap-4">
                             {icons.map((item, index) => (
                                 <div
