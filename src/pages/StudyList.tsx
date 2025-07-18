@@ -1,108 +1,134 @@
-import { Badge } from "@/components/ui/badge"
+import { BarChart3, Clock, User, Users, } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import Header from "@/components/ui/Header"
-import { Users, User } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
-interface Study {
-    id: number
-    title: string
-    instructor: string
-    introduction: string
-    recruitMethod: "FCFS" | "APPLICATION"
-    maxMember: string
-    schedule: string
-    curriculum: string
-    qualification: string
-    category: "LANGUAGE" | "CS" | "SECURITY" | "GAME" | "WEB"
-    closed: boolean
+const studyData = [
+    {
+        id: 1,
+        title: "Spring과 함께 백엔드 개발자 되기",
+        status: "모집중",
+        category: "WEB",
+        difficulty: "중급",
+        schedule: "한번 더 공부",
+        participants: "10/20명",
+        manager: "관리자",
+    },
+    {
+        id: 2,
+        title: "React 입문",
+        status: "모집중",
+        category: "WEB",
+        difficulty: "입문",
+        schedule: "한번 더 공부",
+        participants: "10/20명",
+        manager: "관리자",
+    },
+    {
+        id: 3,
+        title: "Python 데이터 분석",
+        status: "진행중",
+        category: "DATA",
+        difficulty: "중급",
+        schedule: "주 2회",
+        participants: "15/20명",
+        manager: "관리자",
+    },
+    {
+        id: 4,
+        title: "Flutter 모바일 앱 개발",
+        status: "모집중",
+        category: "MOBILE",
+        difficulty: "고급",
+        schedule: "주 3회",
+        participants: "8/15명",
+        manager: "관리자",
+    },
+]
+
+interface StudyListMainProps {
+    onCreateStudy: () => void;
+    onViewStudyDetail: (studyId: number) => void;
 }
 
-function StudyList() {
-    const studies: Study[] = [
-        {
-            id: 1,
-            title: "알고리즘 문제풀이 스터디",
-            instructor: "42",
-            introduction: "매주 알고리즘 문제를 함께 풀며 사고력을 키우는 스터디입니다.",
-            recruitMethod: "FCFS",
-            maxMember: "10명 이하",
-            schedule: "매주 금요일 오후 6시",
-            curriculum: "1주차: 그리디, 2주차: DFS/BFS, 3주차: DP...",
-            qualification: "기초적인 Python 또는 Java 사용 가능자",
-            category: "CS",
-            closed: false,
-        },
-        {
-            id: 2,
-            title: "Spring과 함께 백엔드 개발자 되기",
-            instructor: "42",
-            introduction: "매주 알고리즘 문제를 함께 풀며 사고력을 키우는 스터디입니다.",
-            recruitMethod: "FCFS",
-            maxMember: "10명 이하",
-            schedule: "매주 금요일 오후 6시",
-            curriculum: "1주차: 그리디, 2주차: DFS/BFS, 3주차: DP...",
-            qualification: "기초적인 Python 또는 Java 사용 가능자",
-            category: "WEB",
-            closed: true,
-        }
-    ]
+export default function StudyList({
+    onCreateStudy,
+    onViewStudyDetail,
+}: StudyListMainProps) {
 
     return (
-        <div className="min-h-screen bg-[#F2F3F8]">
-            <Header />
-            <div className="container mx-auto max-w-4xl px-4">
-                <div className="mb-8 text-center">
-                    <h1 className="mt-8 mb-2 font-bold text-3xl text-gray-900">스터디 목록</h1>
-                    <p className="text-gray-600">함께 성장할 스터디를 찾아보세요</p>
+        <div className="flex min-h-screen flex-col bg-gray-50 ">
+            <header className="border-gray-200 border-b bg-white px-6 py-4">
+                <div className="flex items-center">
+                    <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-black">
+                        <img src="/aegis-logo-2500w-opti.png" alt="Aegis Logo" width={56} height={56} className="rounded-full" />
+                    </div>
+                    <span className="font-bold text-gray-900 text-xl">Aegis</span>
+                </div>
+            </header>
+            <main className="mx-auto max-w-6xl items-center p-6">
+                <div className="mb-6 flex items-center justify-between">
+                    <h2 className="font-bold text-2xl text-gray-900">스터디 목록</h2>
+                    <Button onClick={onCreateStudy} className="bg-blue-600 text-white hover:bg-blue-700">
+                        스터디 개설하기
+                    </Button>
                 </div>
 
-                <div className="grid gap-4 md:gap-6">
-                    {studies.map((study) => (
-                        <Card key={study.id} className="cursor-pointer transition-shadow hover:shadow-md">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {studyData.map((study) => (
+                        <Card
+                            key={study.id}
+                            className="cursor-pointer border-gray-200 transition-shadow hover:shadow-md"
+                            onClick={() => onViewStudyDetail(study.id)}
+                        >
                             <CardContent className="p-6">
-                                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                    <div className="flex-1">
-                                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-                                            <h3 className="font-semibold text-gray-900 text-lg">{study.title}</h3>
-                                            <Badge
-                                                variant={study.closed ? "destructive" : "default"}
-                                                className={
-                                                    study.closed
-                                                        ? "bg-gray-100 text-gray-800 hover:bg-gray-300"
-                                                        : "bg-green-100 text-green-800 hover:bg-green-300"
-                                                }
-                                            >
-                                                {study.closed ? "모집완료" : "모집중"}
-                                            </Badge>
-                                        </div>
+                                <div className="space-y-3">
+                                    <div>
+                                        <Badge
+                                            variant="secondary"
+                                            className={`${study.status === "모집중"
+                                                ? "bg-blue-100 text-blue-800"
+                                                : study.status === "진행중"
+                                                    ? "bg-gray-100 text-gray-800"
+                                                    : "bg-gray-100 text-gray-600"
+                                                }`}
+                                        >
+                                            {study.status}
+                                        </Badge>
+                                    </div>
 
-                                        <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
-                                            <div className="flex items-center gap-2 text-gray-600">
-                                                <User className="h-4 w-4" />
-                                                <span className="text-sm">스터디장: {study.instructor}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-gray-600">
-                                                <Users className="h-4 w-4" />
-                                                <span className="text-sm">
-                                                    인원 제한: {study.maxMember}
-                                                </span>
-                                            </div>
+                                    <h3 className="font-semibold text-gray-900 text-lg leading-tight">{study.title}</h3>
+
+                                    <div className="space-y-3 text-gray-600 text-sm">
+                                        <div className="flex items-center">
+                                            <BarChart3 className="mr-2 h-4 w-4" />
+                                            <span>{study.difficulty}</span>
                                         </div>
+                                        <div className="flex items-center">
+                                            <Clock className="mr-2 h-4 w-4" />
+                                            <span>{study.schedule}</span>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <Users className="mr-2 h-4 w-4" />
+                                            <span>{study.participants}</span>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <User className="mr-2 h-4 w-4" />
+                                            <span>{study.manager}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-end">
+                                        <Badge variant="outline" className="border-gray-300 text-gray-600">
+                                            #{study.category}
+                                        </Badge>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
                     ))}
                 </div>
-
-                {studies.length === 0 && (
-                    <div className="py-12 text-center">
-                        <p className="text-gray-500">등록된 스터디가 없습니다.</p>
-                    </div>
-                )}
-            </div>
+            </main>
         </div>
     )
 }
-
-export default StudyList;
