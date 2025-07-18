@@ -1,7 +1,25 @@
 import { useParams, useNavigate } from "react-router-dom";
 import StudyDetail from "../StudyDetail";
 
-const studyDetailData = {
+interface Study {
+    id: number;
+    title: string;
+    status: string;
+    category: string;
+    difficulty: string;
+    participants: string;
+    manager: string;
+    recruitmentMethod: string;
+    maxParticipants: number;
+    currentParticipants: number;
+    schedule: string;
+    introduction: string;
+    curriculum: string[];
+    requirements: string[];
+    ownerId: string;
+}
+
+const studyDetailData: Record<number, Study> = {
     1: {
         id: 1,
         title: "Spring과 함께 백엔드 개발자 되기",
@@ -94,7 +112,7 @@ export default function StudyDetailWrapper({ onBack }: { onBack: () => void }) {
             onBack={onBack}
             isOwner={isOwner}
             currentUserId={currentUserId}
-            onEdit={(id) => navigate(`/edit/${id}`)}   // 이 부분 수정
+            onEdit={(id) => navigate(`/edit/${id}`)}
             onViewApplications={(id) => console.log("Applications", id)}
             onViewMembers={(id) => console.log("Members", id)}
         />

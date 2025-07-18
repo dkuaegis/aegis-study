@@ -101,17 +101,16 @@ const studyDetailData = {
     },
 }
 
-// 사용자의 스터디 신청 상태 (실제로는 API에서 가져올 데이터)
-const initialUserApplicationStatus = {
+const initialUserApplicationStatus: Record<string, Record<number, 'approved' | 'pending' | 'rejected'>> = {
     user123: {
-        // 현재 사용자 ID
-        1: "approved", // 스터디 ID 1에 승인됨
-        2: "pending", // 스터디 ID 2에 대기 중
+        1: "approved",
+        2: "pending",
     },
     user456: {
         1: "pending",
     },
 }
+
 
 export default function StudyDetail({
     studyId,
@@ -127,9 +126,10 @@ export default function StudyDetail({
     const [isCancelling, setIsCancelling] = useState(false)
 
     // 사용자의 신청 상태를 로컬 state로 관리
-    const [userApplicationStatus, setUserApplicationStatus] = useState(
-        initialUserApplicationStatus[currentUserId as keyof typeof initialUserApplicationStatus]?.[studyId] || null,
+    const [userApplicationStatus, setUserApplicationStatus] = useState<'approved' | 'pending' | 'rejected' | null>(
+        initialUserApplicationStatus[currentUserId]?.[studyId] ?? null
     )
+
 
     const study = studyDetailData[studyId as keyof typeof studyDetailData]
 
@@ -291,8 +291,8 @@ export default function StudyDetail({
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-3">
-                                    {study.curriculum.map((item, index) => (
-                                        <div key={index} className="flex items-start">
+                                    {study.curriculum.map((item) => (
+                                        <div key={item} className="flex items-start">
                                             <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
                                             <span className="text-gray-700">{item}</span>
                                         </div>
@@ -308,8 +308,8 @@ export default function StudyDetail({
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-2">
-                                    {study.requirements.map((requirement, index) => (
-                                        <div key={index} className="flex items-start">
+                                    {study.requirements.map((requirement) => (
+                                        <div key={requirement} className="flex items-start">
                                             <span className="mt-2 mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-gray-400" />
                                             <span className="text-gray-700">{requirement}</span>
                                         </div>

@@ -15,13 +15,25 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
+interface StudyMember {
+    id: string
+    name: string
+    email: string
+    joinedAt: string
+    role: "스터디원" | "스터디장"
+    status?: "active"
+}
+
 interface StudyMembersProps {
     studyId: number
     onBack: () => void
 }
 
-// 스터디원 데이터 (실제로는 API에서 가져올 데이터)
-const studyMembersData = {
+const studyMembersData: Record<number, {
+    studyTitle: string
+    owner: StudyMember
+    members: StudyMember[]
+}> = {
     1: {
         studyTitle: "Spring과 함께 백엔드 개발자 되기",
         owner: {
@@ -135,7 +147,7 @@ function MemberCard({
     onKick,
     isOwner,
 }: {
-    member: any
+    member: StudyMember
     onKick: (memberId: string) => void
     isOwner: boolean
 }) {

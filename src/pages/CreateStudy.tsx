@@ -195,7 +195,6 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                         </CardContent>
                     </Card>
 
-                    {/* Recruitment Settings */}
                     <Card className="border-gray-200">
                         <CardHeader>
                             <CardTitle className="font-semibold text-gray-900 text-lg">모집 설정</CardTitle>

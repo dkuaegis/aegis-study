@@ -7,13 +7,26 @@ import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
+interface Application {
+    id: number
+    name: string
+    email: string
+    appliedAt: string
+    status: 'pending' | 'approved' | 'rejected'
+    applicationText: string
+}
+
 interface ApplicationStatusProps {
     studyId: number
     onBack: () => void
 }
+interface StudyData {
+    studyTitle: string
+    recruitmentMethod: string
+    applications: Application[]
+}
 
-// 지원자 데이터 (실제로는 API에서 가져올 데이터)
-const applicationsData = {
+const applicationsData: Record<number, StudyData> = {
     1: {
         studyTitle: "Spring과 함께 백엔드 개발자 되기",
         recruitmentMethod: "지원서",
@@ -23,72 +36,13 @@ const applicationsData = {
                 name: "김개발",
                 email: "kim.dev@example.com",
                 appliedAt: "2024-01-15",
-                status: "pending", // pending, approved, rejected
-                applicationText: `안녕하세요. 백엔드 개발에 관심이 많은 김개발입니다.
-
-현재 Java 기초를 공부하고 있으며, Spring Framework를 체계적으로 학습하고 싶어 지원하게 되었습니다. 
-
-특히 실무에서 사용되는 기술들을 배우고 싶고, 팀 프로젝트를 통해 협업 경험도 쌓고 싶습니다. 매주 정기 모임에 빠짐없이 참석하겠습니다.
-
-감사합니다.`,
-            },
-            {
-                id: 2,
-                name: "이자바",
-                email: "lee.java@example.com",
-                appliedAt: "2024-01-16",
-                status: "approved",
-                applicationText: `Spring 스터디에 지원합니다.
-
-Java 개발 경험이 1년 정도 있으며, Spring Boot로 간단한 프로젝트를 만들어본 경험이 있습니다. 하지만 아직 부족한 부분이 많아서 체계적으로 학습하고 싶습니다.
-
-특히 Spring Security와 JPA 부분을 깊이 있게 공부하고 싶습니다.`,
-            },
-            {
-                id: 3,
-                name: "박스프링",
-                email: "park.spring@example.com",
-                appliedAt: "2024-01-17",
-                status: "rejected",
-                applicationText: `백엔드 개발자가 되고 싶어서 지원합니다.
-
-아직 프로그래밍 경험은 많지 않지만 열심히 하겠습니다.`,
-            },
-            {
-                id: 4,
-                name: "최코딩",
-                email: "choi.coding@example.com",
-                appliedAt: "2024-01-18",
                 status: "pending",
-                applicationText: `Spring Framework 학습을 위해 지원합니다.
-
-현재 웹 개발 부트캠프를 수료했으며, Java와 Spring Boot 기초를 학습했습니다. 실무 수준의 백엔드 개발 능력을 기르고 싶어서 이 스터디에 참여하고 싶습니다.
-
-Git 사용에 익숙하며, 팀 프로젝트 경험도 있습니다. 적극적으로 참여하겠습니다.`,
-            },
-            {
-                id: 5,
-                name: "정리액트",
-                email: "jung.react@example.com",
-                appliedAt: "2024-01-19",
-                status: "approved",
-                applicationText: `백엔드 개발 스터디에 지원합니다.
-
-프론트엔드 개발 경험이 있지만, 풀스택 개발자가 되기 위해 백엔드 기술을 학습하고 싶습니다. Spring Framework에 대한 체계적인 학습을 통해 서버 개발 역량을 키우고 싶습니다.`,
-            },
-            {
-                id: 6,
-                name: "한노드",
-                email: "han.node@example.com",
-                appliedAt: "2024-01-20",
-                status: "rejected",
-                applicationText: `Spring 스터디 지원합니다.
-
-Node.js 경험이 있어서 백엔드 개발에 관심이 있습니다.`,
+                applicationText: `안녕하세요...`,
             },
         ],
     },
 }
+
 
 export default function ApplicationStatus({ studyId, onBack }: ApplicationStatusProps) {
     const [selectedFilter, setSelectedFilter] = useState("all")
@@ -284,8 +238,8 @@ function ApplicationCard({
     onStatusChange,
     recruitmentMethod,
 }: {
-    application: any
-    onStatusChange: (id: number, status: "approved" | "rejected") => void
+    application: Application
+    onStatusChange: (id: number, status: 'approved' | 'rejected') => void
     recruitmentMethod: string
 }) {
     const getStatusBadge = (status: string) => {
