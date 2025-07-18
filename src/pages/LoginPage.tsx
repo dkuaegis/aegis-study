@@ -77,6 +77,9 @@ const LoginPage = () => {
                 },
                 "-=0.1",
             )
+        return () => {
+            tl.kill()
+        }
     }, [])
 
     const icons = [
