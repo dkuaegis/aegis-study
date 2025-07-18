@@ -1,82 +1,150 @@
-import { useEffect, useRef } from "react";
-import { Lock, Globe, CodeXml, Gamepad2, BrainCircuit } from "lucide-react";
-import gsap from "gsap";
-import { Button } from "@/components/ui/button";
-import Header from "@/components/ui/Header";
+import { useEffect, useRef } from "react"
+import { gsap } from "gsap"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Lock, Globe, CodeXml, Gamepad2, BrainCircuit } from "lucide-react"
 
-function LoginPage() {
-    const iconRefs = [
-        useRef<HTMLDivElement>(null),
-        useRef<HTMLDivElement>(null),
-        useRef<HTMLDivElement>(null),
-        useRef<HTMLDivElement>(null),
-        useRef<HTMLDivElement>(null),
-    ];
+const LoginPage = () => {
+    const iconsRef = useRef<(HTMLDivElement | null)[]>([])
+    const titleRef = useRef<HTMLHeadingElement>(null)
+    const subtitleRef = useRef<HTMLParagraphElement>(null)
+    const buttonRef = useRef<HTMLButtonElement>(null)
+    const cardRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        const animations: gsap.core.Tween[] = [];
+        const tl = gsap.timeline({ delay: 0.3 })
 
-        iconRefs.forEach((ref, i) => {
-            if (ref.current) {
-                const animation = gsap.fromTo(
-                    ref.current,
-                    { x: -100, opacity: 0 },
-                    {
-                        x: 0,
-                        opacity: 1,
-                        duration: 1.2,
-                        delay: i * 0.3,
-                        ease: "power2.out",
-                    }
-                );
-                animations.push(animation);
-            }
-        });
-        return () => {
-            animations.forEach(animation => animation.kill());
-        };
-    }, [iconRefs.forEach]);
+        gsap.set([titleRef.current, subtitleRef.current, buttonRef.current], {
+            opacity: 0,
+            y: 20,
+        })
+
+        gsap.set(iconsRef.current, {
+            opacity: 0,
+            x: -50,
+            scale: 0.9,
+        })
+
+        gsap.set(cardRef.current, {
+            scale: 0.95,
+            opacity: 1,
+        })
+
+        tl.to(cardRef.current, {
+            scale: 1,
+            duration: 0.5,
+            ease: "power2.out",
+        })
+            .to(
+                titleRef.current,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    ease: "power2.out",
+                },
+                "-=0.2",
+            )
+            .to(
+                subtitleRef.current,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power2.out",
+                },
+                "-=0.3",
+            )
+            .to(
+                iconsRef.current,
+                {
+                    opacity: 1,
+                    x: 0,
+                    scale: 1,
+                    duration: 0.5,
+                    stagger: 0.1,
+                    ease: "back.out(1.4)",
+                },
+                "-=0.2",
+            )
+            .to(
+                buttonRef.current,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power2.out",
+                },
+                "-=0.1",
+            )
+    }, [])
+
+    const icons = [
+        { id: "lock", Icon: Lock, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
+        { id: "globe", Icon: Globe, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
+        { id: "codeXml", Icon: CodeXml, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
+        { id: "gamepad", Icon: Gamepad2, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
+        { id: "braincircuit", Icon: BrainCircuit, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
+    ]
 
     return (
-        <div className="min-h-screen bg-[#F2F3F8]">
-            <Header />
+        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 p-4">
+            <div className="absolute inset-0 opacity-[0.02]">
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        backgroundImage: `radial-gradient(circle at 1px 1px, black 1px, transparent 0)`,
+                        backgroundSize: "20px 20px",
+                    }}
+                ></div>
+            </div>
 
-            <main className="flex min-h-[80vh] flex-col items-center justify-center px-8 py-16">
-                <div className="mx-auto flex max-w-2xl flex-col items-center space-y-8 text-center">
-                    <div className="mb-8 flex flex-row gap-8">
-                        <div ref={iconRefs[0]}>
-                            <Lock size={80} color="#6366f1" aria-hidden="true" />
-                        </div>
-                        <div ref={iconRefs[1]}>
-                            <Globe size={80} color="#10b981" aria-hidden="true" />
-                        </div>
-                        <div ref={iconRefs[2]}>
-                            <CodeXml size={80} color="#f59e42" aria-hidden="true" />
-                        </div>
-                        <div ref={iconRefs[3]}>
-                            <Gamepad2 size={80} color="#ef4444" aria-hidden="true" />
-                        </div>
-                        <div ref={iconRefs[4]}>
-                            <BrainCircuit size={80} color="#a855f7" aria-hidden="true" />
-                        </div>
-                    </div>
-
-                    <p className="mb-8 text-gray-900 text-xl leading-relaxed">
-                        Aegis는 단국대학교 학생들을 위해<br />
-                        개발에 쉽게 입문할 수 있는 기회를 제공해요.
-                    </p>
-
-                    <Button className="h-12 w-full py-0 text-xl" asChild>
-                        <a
-                            href={`${import.meta.env.VITE_API_URL}/oauth2/authorization/google`}
-                        >
-                            Google로 로그인
-                        </a>
-                    </Button>
+            <div className="absolute top-6 left-6 flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black">
+                    <img src="/aegis-logo-2500w-opti.png" alt="Aegis Logo" width={56} height={56} className="rounded-full" />
                 </div>
-            </main>
+                <span className="font-bold text-gray-900 text-xl">Aegis</span>
+            </div>
+
+            <Card
+                ref={cardRef}
+                className="w-full max-w-md border border-gray-200/50 bg-white/90 shadow-2xl shadow-gray-500/10 backdrop-blur-sm"
+            >
+                <CardContent className="p-8">
+                    <div className="space-y-8 text-center">
+                        <div className="space-y-3">
+                            <h2 ref={titleRef} className="font-bold text-3xl text-gray-900">
+                                환영합니다
+                            </h2>
+                            <p ref={subtitleRef} className="text-gray-600 leading-relaxed">
+                                Aegis는 단국대학교 학생들을 위해
+                                <br />
+                                개발에 쉽게 입문할 수 있는 기회를 제공해요.
+                            </p>
+                        </div>
+
+                        <div className="flex justify-center gap-4">
+                            {icons.map((item, index) => (
+                                <div
+                                    key={item.id}
+                                    ref={(el) => {
+                                        iconsRef.current[index] = el
+                                    }}
+                                    className={`h-14 w-14 ${item.bg} flex items-center justify-center rounded-2xl transition-all duration-300 hover:scale-110 ${item.shadow} cursor-pointer border border-gray-200/50 hover:shadow-lg`}
+                                >
+                                    <item.Icon className={`h-7 w-7 ${item.color}`} />
+                                </div>
+                            ))}
+                        </div>
+
+                        <Button ref={buttonRef} className="h-12 w-full py-0 text-xl" asChild>
+                            <a href={`${import.meta.env.VITE_API_URL}/oauth2/authorization/google`}>Google로 로그인</a>
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
-    );
+    )
 }
 
-export default LoginPage;
+export default LoginPage
