@@ -1,34 +1,34 @@
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Lock, Globe, CodeXml, Gamepad2, BrainCircuit } from "lucide-react"
+import { gsap } from "gsap";
+import { BrainCircuit, CodeXml, Gamepad2, Globe, Lock } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const LoginPage = () => {
-    const iconsRef = useRef<(HTMLDivElement | null)[]>([])
-    const titleRef = useRef<HTMLHeadingElement>(null)
-    const subtitleRef = useRef<HTMLParagraphElement>(null)
-    const buttonRef = useRef<HTMLButtonElement>(null)
-    const cardRef = useRef<HTMLDivElement>(null)
+    const iconsRef = useRef<(HTMLDivElement | null)[]>([]);
+    const titleRef = useRef<HTMLHeadingElement>(null);
+    const subtitleRef = useRef<HTMLParagraphElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const cardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const tl = gsap.timeline({ delay: 0.3 })
+        const tl = gsap.timeline({ delay: 0.3 });
 
         gsap.set([titleRef.current, subtitleRef.current, buttonRef.current], {
             opacity: 0,
             y: 20,
-        })
+        });
 
         gsap.set(iconsRef.current, {
             opacity: 0,
             x: -50,
             scale: 0.9,
-        })
+        });
 
         gsap.set(cardRef.current, {
             scale: 0.95,
             opacity: 1,
-        })
+        });
 
         tl.to(cardRef.current, {
             scale: 1,
@@ -43,7 +43,7 @@ const LoginPage = () => {
                     duration: 0.6,
                     ease: "power2.out",
                 },
-                "-=0.2",
+                "-=0.2"
             )
             .to(
                 subtitleRef.current,
@@ -53,7 +53,7 @@ const LoginPage = () => {
                     duration: 0.5,
                     ease: "power2.out",
                 },
-                "-=0.3",
+                "-=0.3"
             )
             .to(
                 iconsRef.current,
@@ -65,7 +65,7 @@ const LoginPage = () => {
                     stagger: 0.1,
                     ease: "back.out(1.4)",
                 },
-                "-=0.2",
+                "-=0.2"
             )
             .to(
                 buttonRef.current,
@@ -75,20 +75,50 @@ const LoginPage = () => {
                     duration: 0.5,
                     ease: "power2.out",
                 },
-                "-=0.1",
-            )
+                "-=0.1"
+            );
         return () => {
-            tl.kill()
-        }
-    }, [])
+            tl.kill();
+        };
+    }, []);
 
     const icons = [
-        { id: "lock", Icon: Lock, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
-        { id: "globe", Icon: Globe, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
-        { id: "codeXml", Icon: CodeXml, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
-        { id: "gamepad", Icon: Gamepad2, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
-        { id: "braincircuit", Icon: BrainCircuit, color: "text-gray-900", bg: "bg-white", shadow: "hover:shadow-gray-300" },
-    ]
+        {
+            id: "lock",
+            Icon: Lock,
+            color: "text-gray-900",
+            bg: "bg-white",
+            shadow: "hover:shadow-gray-300",
+        },
+        {
+            id: "globe",
+            Icon: Globe,
+            color: "text-gray-900",
+            bg: "bg-white",
+            shadow: "hover:shadow-gray-300",
+        },
+        {
+            id: "codeXml",
+            Icon: CodeXml,
+            color: "text-gray-900",
+            bg: "bg-white",
+            shadow: "hover:shadow-gray-300",
+        },
+        {
+            id: "gamepad",
+            Icon: Gamepad2,
+            color: "text-gray-900",
+            bg: "bg-white",
+            shadow: "hover:shadow-gray-300",
+        },
+        {
+            id: "braincircuit",
+            Icon: BrainCircuit,
+            color: "text-gray-900",
+            bg: "bg-white",
+            shadow: "hover:shadow-gray-300",
+        },
+    ];
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 p-4">
@@ -104,7 +134,13 @@ const LoginPage = () => {
 
             <div className="absolute top-6 left-6 flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black">
-                    <img src="/aegis-logo-2500w-opti.png" alt="Aegis Logo" width={56} height={56} className="rounded-full" />
+                    <img
+                        src="/aegis-logo-2500w-opti.png"
+                        alt="Aegis Logo"
+                        width={56}
+                        height={56}
+                        className="rounded-full"
+                    />
                 </div>
                 <span className="font-bold text-gray-900 text-xl">Aegis</span>
             </div>
@@ -116,10 +152,16 @@ const LoginPage = () => {
                 <CardContent className="p-8">
                     <div className="space-y-8 text-center">
                         <div className="space-y-3">
-                            <h2 ref={titleRef} className="font-bold text-3xl text-gray-900">
+                            <h2
+                                ref={titleRef}
+                                className="font-bold text-3xl text-gray-900"
+                            >
                                 환영합니다
                             </h2>
-                            <p ref={subtitleRef} className="text-gray-600 leading-relaxed">
+                            <p
+                                ref={subtitleRef}
+                                className="text-gray-600 leading-relaxed"
+                            >
                                 Aegis는 단국대학교 학생들을 위해
                                 <br />
                                 개발에 쉽게 입문할 수 있는 기회를 제공해요.
@@ -130,23 +172,33 @@ const LoginPage = () => {
                                 <div
                                     key={item.id}
                                     ref={(el) => {
-                                        iconsRef.current[index] = el
+                                        iconsRef.current[index] = el;
                                     }}
                                     className={`h-14 w-14 ${item.bg} flex items-center justify-center rounded-2xl transition-all duration-300 hover:scale-110 ${item.shadow} cursor-pointer border border-gray-200/50 hover:shadow-lg`}
                                 >
-                                    <item.Icon className={`h-7 w-7 ${item.color}`} />
+                                    <item.Icon
+                                        className={`h-7 w-7 ${item.color}`}
+                                    />
                                 </div>
                             ))}
                         </div>
 
-                        <Button ref={buttonRef} className="h-12 w-full py-0 text-xl" asChild>
-                            <a href={`${import.meta.env.VITE_API_URL}/oauth2/authorization/google`}>Google로 로그인</a>
+                        <Button
+                            ref={buttonRef}
+                            className="h-12 w-full py-0 text-xl"
+                            asChild
+                        >
+                            <a
+                                href={`${import.meta.env.VITE_API_URL}/oauth2/authorization/google`}
+                            >
+                                Google로 로그인
+                            </a>
                         </Button>
                     </div>
                 </CardContent>
             </Card>
         </div>
-    )
-}
+    );
+};
 
-export default LoginPage
+export default LoginPage;
