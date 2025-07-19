@@ -1,11 +1,14 @@
-import { useState } from "react"
-import { ArrowLeft, Users, User, BarChart3, CheckCircle, Settings, UsersIcon, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
+import {
+    ArrowLeft,
+    BarChart3,
+    CheckCircle,
+    Settings,
+    User,
+    Users,
+    UsersIcon,
+    X,
+} from "lucide-react";
+import { useState } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,16 +19,22 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 
 interface StudyDetailProps {
-    studyId: number
-    onBack: () => void
-    onEdit?: (studyId: number) => void
-    onViewApplications?: (studyId: number) => void
-    onViewMembers?: (studyId: number) => void
-    isOwner?: boolean
-    currentUserId?: string
+    studyId: number;
+    onBack: () => void;
+    onEdit?: (studyId: number) => void;
+    onViewApplications?: (studyId: number) => void;
+    onViewMembers?: (studyId: number) => void;
+    isOwner?: boolean;
+    currentUserId?: string;
 }
 
 const studyDetailData = {
@@ -99,9 +108,12 @@ const studyDetailData = {
         ],
         ownerId: "user124",
     },
-}
+};
 
-const initialUserApplicationStatus: Record<string, Record<number, 'approved' | 'pending' | 'rejected'>> = {
+const initialUserApplicationStatus: Record<
+    string,
+    Record<number, "approved" | "pending" | "rejected">
+> = {
     user123: {
         1: "approved",
         2: "pending",
@@ -109,8 +121,7 @@ const initialUserApplicationStatus: Record<string, Record<number, 'approved' | '
     user456: {
         1: "pending",
     },
-}
-
+};
 
 export default function StudyDetail({
     studyId,
@@ -121,84 +132,108 @@ export default function StudyDetail({
     isOwner = false,
     currentUserId = "user123",
 }: StudyDetailProps) {
-    const [applicationText, setApplicationText] = useState("")
-    const [isApplying, setIsApplying] = useState(false)
-    const [isCancelling, setIsCancelling] = useState(false)
+    const [applicationText, setApplicationText] = useState("");
+    const [isApplying, setIsApplying] = useState(false);
+    const [isCancelling, setIsCancelling] = useState(false);
 
     // 사용자의 신청 상태를 로컬 state로 관리
-    const [userApplicationStatus, setUserApplicationStatus] = useState<'approved' | 'pending' | 'rejected' | null>(
-        initialUserApplicationStatus[currentUserId]?.[studyId] ?? null
-    )
+    const [userApplicationStatus, setUserApplicationStatus] = useState<
+        "approved" | "pending" | "rejected" | null
+    >(initialUserApplicationStatus[currentUserId]?.[studyId] ?? null);
 
-
-    const study = studyDetailData[studyId as keyof typeof studyDetailData]
+    const study = studyDetailData[studyId as keyof typeof studyDetailData];
 
     if (!study) {
-        return <div>스터디를 찾을 수 없습니다.</div>
+        return <div>스터디를 찾을 수 없습니다.</div>;
     }
 
     const handleApply = async () => {
-        setIsApplying(true)
+        setIsApplying(true);
         // 지원 로직 시뮬레이션
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         if (study.recruitmentMethod === "선착순") {
             // 선착순인 경우 바로 승인
-            setUserApplicationStatus("approved")
-            alert("지원이 완료되었습니다! 스터디에 참여하게 되었습니다.")
+            setUserApplicationStatus("approved");
+            alert("지원이 완료되었습니다! 스터디에 참여하게 되었습니다.");
         } else {
             // 지원서인 경우 대기 상태
-            setUserApplicationStatus("pending")
-            alert("지원서가 제출되었습니다! 검토 후 결과를 알려드리겠습니다.")
+            setUserApplicationStatus("pending");
+            alert("지원서가 제출되었습니다! 검토 후 결과를 알려드리겠습니다.");
         }
 
-        setIsApplying(false)
-        setApplicationText("")
-    }
+        setIsApplying(false);
+        setApplicationText("");
+    };
 
     const handleCancelApplication = async () => {
-        setIsCancelling(true)
+        setIsCancelling(true);
         // 신청 취소 로직 시뮬레이션
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // 상태를 null로 변경하여 다시 지원하기 버튼이 나타나도록 함
-        setUserApplicationStatus(null)
+        setUserApplicationStatus(null);
 
         if (userApplicationStatus === "approved") {
-            alert("스터디에서 탈퇴되었습니다.")
+            alert("스터디에서 탈퇴되었습니다.");
         } else {
-            alert("스터디 신청이 취소되었습니다.")
+            alert("스터디 신청이 취소되었습니다.");
         }
 
-        setIsCancelling(false)
-    }
+        setIsCancelling(false);
+    };
 
     const getApplicationStatusBadge = (status: string | null) => {
         switch (status) {
             case "pending":
-                return <Badge className="bg-yellow-100 text-yellow-800">신청 대기 중</Badge>
+                return (
+                    <Badge className="bg-yellow-100 text-yellow-800">
+                        신청 대기 중
+                    </Badge>
+                );
             case "approved":
-                return <Badge className="bg-green-100 text-green-800">참여 중</Badge>
+                return (
+                    <Badge className="bg-green-100 text-green-800">
+                        참여 중
+                    </Badge>
+                );
             case "rejected":
-                return <Badge className="bg-red-100 text-red-800">신청 거절됨</Badge>
+                return (
+                    <Badge className="bg-red-100 text-red-800">
+                        신청 거절됨
+                    </Badge>
+                );
             default:
-                return null
+                return null;
         }
-    }
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="border-gray-200 border-b bg-white px-6 py-4">
                 <div className="flex items-center">
-                    <Button variant="ghost" size="sm" onClick={onBack} className="mr-4 text-gray-600 hover:text-gray-900">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={onBack}
+                        className="mr-4 text-gray-600 hover:text-gray-900"
+                    >
                         <ArrowLeft className="mr-1 h-4 w-4" />
                         뒤로가기
                     </Button>
                     <div className="flex items-center">
                         <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-black">
-                            <img src="/aegis-logo-2500w-opti.png" alt="Aegis Logo" width={56} height={56} className="rounded-full" />
+                            <img
+                                src="/aegis-logo-2500w-opti.png"
+                                alt="Aegis Logo"
+                                width={56}
+                                height={56}
+                                className="rounded-full"
+                            />
                         </div>
-                        <span className="font-bold text-gray-900 text-xl">Aegis</span>
+                        <span className="font-bold text-gray-900 text-xl">
+                            Aegis
+                        </span>
                     </div>
                 </div>
             </header>
@@ -210,15 +245,26 @@ export default function StudyDetail({
                         <div className="flex items-start justify-between">
                             <div className="flex-1">
                                 <div className="mb-2 flex items-center gap-2">
-                                    <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                                    <Badge
+                                        variant="secondary"
+                                        className="bg-blue-100 text-blue-800"
+                                    >
                                         {study.status}
                                     </Badge>
-                                    <Badge variant="outline" className="border-gray-300 text-gray-600">
+                                    <Badge
+                                        variant="outline"
+                                        className="border-gray-300 text-gray-600"
+                                    >
                                         #{study.category}
                                     </Badge>
-                                    {userApplicationStatus && getApplicationStatusBadge(userApplicationStatus)}
+                                    {userApplicationStatus &&
+                                        getApplicationStatusBadge(
+                                            userApplicationStatus
+                                        )}
                                 </div>
-                                <CardTitle className="mb-4 font-bold text-2xl text-gray-900">{study.title}</CardTitle>
+                                <CardTitle className="mb-4 font-bold text-2xl text-gray-900">
+                                    {study.title}
+                                </CardTitle>
 
                                 {isOwner && (
                                     <div className="mb-4 flex gap-2">
@@ -234,7 +280,9 @@ export default function StudyDetail({
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => onViewApplications?.(studyId)}
+                                            onClick={() =>
+                                                onViewApplications?.(studyId)
+                                            }
                                             className="border-green-600 text-green-600 hover:bg-green-50"
                                         >
                                             <UsersIcon className="mr-1 h-4 w-4" />
@@ -243,7 +291,9 @@ export default function StudyDetail({
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => onViewMembers?.(studyId)}
+                                            onClick={() =>
+                                                onViewMembers?.(studyId)
+                                            }
                                             className="border-purple-600 text-purple-600 hover:bg-purple-50"
                                         >
                                             <Users className="mr-1 h-4 w-4" />
@@ -277,24 +327,35 @@ export default function StudyDetail({
                         {/* Study Introduction */}
                         <Card className="border-gray-200">
                             <CardHeader>
-                                <CardTitle className="font-semibold text-gray-900 text-lg">스터디 소개</CardTitle>
+                                <CardTitle className="font-semibold text-gray-900 text-lg">
+                                    스터디 소개
+                                </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="whitespace-pre-line text-gray-700 leading-relaxed">{study.introduction}</p>
+                                <p className="whitespace-pre-line text-gray-700 leading-relaxed">
+                                    {study.introduction}
+                                </p>
                             </CardContent>
                         </Card>
 
                         {/* Curriculum */}
                         <Card className="border-gray-200">
                             <CardHeader>
-                                <CardTitle className="font-semibold text-gray-900 text-lg">커리큘럼</CardTitle>
+                                <CardTitle className="font-semibold text-gray-900 text-lg">
+                                    커리큘럼
+                                </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-3">
                                     {study.curriculum.map((item) => (
-                                        <div key={item} className="flex items-start">
+                                        <div
+                                            key={item}
+                                            className="flex items-start"
+                                        >
                                             <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
-                                            <span className="text-gray-700">{item}</span>
+                                            <span className="text-gray-700">
+                                                {item}
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
@@ -304,14 +365,21 @@ export default function StudyDetail({
                         {/* Requirements */}
                         <Card className="border-gray-200">
                             <CardHeader>
-                                <CardTitle className="font-semibold text-gray-900 text-lg">지원 자격</CardTitle>
+                                <CardTitle className="font-semibold text-gray-900 text-lg">
+                                    지원 자격
+                                </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-2">
                                     {study.requirements.map((requirement) => (
-                                        <div key={requirement} className="flex items-start">
+                                        <div
+                                            key={requirement}
+                                            className="flex items-start"
+                                        >
                                             <span className="mt-2 mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-gray-400" />
-                                            <span className="text-gray-700">{requirement}</span>
+                                            <span className="text-gray-700">
+                                                {requirement}
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
@@ -322,26 +390,39 @@ export default function StudyDetail({
                     <div className="space-y-6">
                         <Card className="border-gray-200">
                             <CardHeader>
-                                <CardTitle className="font-semibold text-gray-900 text-lg">스터디 정보</CardTitle>
+                                <CardTitle className="font-semibold text-gray-900 text-lg">
+                                    스터디 정보
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div>
-                                    <Label className="font-medium text-gray-900 text-sm">모집 방법</Label>
+                                    <Label className="font-medium text-gray-900 text-sm">
+                                        모집 방법
+                                    </Label>
                                     <p className="mt-1 text-gray-700">
-                                        {study.recruitmentMethod === "선착순" ? "선착순 모집" : "지원서 심사"}
+                                        {study.recruitmentMethod === "선착순"
+                                            ? "선착순 모집"
+                                            : "지원서 심사"}
                                     </p>
                                 </div>
                                 <Separator className="bg-gray-200" />
                                 <div>
-                                    <Label className="font-medium text-gray-900 text-sm">제한 인원</Label>
+                                    <Label className="font-medium text-gray-900 text-sm">
+                                        제한 인원
+                                    </Label>
                                     <p className="mt-1 text-gray-700">
-                                        {study.currentParticipants}/{study.maxParticipants}명
+                                        {study.currentParticipants}/
+                                        {study.maxParticipants}명
                                     </p>
                                 </div>
                                 <Separator className="bg-gray-200" />
                                 <div>
-                                    <Label className="font-medium text-gray-900 text-sm">일정</Label>
-                                    <p className="mt-1 text-gray-700">{study.schedule}</p>
+                                    <Label className="font-medium text-gray-900 text-sm">
+                                        일정
+                                    </Label>
+                                    <p className="mt-1 text-gray-700">
+                                        {study.schedule}
+                                    </p>
                                 </div>
                             </CardContent>
                         </Card>
@@ -352,20 +433,25 @@ export default function StudyDetail({
                                     <CardTitle className="font-semibold text-gray-900 text-lg">
                                         {userApplicationStatus === "pending"
                                             ? "신청 현황"
-                                            : userApplicationStatus === "approved"
-                                                ? "참여 현황"
-                                                : userApplicationStatus === "rejected"
-                                                    ? "신청 결과"
-                                                    : study.recruitmentMethod === "선착순"
-                                                        ? "지원하기"
-                                                        : "지원서 작성"}
+                                            : userApplicationStatus ===
+                                                "approved"
+                                              ? "참여 현황"
+                                              : userApplicationStatus ===
+                                                  "rejected"
+                                                ? "신청 결과"
+                                                : study.recruitmentMethod ===
+                                                    "선착순"
+                                                  ? "지원하기"
+                                                  : "지원서 작성"}
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     {/* 신청 상태에 따른 UI 분기 */}
                                     {userApplicationStatus === "pending" && (
                                         <div className="space-y-4 text-center">
-                                            <p className="text-gray-600">스터디 신청이 검토 중입니다.</p>
+                                            <p className="text-gray-600">
+                                                스터디 신청이 검토 중입니다.
+                                            </p>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button
@@ -378,18 +464,29 @@ export default function StudyDetail({
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent>
                                                     <AlertDialogHeader>
-                                                        <AlertDialogTitle>신청 취소</AlertDialogTitle>
+                                                        <AlertDialogTitle>
+                                                            신청 취소
+                                                        </AlertDialogTitle>
                                                         <AlertDialogDescription>
-                                                            스터디 신청을 취소하시겠습니까? 이후 다시 신청할 수 있습니다.
+                                                            스터디 신청을
+                                                            취소하시겠습니까?
+                                                            이후 다시 신청할 수
+                                                            있습니다.
                                                         </AlertDialogDescription>
                                                     </AlertDialogHeader>
                                                     <AlertDialogFooter>
-                                                        <AlertDialogCancel>돌아가기</AlertDialogCancel>
+                                                        <AlertDialogCancel>
+                                                            돌아가기
+                                                        </AlertDialogCancel>
                                                         <AlertDialogAction
-                                                            onClick={handleCancelApplication}
+                                                            onClick={
+                                                                handleCancelApplication
+                                                            }
                                                             className="bg-red-600 hover:bg-red-700"
                                                         >
-                                                            {isCancelling ? "취소 중..." : "신청 취소"}
+                                                            {isCancelling
+                                                                ? "취소 중..."
+                                                                : "신청 취소"}
                                                         </AlertDialogAction>
                                                     </AlertDialogFooter>
                                                 </AlertDialogContent>
@@ -399,7 +496,9 @@ export default function StudyDetail({
 
                                     {userApplicationStatus === "approved" && (
                                         <div className="space-y-4 text-center">
-                                            <p className="font-medium text-green-600">스터디에 참여 중입니다!</p>
+                                            <p className="font-medium text-green-600">
+                                                스터디에 참여 중입니다!
+                                            </p>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button
@@ -412,18 +511,30 @@ export default function StudyDetail({
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent>
                                                     <AlertDialogHeader>
-                                                        <AlertDialogTitle>스터디 탈퇴</AlertDialogTitle>
+                                                        <AlertDialogTitle>
+                                                            스터디 탈퇴
+                                                        </AlertDialogTitle>
                                                         <AlertDialogDescription>
-                                                            스터디에서 탈퇴하시겠습니까? 탈퇴 후 다시 참여하려면 재신청이 필요합니다.
+                                                            스터디에서
+                                                            탈퇴하시겠습니까?
+                                                            탈퇴 후 다시
+                                                            참여하려면 재신청이
+                                                            필요합니다.
                                                         </AlertDialogDescription>
                                                     </AlertDialogHeader>
                                                     <AlertDialogFooter>
-                                                        <AlertDialogCancel>돌아가기</AlertDialogCancel>
+                                                        <AlertDialogCancel>
+                                                            돌아가기
+                                                        </AlertDialogCancel>
                                                         <AlertDialogAction
-                                                            onClick={handleCancelApplication}
+                                                            onClick={
+                                                                handleCancelApplication
+                                                            }
                                                             className="bg-red-600 hover:bg-red-700"
                                                         >
-                                                            {isCancelling ? "탈퇴 중..." : "탈퇴하기"}
+                                                            {isCancelling
+                                                                ? "탈퇴 중..."
+                                                                : "탈퇴하기"}
                                                         </AlertDialogAction>
                                                     </AlertDialogFooter>
                                                 </AlertDialogContent>
@@ -433,10 +544,18 @@ export default function StudyDetail({
 
                                     {userApplicationStatus === "rejected" && (
                                         <div className="space-y-4 text-center">
-                                            <p className="text-red-600">신청이 거절되었습니다.</p>
-                                            <p className="text-gray-500 text-sm">다른 스터디를 찾아보세요.</p>
+                                            <p className="text-red-600">
+                                                신청이 거절되었습니다.
+                                            </p>
+                                            <p className="text-gray-500 text-sm">
+                                                다른 스터디를 찾아보세요.
+                                            </p>
                                             <Button
-                                                onClick={() => setUserApplicationStatus(null)}
+                                                onClick={() =>
+                                                    setUserApplicationStatus(
+                                                        null
+                                                    )
+                                                }
                                                 variant="outline"
                                                 className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
                                             >
@@ -447,16 +566,25 @@ export default function StudyDetail({
 
                                     {!userApplicationStatus && (
                                         <>
-                                            {study.recruitmentMethod === "지원서" && (
+                                            {study.recruitmentMethod ===
+                                                "지원서" && (
                                                 <div>
-                                                    <Label htmlFor="application" className="font-medium text-gray-900 text-sm">
-                                                        지원 동기 및 각오를 작성해주세요
+                                                    <Label
+                                                        htmlFor="application"
+                                                        className="font-medium text-gray-900 text-sm"
+                                                    >
+                                                        지원 동기 및 각오를
+                                                        작성해주세요
                                                     </Label>
                                                     <Textarea
                                                         id="application"
                                                         placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
                                                         value={applicationText}
-                                                        onChange={(e) => setApplicationText(e.target.value)}
+                                                        onChange={(e) =>
+                                                            setApplicationText(
+                                                                e.target.value
+                                                            )
+                                                        }
                                                         className="mt-2 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                                     />
                                                 </div>
@@ -464,15 +592,25 @@ export default function StudyDetail({
 
                                             <Button
                                                 onClick={handleApply}
-                                                disabled={isApplying || (study.recruitmentMethod === "지원서" && !applicationText.trim())}
+                                                disabled={
+                                                    isApplying ||
+                                                    (study.recruitmentMethod ===
+                                                        "지원서" &&
+                                                        !applicationText.trim())
+                                                }
                                                 className="w-full bg-blue-600 text-white hover:bg-blue-700"
                                             >
-                                                {isApplying ? "처리 중..." : "지원하기"}
+                                                {isApplying
+                                                    ? "처리 중..."
+                                                    : "지원하기"}
                                             </Button>
 
-                                            {study.recruitmentMethod === "선착순" && (
+                                            {study.recruitmentMethod ===
+                                                "선착순" && (
                                                 <p className="text-center text-gray-500 text-xs">
-                                                    선착순으로 모집되며, 정원이 마감되면 자동으로 마감됩니다.
+                                                    선착순으로 모집되며, 정원이
+                                                    마감되면 자동으로
+                                                    마감됩니다.
                                                 </p>
                                             )}
                                         </>
@@ -484,5 +622,5 @@ export default function StudyDetail({
                 </div>
             </div>
         </div>
-    )
+    );
 }

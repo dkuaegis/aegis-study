@@ -1,12 +1,12 @@
-import { Route, Routes } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
+
+import useAuth, { AuthStatus } from "./hooks/useAuth";
+import CreateStudy from "./pages/CreateStudy";
 import LoginPage from "./pages/LoginPage";
 import StudyList from "./pages/StudyList";
-import CreateStudy from "./pages/CreateStudy";
-import StudyDetailWrapper from "./pages/wrappers/StudyDetailWrapper";
-import useAuth, { AuthStatus } from "./hooks/useAuth";
-import EditStudyWrapper from "./pages/wrappers/EditStudyWrapper";
 import ApplicationStatusWrapper from "./pages/wrappers/ApplicationStatusWrapper";
+import EditStudyWrapper from "./pages/wrappers/EditStudyWrapper";
+import StudyDetailWrapper from "./pages/wrappers/StudyDetailWrapper";
 import StudyMembersWrapper from "./pages/wrappers/StudyMemberWrapper";
 
 function App() {
@@ -25,34 +25,29 @@ function App() {
                     element={
                         <StudyList
                             onCreateStudy={() => navigate("/create")}
-                            onViewStudyDetail={(studyId: number) => navigate(`/detail/${studyId}`)}
+                            onViewStudyDetail={(studyId: number) =>
+                                navigate(`/detail/${studyId}`)
+                            }
                         />
                     }
                 />
                 <Route
                     path="/create"
-                    element={
-                        <CreateStudy onBack={() => navigate("/")} />
-                    }
+                    element={<CreateStudy onBack={() => navigate("/")} />}
                 />
                 <Route
                     path="/detail/:studyId"
                     element={
-                        <StudyDetailWrapper
-                            onBack={() => navigate("/")}
-                        />
+                        <StudyDetailWrapper onBack={() => navigate("/")} />
                     }
                 />
-                <Route
-                    path="/edit/:studyId"
-                    element={
-                        <EditStudyWrapper onBack={() => navigate("/")} />
-                    }
-                />
+                <Route path="/edit/:studyId" element={<EditStudyWrapper />} />
                 <Route
                     path="/applications/:studyId"
                     element={
-                        <ApplicationStatusWrapper onBack={() => navigate("/")} />
+                        <ApplicationStatusWrapper
+                            onBack={() => navigate("/")}
+                        />
                     }
                 />
                 <Route
