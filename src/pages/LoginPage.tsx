@@ -56,6 +56,16 @@ const LoginPage = () => {
                 "-=0.3"
             )
             .to(
+                buttonRef.current,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power2.out",
+                },
+                "-=0.5" // subtitle과 버튼이 동시에 등장하도록 offset을 동일하게 맞춤
+            )
+            .to(
                 iconsRef.current,
                 {
                     opacity: 1,
@@ -66,16 +76,6 @@ const LoginPage = () => {
                     ease: "back.out(1.4)",
                 },
                 "-=0.2"
-            )
-            .to(
-                buttonRef.current,
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.5,
-                    ease: "power2.out",
-                },
-                "-=0.1"
             );
         return () => {
             tl.kill();

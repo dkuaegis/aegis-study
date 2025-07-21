@@ -47,8 +47,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
     const difficulties = [
         { value: "입문", label: "입문" },
         { value: "초급", label: "초급" },
-        { value: "중급", label: "중급" },
-        { value: "고급", label: "고급" },
+        { value: "중급 이상", label: "중급 이상" },
     ];
 
     const handleInputChange = (field: string, value: string) => {
