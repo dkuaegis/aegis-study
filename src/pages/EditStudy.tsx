@@ -19,7 +19,6 @@ interface EditStudyProps {
     onBack: () => void;
 }
 
-// 기존 스터디 데이터 (실제로는 API에서 가져올 데이터)
 const existingStudyData = {
     1: {
         title: "Spring과 함께 백엔드 개발자 되기",
@@ -84,15 +83,12 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
     const difficulties = [
         { value: "입문", label: "입문" },
         { value: "초급", label: "초급" },
-        { value: "중급", label: "중급" },
-        { value: "고급", label: "고급" },
+        { value: "중급 이상", label: "중급 이상" },
     ];
 
-    // 기존 데이터 로드
     useEffect(() => {
         const loadStudyData = async () => {
             setIsLoading(true);
-            // API 호출 시뮬레이션
             await new Promise((resolve) => setTimeout(resolve, 500));
 
             const existingData =
@@ -171,7 +167,6 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
             return;
         }
 
-        // 스터디 수정 시뮬레이션
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         const studyData = {
@@ -465,7 +460,6 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                         </CardContent>
                     </Card>
 
-                    {/* Curriculum */}
                     <Card className="border-gray-200">
                         <CardHeader>
                             <div className="flex items-center justify-between">
@@ -522,7 +516,6 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                         </CardContent>
                     </Card>
 
-                    {/* Requirements */}
                     <Card className="border-gray-200">
                         <CardHeader>
                             <div className="flex items-center justify-between">
@@ -579,7 +572,6 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                         </CardContent>
                     </Card>
 
-                    {/* Submit Buttons */}
                     <div className="flex justify-end gap-3 pt-6">
                         <Button
                             type="button"
