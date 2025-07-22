@@ -18,6 +18,20 @@ interface CreateStudyProps {
     onBack: () => void;
 }
 
+import type { FieldValues } from "react-hook-form";
+
+interface FormValues extends FieldValues {
+    title: string;
+    category: string;
+    difficulty: string;
+    introduction: string;
+    recruitmentMethod: string;
+    maxParticipants: string;
+    schedule: string;
+    curriculum: string[];
+    requirements: string[];
+}
+
 export default function CreateStudy({ onBack }: CreateStudyProps) {
     const {
         control,
@@ -60,7 +74,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
         fields: curriculumFields,
         append: appendCurriculum,
         remove: removeCurriculum,
-    } = useFieldArray({
+    } = useFieldArray<FormValues, "curriculum">({
         control,
         name: "curriculum",
     });
@@ -69,18 +83,18 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
         fields: requirementFields,
         append: appendRequirement,
         remove: removeRequirement,
-    } = useFieldArray({
+    } = useFieldArray<FormValues, "requirements">({
         control,
         name: "requirements",
     });
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: FormValues) => {
         // 커리큘럼/자격 최소 1개 이상, 빈 값 제거
         const filteredCurriculum = data.curriculum.filter(
-            (item: string) => item.trim() !== ""
+            (item) => item.trim() !== ""
         );
         const filteredRequirements = data.requirements.filter(
-            (item: string) => item.trim() !== ""
+            (item) => item.trim() !== ""
         );
 
         let hasError = false;
@@ -481,7 +495,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                         </CardHeader>
                         <CardContent className="space-y-3">
                             {curriculumFields.map(
-                                (field: any, index: number) => (
+                                (field, index: number) => (
                                     <div
                                         key={field.id}
                                         className="flex items-center gap-2"
@@ -499,11 +513,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                                     value.trim() !== "" ||
                                                     "커리큘럼 내용을 입력하세요.",
                                             }}
-                                            render={({
-                                                field,
-                                            }: {
-                                                field: any;
-                                            }) => (
+                                            render={({ field }) => (
                                                 <Input
                                                     {...field}
                                                     placeholder={`${index + 1}주차 내용을 입력하세요`}
@@ -570,7 +580,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                         </CardHeader>
                         <CardContent className="space-y-3">
                             {requirementFields.map(
-                                (field: any, index: number) => (
+                                (field, index: number) => (
                                     <div
                                         key={field.id}
                                         className="flex items-center gap-2"
@@ -588,11 +598,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                                     value.trim() !== "" ||
                                                     "지원 자격 조건을 입력하세요.",
                                             }}
-                                            render={({
-                                                field,
-                                            }: {
-                                                field: any;
-                                            }) => (
+                                            render={({ field }) => (
                                                 <Input
                                                     {...field}
                                                     placeholder="지원 자격 조건을 입력하세요"
