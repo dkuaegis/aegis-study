@@ -404,7 +404,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                         <CardContent className="space-y-3">
                             {curriculum.map((item, index) => (
                                 <div
-                                    key={index}
+                                    key={`curriculum-${index}-${item || 'empty'}`}
                                     className="flex items-center gap-2"
                                 >
                                     <span className="w-8 text-gray-500 text-sm">
@@ -439,7 +439,6 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                         </CardContent>
                     </Card>
 
-                    {/* Requirements */}
                     <Card className="border-gray-200">
                         <CardHeader>
                             <div className="flex items-center justify-between">
@@ -461,7 +460,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                         <CardContent className="space-y-3">
                             {requirements.map((item, index) => (
                                 <div
-                                    key={index}
+                                    key={`requirement-${index}-${item || 'empty'}`}
                                     className="flex items-center gap-2"
                                 >
                                     <span className="text-gray-500 text-sm">
