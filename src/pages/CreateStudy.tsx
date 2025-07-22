@@ -555,6 +555,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                     "string" && (
                                     <span className="mt-1 block text-red-500 text-xs">
                                         {errors.curriculum.message}
+
                                     </span>
                                 )}
                         </CardContent>
