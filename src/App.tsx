@@ -44,17 +44,11 @@ function App() {
                 <Route path="/edit/:studyId" element={<EditStudyWrapper />} />
                 <Route
                     path="/applications/:studyId"
-                    element={
-                        <ApplicationStatusWrapper
-                            onBack={() => navigate("/")}
-                        />
-                    }
+                    element={<ApplicationStatusWrapper />}
                 />
                 <Route
                     path="/members/:studyId"
-                    element={
-                        <StudyMembersWrapper onBack={() => navigate("/")} />
-                    }
+                    element={<StudyMembersWrapper />}
                 />
             </Routes>
         </div>

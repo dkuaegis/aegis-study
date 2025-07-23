@@ -1,10 +1,16 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import StudyMembers from "../StudyMembers";
 
-function StudyMembersWrapper({ onBack }: { onBack: () => void }) {
+function StudyMembersWrapper() {
     const { studyId } = useParams<{ studyId: string }>();
+    const navigate = useNavigate();
 
-    return <StudyMembers studyId={Number(studyId)} onBack={onBack} />;
+    return (
+        <StudyMembers
+            studyId={Number(studyId)}
+            onBack={() => navigate(`/detail/${studyId}`)}
+        />
+    );
 }
 
 export default StudyMembersWrapper;
