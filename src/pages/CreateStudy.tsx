@@ -143,9 +143,13 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                     </Button>
                     <div className="flex items-center">
                         <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-black">
-                            <span className="font-bold text-sm text-white">
-                                A
-                            </span>
+                            <img
+                                src="/aegis-logo-2500w-opti.png"
+                                alt="Aegis Logo"
+                                width={56}
+                                height={56}
+                                className="rounded-full"
+                            />
                         </div>
                         <span className="font-bold text-gray-900 text-xl">
                             Aegis
@@ -494,68 +498,60 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                            {curriculumFields.map(
-                                (field, index: number) => (
-                                    <div
-                                        key={field.id}
-                                        className="flex items-center gap-2"
-                                    >
-                                        <span className="w-8 text-gray-500 text-sm">
-                                            {index + 1}.
+                            {curriculumFields.map((field, index: number) => (
+                                <div
+                                    key={field.id}
+                                    className="flex items-center gap-2"
+                                >
+                                    <span className="w-8 text-gray-500 text-sm">
+                                        {index + 1}.
+                                    </span>
+                                    <Controller
+                                        name={`curriculum.${index}`}
+                                        control={control}
+                                        rules={{
+                                            required:
+                                                "커리큘럼 내용을 입력하세요.",
+                                            validate: (value: string) =>
+                                                value.trim() !== "" ||
+                                                "커리큘럼 내용을 입력하세요.",
+                                        }}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                placeholder={`${index + 1}주차 내용을 입력하세요`}
+                                                className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                                aria-invalid={
+                                                    !!errors.curriculum?.[index]
+                                                }
+                                            />
+                                        )}
+                                    />
+                                    {curriculumFields.length > 1 && (
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() =>
+                                                removeCurriculum(index)
+                                            }
+                                            className="text-gray-400 hover:text-red-500"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    )}
+                                    {errors.curriculum?.[index] && (
+                                        <span className="ml-2 text-red-500 text-xs">
+                                            {errors.curriculum[index]?.message}
                                         </span>
-                                        <Controller
-                                            name={`curriculum.${index}`}
-                                            control={control}
-                                            rules={{
-                                                required:
-                                                    "커리큘럼 내용을 입력하세요.",
-                                                validate: (value: string) =>
-                                                    value.trim() !== "" ||
-                                                    "커리큘럼 내용을 입력하세요.",
-                                            }}
-                                            render={({ field }) => (
-                                                <Input
-                                                    {...field}
-                                                    placeholder={`${index + 1}주차 내용을 입력하세요`}
-                                                    className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                                    aria-invalid={
-                                                        !!errors.curriculum?.[
-                                                            index
-                                                        ]
-                                                    }
-                                                />
-                                            )}
-                                        />
-                                        {curriculumFields.length > 1 && (
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() =>
-                                                    removeCurriculum(index)
-                                                }
-                                                className="text-gray-400 hover:text-red-500"
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </Button>
-                                        )}
-                                        {errors.curriculum?.[index] && (
-                                            <span className="ml-2 text-red-500 text-xs">
-                                                {
-                                                    errors.curriculum[index]
-                                                        ?.message
-                                                }
-                                            </span>
-                                        )}
-                                    </div>
-                                )
-                            )}
+                                    )}
+                                </div>
+                            ))}
                             {errors.curriculum &&
                                 typeof errors.curriculum.message ===
-                                    "string" && (
+                                "string" && (
                                     <span className="mt-1 block text-red-500 text-xs">
                                         {errors.curriculum.message}
-
                                     </span>
                                 )}
                         </CardContent>
@@ -580,65 +576,63 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                            {requirementFields.map(
-                                (field, index: number) => (
-                                    <div
-                                        key={field.id}
-                                        className="flex items-center gap-2"
-                                    >
-                                        <span className="text-gray-500 text-sm">
-                                            •
+                            {requirementFields.map((field, index: number) => (
+                                <div
+                                    key={field.id}
+                                    className="flex items-center gap-2"
+                                >
+                                    <span className="text-gray-500 text-sm">
+                                        •
+                                    </span>
+                                    <Controller
+                                        name={`requirements.${index}`}
+                                        control={control}
+                                        rules={{
+                                            required:
+                                                "지원 자격 조건을 입력하세요.",
+                                            validate: (value: string) =>
+                                                value.trim() !== "" ||
+                                                "지원 자격 조건을 입력하세요.",
+                                        }}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                placeholder="지원 자격 조건을 입력하세요"
+                                                className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                                aria-invalid={
+                                                    !!errors.requirements?.[
+                                                    index
+                                                    ]
+                                                }
+                                            />
+                                        )}
+                                    />
+                                    {requirementFields.length > 1 && (
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() =>
+                                                removeRequirement(index)
+                                            }
+                                            className="text-gray-400 hover:text-red-500"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    )}
+                                    {errors.requirements?.[index] && (
+                                        <span className="ml-2 text-red-500 text-xs">
+                                            {
+                                                errors.requirements[index]
+                                                    ?.message
+                                            }
                                         </span>
-                                        <Controller
-                                            name={`requirements.${index}`}
-                                            control={control}
-                                            rules={{
-                                                required:
-                                                    "지원 자격 조건을 입력하세요.",
-                                                validate: (value: string) =>
-                                                    value.trim() !== "" ||
-                                                    "지원 자격 조건을 입력하세요.",
-                                            }}
-                                            render={({ field }) => (
-                                                <Input
-                                                    {...field}
-                                                    placeholder="지원 자격 조건을 입력하세요"
-                                                    className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                                    aria-invalid={
-                                                        !!errors.requirements?.[
-                                                            index
-                                                        ]
-                                                    }
-                                                />
-                                            )}
-                                        />
-                                        {requirementFields.length > 1 && (
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() =>
-                                                    removeRequirement(index)
-                                                }
-                                                className="text-gray-400 hover:text-red-500"
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </Button>
-                                        )}
-                                        {errors.requirements?.[index] && (
-                                            <span className="ml-2 text-red-500 text-xs">
-                                                {
-                                                    errors.requirements[index]
-                                                        ?.message
-                                                }
-                                            </span>
-                                        )}
-                                    </div>
-                                )
-                            )}
+                                    )}
+                                </div>
+                            ))}
                             {errors.requirements &&
                                 typeof errors.requirements.message ===
-                                    "string" && (
+                                "string" && (
                                     <span className="mt-1 block text-red-500 text-xs">
                                         {errors.requirements.message}
                                     </span>

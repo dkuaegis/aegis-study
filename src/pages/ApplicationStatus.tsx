@@ -170,9 +170,13 @@ export default function ApplicationStatus({
                     </Button>
                     <div className="flex items-center">
                         <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-black">
-                            <span className="font-bold text-sm text-white">
-                                A
-                            </span>
+                            <img
+                                src="/aegis-logo-2500w-opti.png"
+                                alt="Aegis Logo"
+                                width={56}
+                                height={56}
+                                className="rounded-full"
+                            />
                         </div>
                         <span className="font-bold text-gray-900 text-xl">
                             Aegis
@@ -208,19 +212,17 @@ export default function ApplicationStatus({
                                         onClick={() =>
                                             setSelectedFilter(option.key)
                                         }
-                                        className={`flex flex-shrink-0 items-center justify-between rounded-lg border p-4 transition-all duration-200 lg:w-full ${
-                                            isActive
+                                        className={`flex flex-shrink-0 items-center justify-between rounded-lg border p-4 transition-all duration-200 lg:w-full ${isActive
                                                 ? `${option.activeColor} border-current`
                                                 : `border-gray-200 ${option.hoverColor} hover:border-gray-300`
-                                        }`}
+                                            }`}
                                     >
                                         <div className="flex items-center">
                                             <div
-                                                className={`mr-3 flex h-10 w-10 items-center justify-center rounded-full ${
-                                                    isActive
+                                                className={`mr-3 flex h-10 w-10 items-center justify-center rounded-full ${isActive
                                                         ? "bg-white"
                                                         : option.bgColor
-                                                }`}
+                                                    }`}
                                             >
                                                 <IconComponent
                                                     className={`h-5 w-5 ${isActive ? option.color : option.color}`}
@@ -234,11 +236,10 @@ export default function ApplicationStatus({
                                         </div>
                                         <Badge
                                             variant="secondary"
-                                            className={`${
-                                                isActive
+                                            className={`${isActive
                                                     ? "border-current bg-white text-current"
                                                     : "border-gray-200 bg-gray-100 text-gray-600"
-                                            }`}
+                                                }`}
                                         >
                                             {option.count}
                                         </Badge>

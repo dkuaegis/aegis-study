@@ -482,7 +482,6 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                             {curriculum.map((item, index) => (
                                 <div
                                     key={`curriculum-${index}-${item || "empty"}`}
-
                                     className="flex items-center gap-2"
                                 >
                                     <span className="w-8 text-gray-500 text-sm">
@@ -539,7 +538,6 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                             {requirements.map((item, index) => (
                                 <div
                                     key={`requirement-${index}-${item || "empty"}`}
-
                                     className="flex items-center gap-2"
                                 >
                                     <span className="text-gray-500 text-sm">
