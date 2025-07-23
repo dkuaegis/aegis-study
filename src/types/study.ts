@@ -1,12 +1,12 @@
 export enum Level {
     BASIC = "BASIC",
     EASY = "EASY",
-    UPPERINTERMEDIATE = "UPPERINTERMEDIATE"
+    UPPERINTERMEDIATE = "UPPERINTERMEDIATE",
 }
 
 export enum recruitmentMethod {
     FCFS = "FCFS",
-    APPLICATION = "APPLICATION"
+    APPLICATION = "APPLICATION",
 }
 
 export enum Category {
@@ -14,5 +14,5 @@ export enum Category {
     CS = "CS",
     LANGUAGE = "LANGUAGE",
     SECURITY = "SECURITY",
-    GAME = "GAME"
+    GAME = "GAME",
 }

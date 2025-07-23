@@ -1,5 +1,5 @@
 import { ArrowLeft, Calendar, Plus, Users, X } from "lucide-react";
-import { useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,20 +18,40 @@ interface CreateStudyProps {
     onBack: () => void;
 }
 
-export default function CreateStudy({ onBack }: CreateStudyProps) {
-    const [formData, setFormData] = useState({
-        title: "",
-        category: "",
-        difficulty: "",
-        introduction: "",
-        recruitmentMethod: "선착순",
-        maxParticipants: "",
-        schedule: "",
-    });
+import type { FieldValues } from "react-hook-form";
 
-    const [curriculum, setCurriculum] = useState<string[]>([""]);
-    const [requirements, setRequirements] = useState<string[]>([""]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+interface FormValues extends FieldValues {
+    title: string;
+    category: string;
+    difficulty: string;
+    introduction: string;
+    recruitmentMethod: string;
+    maxParticipants: string;
+    schedule: string;
+    curriculum: string[];
+    requirements: string[];
+}
+
+export default function CreateStudy({ onBack }: CreateStudyProps) {
+    const {
+        control,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        setError,
+    } = useForm({
+        defaultValues: {
+            title: "",
+            category: "",
+            difficulty: "",
+            introduction: "",
+            recruitmentMethod: "선착순",
+            maxParticipants: "",
+            schedule: "",
+            curriculum: [""],
+            requirements: [""],
+        },
+        mode: "onBlur",
+    });
 
     const categories = [
         { value: "WEB", label: "웹 개발" },
@@ -50,71 +70,60 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
         { value: "중급 이상", label: "중급 이상" },
     ];
 
-    const handleInputChange = (field: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
+    const {
+        fields: curriculumFields,
+        append: appendCurriculum,
+        remove: removeCurriculum,
+    } = useFieldArray<FormValues, "curriculum">({
+        control,
+        name: "curriculum",
+    });
 
-    const addCurriculumItem = () => {
-        setCurriculum((prev) => [...prev, ""]);
-    };
+    const {
+        fields: requirementFields,
+        append: appendRequirement,
+        remove: removeRequirement,
+    } = useFieldArray<FormValues, "requirements">({
+        control,
+        name: "requirements",
+    });
 
-    const updateCurriculumItem = (index: number, value: string) => {
-        setCurriculum((prev) =>
-            prev.map((item, i) => (i === index ? value : item))
-        );
-    };
-
-    const removeCurriculumItem = (index: number) => {
-        setCurriculum((prev) => prev.filter((_, i) => i !== index));
-    };
-
-    const addRequirementItem = () => {
-        setRequirements((prev) => [...prev, ""]);
-    };
-
-    const updateRequirementItem = (index: number, value: string) => {
-        setRequirements((prev) =>
-            prev.map((item, i) => (i === index ? value : item))
-        );
-    };
-
-    const removeRequirementItem = (index: number) => {
-        setRequirements((prev) => prev.filter((_, i) => i !== index));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-
-        const filteredCurriculum = curriculum.filter(
+    const onSubmit = async (data: FormValues) => {
+        // 커리큘럼/자격 최소 1개 이상, 빈 값 제거
+        const filteredCurriculum = data.curriculum.filter(
             (item) => item.trim() !== ""
         );
-        const filteredRequirements = requirements.filter(
+        const filteredRequirements = data.requirements.filter(
             (item) => item.trim() !== ""
         );
 
-        if (
-            !formData.title ||
-            !formData.category ||
-            !formData.difficulty ||
-            !formData.introduction
-        ) {
-            alert("필수 항목을 모두 입력해주세요.");
-            setIsSubmitting(false);
-            return;
+        let hasError = false;
+        if (filteredCurriculum.length === 0) {
+            setError("curriculum", {
+                type: "manual",
+                message: "커리큘럼을 1개 이상 입력하세요.",
+            });
+            hasError = true;
         }
+        if (filteredRequirements.length === 0) {
+            setError("requirements", {
+                type: "manual",
+                message: "지원 자격을 1개 이상 입력하세요.",
+            });
+            hasError = true;
+        }
+        if (hasError) return;
 
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         const studyData = {
-            ...formData,
+            ...data,
             curriculum: filteredCurriculum,
             requirements: filteredRequirements,
         };
 
         console.log("생성된 스터디:", studyData);
         alert("스터디가 성공적으로 개설되었습니다!");
-        setIsSubmitting(false);
         onBack();
     };
 
@@ -156,7 +165,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     {/* Basic Information */}
                     <Card className="border-gray-200">
                         <CardHeader>
@@ -172,19 +181,27 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                 >
                                     스터디명 *
                                 </Label>
-                                <Input
-                                    id="title"
-                                    placeholder="스터디 제목을 입력하세요"
-                                    value={formData.title}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "title",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="mt-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                    required
+                                <Controller
+                                    name="title"
+                                    control={control}
+                                    rules={{
+                                        required: "스터디명을 입력하세요.",
+                                    }}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            id="title"
+                                            placeholder="스터디 제목을 입력하세요"
+                                            className="mt-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                            aria-invalid={!!errors.title}
+                                        />
+                                    )}
                                 />
+                                {errors.title && (
+                                    <span className="mt-1 block text-red-500 text-xs">
+                                        {errors.title.message}
+                                    </span>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -192,55 +209,96 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                     <Label className="font-medium text-gray-900 text-sm">
                                         카테고리 *
                                     </Label>
-                                    <Select
-                                        value={formData.category}
-                                        onValueChange={(value) =>
-                                            handleInputChange("category", value)
-                                        }
-                                    >
-                                        <SelectTrigger className="mt-1 border-gray-300 focus:border-blue-500">
-                                            <SelectValue placeholder="카테고리를 선택하세요" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {categories.map((category) => (
-                                                <SelectItem
-                                                    key={category.value}
-                                                    value={category.value}
-                                                >
-                                                    {category.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <Controller
+                                        name="category"
+                                        control={control}
+                                        rules={{
+                                            required: "카테고리를 선택하세요.",
+                                        }}
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                onValueChange={field.onChange}
+                                                value={field.value}
+                                                aria-invalid={!!errors.category}
+                                            >
+                                                <SelectTrigger className="mt-1 border-gray-300 focus:border-blue-500">
+                                                    <SelectValue placeholder="카테고리를 선택하세요" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {categories.map(
+                                                        (category) => (
+                                                            <SelectItem
+                                                                key={
+                                                                    category.value
+                                                                }
+                                                                value={
+                                                                    category.value
+                                                                }
+                                                            >
+                                                                {category.label}
+                                                            </SelectItem>
+                                                        )
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
+                                    {errors.category && (
+                                        <span className="mt-1 block text-red-500 text-xs">
+                                            {errors.category.message}
+                                        </span>
+                                    )}
                                 </div>
 
                                 <div>
                                     <Label className="font-medium text-gray-900 text-sm">
                                         난이도 *
                                     </Label>
-                                    <Select
-                                        value={formData.difficulty}
-                                        onValueChange={(value) =>
-                                            handleInputChange(
-                                                "difficulty",
-                                                value
-                                            )
-                                        }
-                                    >
-                                        <SelectTrigger className="mt-1 border-gray-300 focus:border-blue-500">
-                                            <SelectValue placeholder="난이도를 선택하세요" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {difficulties.map((difficulty) => (
-                                                <SelectItem
-                                                    key={difficulty.value}
-                                                    value={difficulty.value}
-                                                >
-                                                    {difficulty.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <Controller
+                                        name="difficulty"
+                                        control={control}
+                                        rules={{
+                                            required: "난이도를 선택하세요.",
+                                        }}
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                onValueChange={field.onChange}
+                                                value={field.value}
+                                                aria-invalid={
+                                                    !!errors.difficulty
+                                                }
+                                            >
+                                                <SelectTrigger className="mt-1 border-gray-300 focus:border-blue-500">
+                                                    <SelectValue placeholder="난이도를 선택하세요" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {difficulties.map(
+                                                        (difficulty) => (
+                                                            <SelectItem
+                                                                key={
+                                                                    difficulty.value
+                                                                }
+                                                                value={
+                                                                    difficulty.value
+                                                                }
+                                                            >
+                                                                {
+                                                                    difficulty.label
+                                                                }
+                                                            </SelectItem>
+                                                        )
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
+                                    {errors.difficulty && (
+                                        <span className="mt-1 block text-red-500 text-xs">
+                                            {errors.difficulty.message}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
 
@@ -251,19 +309,27 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                 >
                                     스터디 소개 *
                                 </Label>
-                                <Textarea
-                                    id="introduction"
-                                    placeholder="스터디에 대한 자세한 소개를 작성해주세요"
-                                    value={formData.introduction}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "introduction",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="mt-1 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                    required
+                                <Controller
+                                    name="introduction"
+                                    control={control}
+                                    rules={{
+                                        required: "스터디 소개를 입력하세요.",
+                                    }}
+                                    render={({ field }) => (
+                                        <Textarea
+                                            {...field}
+                                            id="introduction"
+                                            placeholder="스터디에 대한 자세한 소개를 작성해주세요"
+                                            className="mt-1 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                            aria-invalid={!!errors.introduction}
+                                        />
+                                    )}
                                 />
+                                {errors.introduction && (
+                                    <span className="mt-1 block text-red-500 text-xs">
+                                        {errors.introduction.message}
+                                    </span>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
@@ -279,41 +345,43 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                 <Label className="mb-3 block font-medium text-gray-900 text-sm">
                                     모집 방법
                                 </Label>
-                                <RadioGroup
-                                    value={formData.recruitmentMethod}
-                                    onValueChange={(value) =>
-                                        handleInputChange(
-                                            "recruitmentMethod",
-                                            value
-                                        )
-                                    }
-                                    className="flex gap-6"
-                                >
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem
-                                            value="선착순"
-                                            id="first-come"
-                                        />
-                                        <Label
-                                            htmlFor="first-come"
-                                            className="cursor-pointer text-gray-700 text-sm"
+                                <Controller
+                                    name="recruitmentMethod"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <RadioGroup
+                                            {...field}
+                                            value={field.value}
+                                            onValueChange={field.onChange}
+                                            className="flex gap-6"
                                         >
-                                            선착순 모집
-                                        </Label>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem
-                                            value="지원서"
-                                            id="application"
-                                        />
-                                        <Label
-                                            htmlFor="application"
-                                            className="cursor-pointer text-gray-700 text-sm"
-                                        >
-                                            지원서 심사
-                                        </Label>
-                                    </div>
-                                </RadioGroup>
+                                            <div className="flex items-center space-x-2">
+                                                <RadioGroupItem
+                                                    value="선착순"
+                                                    id="first-come"
+                                                />
+                                                <Label
+                                                    htmlFor="first-come"
+                                                    className="cursor-pointer text-gray-700 text-sm"
+                                                >
+                                                    선착순 모집
+                                                </Label>
+                                            </div>
+                                            <div className="flex items-center space-x-2">
+                                                <RadioGroupItem
+                                                    value="지원서"
+                                                    id="application"
+                                                />
+                                                <Label
+                                                    htmlFor="application"
+                                                    className="cursor-pointer text-gray-700 text-sm"
+                                                >
+                                                    지원서 심사
+                                                </Label>
+                                            </div>
+                                        </RadioGroup>
+                                    )}
+                                />
                             </div>
 
                             <div>
@@ -325,21 +393,45 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                 </Label>
                                 <div className="mt-1 flex items-center">
                                     <Users className="mr-2 h-4 w-4 text-gray-400" />
-                                    <Input
-                                        id="maxParticipants"
-                                        type="number"
-                                        placeholder="최대 인원수"
-                                        value={formData.maxParticipants}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "maxParticipants",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                        min="1"
-                                        max="50"
+                                    <Controller
+                                        name="maxParticipants"
+                                        control={control}
+                                        rules={{
+                                            required: "모집 인원을 입력하세요.",
+                                            min: {
+                                                value: 1,
+                                                message:
+                                                    "최소 1명 이상 입력하세요.",
+                                            },
+                                            max: {
+                                                value: 50,
+                                                message:
+                                                    "최대 50명까지 입력 가능합니다.",
+                                            },
+                                            validate: (value) =>
+                                                value !== "" ||
+                                                "모집 인원을 입력하세요.",
+                                        }}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                id="maxParticipants"
+                                                type="number"
+                                                placeholder="최대 인원수"
+                                                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                                min="1"
+                                                max="50"
+                                                aria-invalid={
+                                                    !!errors.maxParticipants
+                                                }
+                                            />
+                                        )}
                                     />
+                                    {errors.maxParticipants && (
+                                        <span className="mt-1 block text-red-500 text-xs">
+                                            {errors.maxParticipants.message}
+                                        </span>
+                                    )}
                                     <span className="ml-2 text-gray-500 text-sm">
                                         명
                                     </span>
@@ -365,17 +457,17 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                 </Label>
                                 <div className="mt-1 flex items-center">
                                     <Calendar className="mr-2 h-4 w-4 text-gray-400" />
-                                    <Input
-                                        id="schedule"
-                                        placeholder="예: 매주 화, 목 19:00-21:00"
-                                        value={formData.schedule}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "schedule",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                    <Controller
+                                        name="schedule"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                id="schedule"
+                                                placeholder="예: 매주 화, 목 19:00-21:00"
+                                                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                            />
+                                        )}
                                     />
                                 </div>
                             </div>
@@ -393,7 +485,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    onClick={addCurriculumItem}
+                                    onClick={() => appendCurriculum("")}
                                     className="border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
                                 >
                                     <Plus className="mr-1 h-4 w-4" />
@@ -402,40 +494,70 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                            {curriculum.map((item, index) => (
-                                <div
-                                    key={`curriculum-${index}-${item || 'empty'}`}
-                                    className="flex items-center gap-2"
-                                >
-                                    <span className="w-8 text-gray-500 text-sm">
-                                        {index + 1}.
+                            {curriculumFields.map(
+                                (field, index: number) => (
+                                    <div
+                                        key={field.id}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <span className="w-8 text-gray-500 text-sm">
+                                            {index + 1}.
+                                        </span>
+                                        <Controller
+                                            name={`curriculum.${index}`}
+                                            control={control}
+                                            rules={{
+                                                required:
+                                                    "커리큘럼 내용을 입력하세요.",
+                                                validate: (value: string) =>
+                                                    value.trim() !== "" ||
+                                                    "커리큘럼 내용을 입력하세요.",
+                                            }}
+                                            render={({ field }) => (
+                                                <Input
+                                                    {...field}
+                                                    placeholder={`${index + 1}주차 내용을 입력하세요`}
+                                                    className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                                    aria-invalid={
+                                                        !!errors.curriculum?.[
+                                                            index
+                                                        ]
+                                                    }
+                                                />
+                                            )}
+                                        />
+                                        {curriculumFields.length > 1 && (
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() =>
+                                                    removeCurriculum(index)
+                                                }
+                                                className="text-gray-400 hover:text-red-500"
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        )}
+                                        {errors.curriculum?.[index] && (
+                                            <span className="ml-2 text-red-500 text-xs">
+                                                {
+                                                    errors.curriculum[index]
+                                                        ?.message
+                                                }
+                                            </span>
+                                        )}
+                                    </div>
+                                )
+                            )}
+                            {errors.curriculum &&
+                                typeof errors.curriculum.message ===
+                                    "string" && (
+                                    <span className="mt-1 block text-red-500 text-xs">
+                                        {errors.curriculum.message}
+
                                     </span>
-                                    <Input
-                                        placeholder={`${index + 1}주차 내용을 입력하세요`}
-                                        value={item}
-                                        onChange={(e) =>
-                                            updateCurriculumItem(
-                                                index,
-                                                e.target.value
-                                            )
-                                        }
-                                        className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                    />
-                                    {curriculum.length > 1 && (
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() =>
-                                                removeCurriculumItem(index)
-                                            }
-                                            className="text-gray-400 hover:text-red-500"
-                                        >
-                                            <X className="h-4 w-4" />
-                                        </Button>
-                                    )}
-                                </div>
-                            ))}
+                                )}
                         </CardContent>
                     </Card>
 
@@ -449,7 +571,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    onClick={addRequirementItem}
+                                    onClick={() => appendRequirement("")}
                                     className="border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
                                 >
                                     <Plus className="mr-1 h-4 w-4" />
@@ -458,40 +580,69 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                            {requirements.map((item, index) => (
-                                <div
-                                    key={`requirement-${index}-${item || 'empty'}`}
-                                    className="flex items-center gap-2"
-                                >
-                                    <span className="text-gray-500 text-sm">
-                                        •
+                            {requirementFields.map(
+                                (field, index: number) => (
+                                    <div
+                                        key={field.id}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <span className="text-gray-500 text-sm">
+                                            •
+                                        </span>
+                                        <Controller
+                                            name={`requirements.${index}`}
+                                            control={control}
+                                            rules={{
+                                                required:
+                                                    "지원 자격 조건을 입력하세요.",
+                                                validate: (value: string) =>
+                                                    value.trim() !== "" ||
+                                                    "지원 자격 조건을 입력하세요.",
+                                            }}
+                                            render={({ field }) => (
+                                                <Input
+                                                    {...field}
+                                                    placeholder="지원 자격 조건을 입력하세요"
+                                                    className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                                    aria-invalid={
+                                                        !!errors.requirements?.[
+                                                            index
+                                                        ]
+                                                    }
+                                                />
+                                            )}
+                                        />
+                                        {requirementFields.length > 1 && (
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() =>
+                                                    removeRequirement(index)
+                                                }
+                                                className="text-gray-400 hover:text-red-500"
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        )}
+                                        {errors.requirements?.[index] && (
+                                            <span className="ml-2 text-red-500 text-xs">
+                                                {
+                                                    errors.requirements[index]
+                                                        ?.message
+                                                }
+                                            </span>
+                                        )}
+                                    </div>
+                                )
+                            )}
+                            {errors.requirements &&
+                                typeof errors.requirements.message ===
+                                    "string" && (
+                                    <span className="mt-1 block text-red-500 text-xs">
+                                        {errors.requirements.message}
                                     </span>
-                                    <Input
-                                        placeholder="지원 자격 조건을 입력하세요"
-                                        value={item}
-                                        onChange={(e) =>
-                                            updateRequirementItem(
-                                                index,
-                                                e.target.value
-                                            )
-                                        }
-                                        className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                    />
-                                    {requirements.length > 1 && (
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() =>
-                                                removeRequirementItem(index)
-                                            }
-                                            className="text-gray-400 hover:text-red-500"
-                                        >
-                                            <X className="h-4 w-4" />
-                                        </Button>
-                                    )}
-                                </div>
-                            ))}
+                                )}
                         </CardContent>
                     </Card>
 
