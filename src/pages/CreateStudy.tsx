@@ -143,9 +143,13 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                     </Button>
                     <div className="flex items-center">
                         <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-black">
-                            <span className="font-bold text-sm text-white">
-                                A
-                            </span>
+                            <img
+                                src="/aegis-logo-2500w-opti.png"
+                                alt="Aegis Logo"
+                                width={56}
+                                height={56}
+                                className="rounded-full"
+                            />
                         </div>
                         <span className="font-bold text-gray-900 text-xl">
                             Aegis
@@ -545,7 +549,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                             ))}
                             {errors.curriculum &&
                                 typeof errors.curriculum.message ===
-                                    "string" && (
+                                "string" && (
                                     <span className="mt-1 block text-red-500 text-xs">
                                         {errors.curriculum.message}
                                     </span>
@@ -597,7 +601,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                                 className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                                 aria-invalid={
                                                     !!errors.requirements?.[
-                                                        index
+                                                    index
                                                     ]
                                                 }
                                             />
@@ -628,7 +632,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                             ))}
                             {errors.requirements &&
                                 typeof errors.requirements.message ===
-                                    "string" && (
+                                "string" && (
                                     <span className="mt-1 block text-red-500 text-xs">
                                         {errors.requirements.message}
                                     </span>
