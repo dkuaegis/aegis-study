@@ -86,7 +86,7 @@ const studyMembersData: Record<
 export default function StudyMembers({ studyId, onBack }: StudyMembersProps) {
     const [members, setMembers] = useState(
         studyMembersData[studyId as keyof typeof studyMembersData]?.members ||
-        []
+            []
     );
 
     const studyInfo =
