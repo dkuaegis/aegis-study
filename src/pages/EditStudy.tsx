@@ -1,6 +1,7 @@
 import { ArrowLeft, Calendar, Plus, Users, X } from "lucide-react";
 import { useEffect } from "react";
 import type { FieldError } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 interface EditStudyProps {
     studyId: number;
@@ -128,7 +128,8 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
     useEffect(() => {
         const loadStudyData = async () => {
             await new Promise((resolve) => setTimeout(resolve, 500));
-            const existingData = existingStudyData[studyId as keyof typeof existingStudyData];
+            const existingData =
+                existingStudyData[studyId as keyof typeof existingStudyData];
             if (existingData) {
                 reset({
                     title: existingData.title,
@@ -138,8 +139,12 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                     recruitmentMethod: existingData.recruitmentMethod,
                     maxParticipants: existingData.maxParticipants,
                     schedule: existingData.schedule,
-                    curriculum: existingData.curriculum.map((v) => ({ value: v })),
-                    requirements: existingData.requirements.map((v) => ({ value: v })),
+                    curriculum: existingData.curriculum.map((v) => ({
+                        value: v,
+                    })),
+                    requirements: existingData.requirements.map((v) => ({
+                        value: v,
+                    })),
                 });
             }
         };
@@ -148,8 +153,12 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
 
     const onSubmit = async (data: FormValues) => {
         // 커리큘럼/자격 최소 1개 이상, 빈 값 제거
-        const filteredCurriculum = data.curriculum.map((item) => item.value).filter((v) => v.trim() !== "");
-        const filteredRequirements = data.requirements.map((item) => item.value).filter((v) => v.trim() !== "");
+        const filteredCurriculum = data.curriculum
+            .map((item) => item.value)
+            .filter((v) => v.trim() !== "");
+        const filteredRequirements = data.requirements
+            .map((item) => item.value)
+            .filter((v) => v.trim() !== "");
 
         let hasError = false;
         if (filteredCurriculum.length === 0) {
@@ -278,18 +287,26 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                                 value={field.value}
                                                 aria-invalid={!!errors.category}
                                             >
-                                                <SelectTrigger className={`mt-1 border-gray-300 focus:border-blue-500 ${errors.category && isDirty ? "border-red-500" : ""}`}>
+                                                <SelectTrigger
+                                                    className={`mt-1 border-gray-300 focus:border-blue-500 ${errors.category && isDirty ? "border-red-500" : ""}`}
+                                                >
                                                     <SelectValue placeholder="카테고리를 선택하세요" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {categories.map((category) => (
-                                                        <SelectItem
-                                                            key={category.value}
-                                                            value={category.value}
-                                                        >
-                                                            {category.label}
-                                                        </SelectItem>
-                                                    ))}
+                                                    {categories.map(
+                                                        (category) => (
+                                                            <SelectItem
+                                                                key={
+                                                                    category.value
+                                                                }
+                                                                value={
+                                                                    category.value
+                                                                }
+                                                            >
+                                                                {category.label}
+                                                            </SelectItem>
+                                                        )
+                                                    )}
                                                 </SelectContent>
                                             </Select>
                                         )}
@@ -316,20 +333,32 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                                 {...field}
                                                 onValueChange={field.onChange}
                                                 value={field.value}
-                                                aria-invalid={!!errors.difficulty}
+                                                aria-invalid={
+                                                    !!errors.difficulty
+                                                }
                                             >
-                                                <SelectTrigger className={`mt-1 border-gray-300 focus:border-blue-500 ${errors.difficulty && isDirty ? "border-red-500" : ""}`}>
+                                                <SelectTrigger
+                                                    className={`mt-1 border-gray-300 focus:border-blue-500 ${errors.difficulty && isDirty ? "border-red-500" : ""}`}
+                                                >
                                                     <SelectValue placeholder="난이도를 선택하세요" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {difficulties.map((difficulty) => (
-                                                        <SelectItem
-                                                            key={difficulty.value}
-                                                            value={difficulty.value}
-                                                        >
-                                                            {difficulty.label}
-                                                        </SelectItem>
-                                                    ))}
+                                                    {difficulties.map(
+                                                        (difficulty) => (
+                                                            <SelectItem
+                                                                key={
+                                                                    difficulty.value
+                                                                }
+                                                                value={
+                                                                    difficulty.value
+                                                                }
+                                                            >
+                                                                {
+                                                                    difficulty.label
+                                                                }
+                                                            </SelectItem>
+                                                        )
+                                                    )}
                                                 </SelectContent>
                                             </Select>
                                         )}
@@ -441,11 +470,13 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                             required: "모집 인원을 입력하세요.",
                                             min: {
                                                 value: 1,
-                                                message: "최소 1명 이상 입력하세요.",
+                                                message:
+                                                    "최소 1명 이상 입력하세요.",
                                             },
                                             max: {
                                                 value: 50,
-                                                message: "최대 50명까지 입력 가능합니다.",
+                                                message:
+                                                    "최대 50명까지 입력 가능합니다.",
                                             },
                                             validate: (value) =>
                                                 value !== "" ||
@@ -460,7 +491,9 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                                 className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.maxParticipants && isDirty ? "border-red-500" : ""}`}
                                                 min="1"
                                                 max="50"
-                                                aria-invalid={!!errors.maxParticipants}
+                                                aria-invalid={
+                                                    !!errors.maxParticipants
+                                                }
                                             />
                                         )}
                                     />
@@ -522,7 +555,9 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => appendCurriculum({ value: "" })}
+                                    onClick={() =>
+                                        appendCurriculum({ value: "" })
+                                    }
                                     className="border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
                                 >
                                     <Plus className="mr-1 h-4 w-4" />
@@ -543,7 +578,8 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                         name={`curriculum.${index}.value`}
                                         control={control}
                                         rules={{
-                                            required: "커리큘럼 내용을 입력하세요.",
+                                            required:
+                                                "커리큘럼 내용을 입력하세요.",
                                             validate: (value: string) =>
                                                 value.trim() !== "" ||
                                                 "커리큘럼 내용을 입력하세요.",
@@ -553,7 +589,9 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                                 {...field}
                                                 placeholder={`${index + 1}주차 내용을 입력하세요`}
                                                 className={`flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.curriculum?.[index] && isDirty ? "border-red-500" : ""}`}
-                                                aria-invalid={!!errors.curriculum?.[index]}
+                                                aria-invalid={
+                                                    !!errors.curriculum?.[index]
+                                                }
                                             />
                                         )}
                                     />
@@ -562,7 +600,9 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                             type="button"
                                             variant="ghost"
                                             size="sm"
-                                            onClick={() => removeCurriculum(index)}
+                                            onClick={() =>
+                                                removeCurriculum(index)
+                                            }
                                             className="text-gray-400 hover:text-red-500"
                                         >
                                             <X className="h-4 w-4" />
@@ -570,18 +610,29 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                     )}
                                     {errors.curriculum?.[index] && (
                                         <span className="ml-2 text-red-500 text-xs">
-                                            {typeof errors.curriculum[index] === "object" &&
+                                            {typeof errors.curriculum[index] ===
+                                                "object" &&
                                             errors.curriculum[index] !== null &&
-                                            "message" in errors.curriculum[index] &&
-                                            typeof (errors.curriculum[index] as FieldError).message === "string"
-                                                ? (errors.curriculum[index] as FieldError).message
+                                            "message" in
+                                                errors.curriculum[index] &&
+                                            typeof (
+                                                errors.curriculum[
+                                                    index
+                                                ] as FieldError
+                                            ).message === "string"
+                                                ? (
+                                                      errors.curriculum[
+                                                          index
+                                                      ] as FieldError
+                                                  ).message
                                                 : ""}
                                         </span>
                                     )}
                                 </div>
                             ))}
                             {errors.curriculum &&
-                                typeof errors.curriculum.message === "string" && (
+                                typeof errors.curriculum.message ===
+                                    "string" && (
                                     <span className="mt-1 block text-red-500 text-xs">
                                         {errors.curriculum.message}
                                     </span>
@@ -600,7 +651,9 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => appendRequirement({ value: "" })}
+                                    onClick={() =>
+                                        appendRequirement({ value: "" })
+                                    }
                                     className="border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
                                 >
                                     <Plus className="mr-1 h-4 w-4" />
@@ -621,7 +674,8 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                         name={`requirements.${index}.value`}
                                         control={control}
                                         rules={{
-                                            required: "지원 자격 조건을 입력하세요.",
+                                            required:
+                                                "지원 자격 조건을 입력하세요.",
                                             validate: (value: string) =>
                                                 value.trim() !== "" ||
                                                 "지원 자격 조건을 입력하세요.",
@@ -631,7 +685,11 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                                 {...field}
                                                 placeholder="지원 자격 조건을 입력하세요"
                                                 className={`flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.requirements?.[index] && isDirty ? "border-red-500" : ""}`}
-                                                aria-invalid={!!errors.requirements?.[index]}
+                                                aria-invalid={
+                                                    !!errors.requirements?.[
+                                                        index
+                                                    ]
+                                                }
                                             />
                                         )}
                                     />
@@ -640,7 +698,9 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                             type="button"
                                             variant="ghost"
                                             size="sm"
-                                            onClick={() => removeRequirement(index)}
+                                            onClick={() =>
+                                                removeRequirement(index)
+                                            }
                                             className="text-gray-400 hover:text-red-500"
                                         >
                                             <X className="h-4 w-4" />
@@ -648,18 +708,31 @@ export default function EditStudy({ studyId, onBack }: EditStudyProps) {
                                     )}
                                     {errors.requirements?.[index] && (
                                         <span className="ml-2 text-red-500 text-xs">
-                                            {typeof errors.requirements[index] === "object" &&
-                                            errors.requirements[index] !== null &&
-                                            "message" in errors.requirements[index] &&
-                                            typeof (errors.requirements[index] as FieldError).message === "string"
-                                                ? (errors.requirements[index] as FieldError).message
+                                            {typeof errors.requirements[
+                                                index
+                                            ] === "object" &&
+                                            errors.requirements[index] !==
+                                                null &&
+                                            "message" in
+                                                errors.requirements[index] &&
+                                            typeof (
+                                                errors.requirements[
+                                                    index
+                                                ] as FieldError
+                                            ).message === "string"
+                                                ? (
+                                                      errors.requirements[
+                                                          index
+                                                      ] as FieldError
+                                                  ).message
                                                 : ""}
                                         </span>
                                     )}
                                 </div>
                             ))}
                             {errors.requirements &&
-                                typeof errors.requirements.message === "string" && (
+                                typeof errors.requirements.message ===
+                                    "string" && (
                                     <span className="mt-1 block text-red-500 text-xs">
                                         {errors.requirements.message}
                                     </span>

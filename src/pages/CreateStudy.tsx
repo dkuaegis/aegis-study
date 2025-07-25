@@ -549,7 +549,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                             ))}
                             {errors.curriculum &&
                                 typeof errors.curriculum.message ===
-                                "string" && (
+                                    "string" && (
                                     <span className="mt-1 block text-red-500 text-xs">
                                         {errors.curriculum.message}
                                     </span>
@@ -601,7 +601,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                                                 className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                                 aria-invalid={
                                                     !!errors.requirements?.[
-                                                    index
+                                                        index
                                                     ]
                                                 }
                                             />
@@ -632,7 +632,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                             ))}
                             {errors.requirements &&
                                 typeof errors.requirements.message ===
-                                "string" && (
+                                    "string" && (
                                     <span className="mt-1 block text-red-500 text-xs">
                                         {errors.requirements.message}
                                     </span>
