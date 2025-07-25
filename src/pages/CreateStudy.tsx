@@ -171,6 +171,7 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                         removeRequirement={removeRequirement}
                         isSubmitting={isSubmitting}
                     />
+
                     <div className="flex justify-end gap-3 pt-6">
                         <Button
                             type="button"
