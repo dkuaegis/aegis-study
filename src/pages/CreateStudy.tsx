@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { StudyFormFields } from "@/components/study/StudyFormFields";
+import { Button } from "@/components/ui/button";
 
 interface CreateStudyProps {
     onBack: () => void;
@@ -152,7 +152,8 @@ export default function CreateStudy({ onBack }: CreateStudyProps) {
                         스터디 개설하기
                     </h1>
                     <p className="text-gray-600">
-                        새로운 스터디를 개설하고 함께 공부할 멤버들을 모집해보세요.
+                        새로운 스터디를 개설하고 함께 공부할 멤버들을
+                        모집해보세요.
                     </p>
                 </div>
 

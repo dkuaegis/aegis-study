@@ -1,8 +1,8 @@
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { useFieldArray, useForm } from "react-hook-form";
 import { StudyFormFields } from "@/components/study/StudyFormFields";
+import { Button } from "@/components/ui/button";
 
 interface EditStudyProps {
     studyId: number;
