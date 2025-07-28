@@ -291,8 +291,8 @@ export function StudyFormFields({
                                     <Input
                                         {...field}
                                         id="maxParticipants"
-                                        type="number"
-                                        placeholder="최대 인원수"
+                                        type="string"
+                                        placeholder="예: 제한 없음, 5명 이내"
                                         className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.maxParticipants && isDirty ? "border-red-500" : ""}`}
                                         min="1"
                                         max="50"
@@ -300,7 +300,8 @@ export function StudyFormFields({
                                     />
                                 )}
                             />
-                            {errors.maxParticipants && (
+                        </div>
+                        {errors.maxParticipants && (
                                 <span className="mt-1 block text-red-500 text-xs">
                                     {
                                         (errors.maxParticipants as FieldError)
@@ -308,10 +309,6 @@ export function StudyFormFields({
                                     }
                                 </span>
                             )}
-                            <span className="ml-2 text-gray-500 text-sm">
-                                명
-                            </span>
-                        </div>
                     </div>
                 </CardContent>
             </Card>
