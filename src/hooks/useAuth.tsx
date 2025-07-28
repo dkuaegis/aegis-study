@@ -6,7 +6,7 @@ export enum AuthStatus {
     COMPLETED = "COMPLETED", // 가입 완료
 }
 
-export default function useAuth() {
+const useAuth = () => {
     const [isAuthenticated, setAuthenticated] = useState<AuthStatus>(
         AuthStatus.UNAUTHORIZED
     );
@@ -44,4 +44,6 @@ export default function useAuth() {
     }, []);
 
     return { isAuthenticated };
-}
+};
+
+export default useAuth;

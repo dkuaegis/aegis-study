@@ -59,10 +59,10 @@ const applicationsData: Record<number, StudyData> = {
     },
 };
 
-export default function ApplicationStatusPage({
+const ApplicationStatusPage = ({
     studyId,
     onBack,
-}: ApplicationStatusProps) {
+}: ApplicationStatusProps) => {
     const [selectedFilter, setSelectedFilter] = useState("all");
     const [applications, setApplications] = useState(
         applicationsData[studyId as keyof typeof applicationsData]
@@ -309,9 +309,11 @@ export default function ApplicationStatusPage({
             </div>
         </div>
     );
-}
+};
 
-function ApplicationCard({
+export default ApplicationStatusPage;
+
+const ApplicationCard = ({
     application,
     onStatusChange,
     recruitmentMethod,
@@ -319,7 +321,7 @@ function ApplicationCard({
     application: Application;
     onStatusChange: (id: number, status: "approved" | "rejected") => void;
     recruitmentMethod: string;
-}) {
+}) => {
     const getStatusBadge = (status: string) => {
         switch (status) {
             case "pending":

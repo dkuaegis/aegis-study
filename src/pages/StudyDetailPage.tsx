@@ -123,7 +123,7 @@ const initialUserApplicationStatus: Record<
     },
 };
 
-export default function StudyDetailPage({
+const StudyDetailPage = ({
     studyId,
     onBack,
     onEdit,
@@ -131,7 +131,7 @@ export default function StudyDetailPage({
     onViewMembers,
     isOwner = false,
     currentUserId = "user123",
-}: StudyDetailProps) {
+}: StudyDetailProps) => {
     const [applicationText, setApplicationText] = useState("");
     const [isApplying, setIsApplying] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
@@ -624,3 +624,5 @@ export default function StudyDetailPage({
         </div>
     );
 }
+
+export default StudyDetailPage;

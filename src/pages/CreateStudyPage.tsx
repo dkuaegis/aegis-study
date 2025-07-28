@@ -1,6 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { StudyFormFields } from "@/components/study/StudyFormFields";
+import StudyFormFields from "@/components/study/StudyFormFields";
 import { Button } from "@/components/ui/button";
 
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ interface FormValues extends FieldValues {
     requirements: { value: string }[];
 }
 
-export default function CreateStudyPage() {
+const CreateStudyPage = () => {
     const navigate = useNavigate();
     const {
         control,
@@ -41,9 +41,9 @@ export default function CreateStudyPage() {
         mode: "onBlur",
     });
 
-    function handleBack() {
+    const handleBack = () => {
         navigate("/");
-    }
+    };
 
     const categories = [
         { value: "WEB", label: "웹 개발" },
@@ -197,3 +197,5 @@ export default function CreateStudyPage() {
         </div>
     );
 }
+
+export default CreateStudyPage;

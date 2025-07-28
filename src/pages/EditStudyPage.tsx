@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { StudyFormFields } from "@/components/study/StudyFormFields";
+import StudyFormFields from "@/components/study/StudyFormFields";
 import { Button } from "@/components/ui/button";
 
 interface EditStudyProps {
@@ -55,7 +55,7 @@ interface FormValues {
     requirements: { value: string }[];
 }
 
-export default function EditStudyPage({ studyId, onBack }: EditStudyProps) {
+const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     const {
         control,
         handleSubmit,
@@ -255,3 +255,5 @@ export default function EditStudyPage({ studyId, onBack }: EditStudyProps) {
         </div>
     );
 }
+
+export default EditStudyPage;
