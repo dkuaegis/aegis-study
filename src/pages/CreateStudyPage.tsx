@@ -3,9 +3,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { StudyFormFields } from "@/components/study/StudyFormFields";
 import { Button } from "@/components/ui/button";
 
-interface CreateStudyProps {
-    onBack: () => void;
-}
+import { useNavigate } from "react-router-dom";
 
 import type { FieldValues } from "react-hook-form";
 
@@ -21,7 +19,8 @@ interface FormValues extends FieldValues {
     requirements: { value: string }[];
 }
 
-export default function CreateStudyPage({ onBack }: CreateStudyProps) {
+export default function CreateStudyPage() {
+    const navigate = useNavigate();
     const {
         control,
         handleSubmit,
@@ -41,6 +40,10 @@ export default function CreateStudyPage({ onBack }: CreateStudyProps) {
         },
         mode: "onBlur",
     });
+
+    function handleBack() {
+        navigate("/");
+    }
 
     const categories = [
         { value: "WEB", label: "웹 개발" },
@@ -113,7 +116,7 @@ export default function CreateStudyPage({ onBack }: CreateStudyProps) {
 
         console.log("생성된 스터디:", studyData);
         alert("스터디가 성공적으로 개설되었습니다!");
-        onBack();
+        handleBack();
     };
 
     return (
@@ -123,7 +126,7 @@ export default function CreateStudyPage({ onBack }: CreateStudyProps) {
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={onBack}
+                        onClick={handleBack}
                         className="mr-4 text-gray-600 hover:text-gray-900"
                     >
                         <ArrowLeft className="mr-1 h-4 w-4" />
@@ -176,7 +179,7 @@ export default function CreateStudyPage({ onBack }: CreateStudyProps) {
                         <Button
                             type="button"
                             variant="outline"
-                            onClick={onBack}
+                            onClick={handleBack}
                             className="border-gray-300 bg-transparent text-gray-700"
                         >
                             취소

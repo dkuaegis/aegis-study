@@ -33,12 +33,12 @@ function App() {
                 />
                 <Route
                     path="/create"
-                    element={<CreateStudyPage onBack={() => navigate("/")} />}
+                    element={<CreateStudyPage />}
                 />
                 <Route
                     path="/detail/:studyId"
                     element={
-                        <StudyDetailWrapper onBack={() => navigate("/")} />
+                        <StudyDetailWrapper />
                     }
                 />
                 <Route path="/edit/:studyId" element={<EditStudyWrapper />} />
