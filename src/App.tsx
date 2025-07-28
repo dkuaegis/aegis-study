@@ -9,7 +9,7 @@ import EditStudyWrapper from "./pages/wrappers/EditStudyWrapper";
 import StudyDetailWrapper from "./pages/wrappers/StudyDetailWrapper";
 import StudyMembersWrapper from "./pages/wrappers/StudyMemberWrapper";
 
-function App() {
+const App = () => {
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
 

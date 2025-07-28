@@ -51,10 +51,10 @@ interface StudyListMainProps {
     onViewStudyDetail: (studyId: number) => void;
 }
 
-export default function StudyList({
+const StudyList = ({
     onCreateStudy,
     onViewStudyDetail,
-}: StudyListMainProps) {
+}: StudyListMainProps) => {
     return (
         <div className="flex min-h-screen flex-col bg-gray-50 ">
             <header className="border-gray-200 border-b bg-white px-6 py-4">
@@ -150,3 +150,5 @@ export default function StudyList({
         </div>
     );
 }
+
+export default StudyList;

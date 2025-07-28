@@ -50,7 +50,7 @@ interface StudyFormFieldsProps {
     isSubmitting?: boolean;
 }
 
-export function StudyFormFields({
+const StudyFormFields = ({
     control,
     errors,
     isDirty,
@@ -62,7 +62,7 @@ export function StudyFormFields({
     requirementFields,
     appendRequirement,
     removeRequirement,
-}: StudyFormFieldsProps) {
+}: StudyFormFieldsProps) => {
     return (
         <>
             {/* 기본 정보 */}
@@ -505,3 +505,5 @@ export function StudyFormFields({
         </>
     );
 }
+
+export default StudyFormFields;
