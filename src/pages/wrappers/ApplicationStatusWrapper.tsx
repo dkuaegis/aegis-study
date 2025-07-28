@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
-import ApplicationStatus from "../ApplicationStatus";
+import ApplicationStatusPage from "../ApplicationStatusPage";
 
 function ApplicationStatusWrapper() {
     const { studyId } = useParams<{ studyId: string }>();
     const navigate = useNavigate();
 
     return (
-        <ApplicationStatus
+        <ApplicationStatusPage
             studyId={Number(studyId)}
             onBack={() => navigate(`/detail/${studyId}`)}
         />

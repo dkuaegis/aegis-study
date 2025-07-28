@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import StudyDetail from "../StudyDetail";
+import StudyDetailPage from "../StudyDetailPage";
 
 interface Study {
     id: number;
@@ -92,7 +92,7 @@ const studyDetailData: Record<number, Study> = {
     },
 };
 
-export default function StudyDetailWrapper({ onBack }: { onBack: () => void }) {
+export default function StudyDetailWrapper() {
     const { studyId } = useParams();
     const numericStudyId = Number(studyId);
     const navigate = useNavigate();
@@ -106,10 +106,14 @@ export default function StudyDetailWrapper({ onBack }: { onBack: () => void }) {
 
     const isOwner = study.ownerId === currentUserId;
 
+    function handleBack() {
+        navigate("/");
+    }
+
     return (
-        <StudyDetail
+        <StudyDetailPage
             studyId={numericStudyId}
-            onBack={onBack}
+            onBack={handleBack}
             isOwner={isOwner}
             currentUserId={currentUserId}
             onEdit={(id) => navigate(`/edit/${id}`)}

@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
-import EditStudy from "../EditStudy";
+import EditStudyPage from "../EditStudyPage";
 
 function EditStudyWrapper() {
     const { studyId } = useParams<{ studyId: string }>();
     const navigate = useNavigate();
 
     return (
-        <EditStudy
+        <EditStudyPage
             studyId={Number(studyId)}
             onBack={() => navigate(`/detail/${studyId}`)}
         />
