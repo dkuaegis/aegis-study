@@ -1,120 +1,19 @@
 import { ArrowLeft } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import StudyFormFields from "@/components/study/StudyFormFields";
+import { StudyFormProvider } from "@/hooks/useStudyForm";
 import { Button } from "@/components/ui/button";
 
 import { useNavigate } from "react-router-dom";
 
-import type { FieldValues } from "react-hook-form";
 
-interface FormValues extends FieldValues {
-    title: string;
-    category: string;
-    difficulty: string;
-    introduction: string;
-    recruitmentMethod: string;
-    maxParticipants: string;
-    schedule: string;
-    curriculum: { value: string }[];
-    requirements: { value: string }[];
-}
 
 const CreateStudyPage = () => {
     const navigate = useNavigate();
-    const {
-        control,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-        setError,
-    } = useForm({
-        defaultValues: {
-            title: "",
-            category: "",
-            difficulty: "",
-            introduction: "",
-            recruitmentMethod: "선착순",
-            maxParticipants: "",
-            schedule: "",
-            curriculum: [{ value: "" }],
-            requirements: [{ value: "" }],
-        },
-        mode: "onBlur",
-    });
 
     const handleBack = () => {
         navigate("/");
     };
 
-    const categories = [
-        { value: "WEB", label: "웹 개발" },
-        { value: "MOBILE", label: "모바일" },
-        { value: "AI", label: "AI/ML" },
-        { value: "DATA", label: "데이터" },
-        { value: "BACKEND", label: "백엔드" },
-        { value: "FRONTEND", label: "프론트엔드" },
-        { value: "DEVOPS", label: "DevOps" },
-        { value: "DESIGN", label: "디자인" },
-    ];
-
-    const difficulties = [
-        { value: "입문", label: "입문" },
-        { value: "초급", label: "초급" },
-        { value: "중급 이상", label: "중급 이상" },
-    ];
-
-    const {
-        fields: curriculumFields,
-        append: appendCurriculum,
-        remove: removeCurriculum,
-    } = useFieldArray<FormValues, "curriculum">({
-        control,
-        name: "curriculum",
-    });
-
-    const {
-        fields: requirementFields,
-        append: appendRequirement,
-        remove: removeRequirement,
-    } = useFieldArray<FormValues, "requirements">({
-        control,
-        name: "requirements",
-    });
-
-    const onSubmit = async (data: FormValues) => {
-        // 커리큘럼/자격 최소 1개 이상, 빈 값 제거
-        const filteredCurriculum = data.curriculum
-            .map((item) => item.value)
-            .filter((v) => v.trim() !== "");
-        const filteredRequirements = data.requirements
-            .map((item) => item.value)
-            .filter((v) => v.trim() !== "");
-
-        let hasError = false;
-        if (filteredCurriculum.length === 0) {
-            setError("curriculum", {
-                type: "manual",
-                message: "커리큘럼을 1개 이상 입력하세요.",
-            });
-            hasError = true;
-        }
-        if (filteredRequirements.length === 0) {
-            setError("requirements", {
-                type: "manual",
-                message: "지원 자격을 1개 이상 입력하세요.",
-            });
-            hasError = true;
-        }
-        if (hasError) return;
-
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        const studyData = {
-            ...data,
-            curriculum: filteredCurriculum,
-            requirements: filteredRequirements,
-        };
-
-        console.log("생성된 스터디:", studyData);
+    const handleSuccess = () => {
         alert("스터디가 성공적으로 개설되었습니다!");
         handleBack();
     };
@@ -160,42 +59,18 @@ const CreateStudyPage = () => {
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    <StudyFormFields
-                        control={control}
-                        errors={errors}
-                        categories={categories}
-                        difficulties={difficulties}
-                        curriculumFields={curriculumFields}
-                        appendCurriculum={appendCurriculum}
-                        removeCurriculum={removeCurriculum}
-                        requirementFields={requirementFields}
-                        appendRequirement={appendRequirement}
-                        removeRequirement={removeRequirement}
-                        isSubmitting={isSubmitting}
+                <StudyFormProvider onSuccess={handleSuccess}>
+                    <StudyFormContent
+                        onCancel={handleBack}
+                        submitText="스터디 개설하기"
+                        submittingText="개설 중..."
                     />
-
-                    <div className="flex justify-end gap-3 pt-6">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={handleBack}
-                            className="border-gray-300 bg-transparent text-gray-700"
-                        >
-                            취소
-                        </Button>
-                        <Button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="min-w-[120px] bg-blue-600 text-white hover:bg-blue-700"
-                        >
-                            {isSubmitting ? "개설 중..." : "스터디 개설하기"}
-                        </Button>
-                    </div>
-                </form>
+                </StudyFormProvider>
             </div>
         </div>
     );
 }
+
+import StudyFormContent from "@/components/study/StudyFormContent";
 
 export default CreateStudyPage;
