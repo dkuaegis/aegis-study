@@ -21,7 +21,7 @@ interface FormValues extends FieldValues {
     requirements: { value: string }[];
 }
 
-export default function CreateStudy({ onBack }: CreateStudyProps) {
+export default function CreateStudyPage({ onBack }: CreateStudyProps) {
     const {
         control,
         handleSubmit,

@@ -59,7 +59,7 @@ const applicationsData: Record<number, StudyData> = {
     },
 };
 
-export default function ApplicationStatus({
+export default function ApplicationStatusPage({
     studyId,
     onBack,
 }: ApplicationStatusProps) {

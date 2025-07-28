@@ -123,7 +123,7 @@ const initialUserApplicationStatus: Record<
     },
 };
 
-export default function StudyDetail({
+export default function StudyDetailPage({
     studyId,
     onBack,
     onEdit,

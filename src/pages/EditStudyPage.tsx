@@ -55,7 +55,7 @@ interface FormValues {
     requirements: { value: string }[];
 }
 
-export default function EditStudy({ studyId, onBack }: EditStudyProps) {
+export default function EditStudyPage({ studyId, onBack }: EditStudyProps) {
     const {
         control,
         handleSubmit,
