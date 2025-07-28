@@ -27,6 +27,7 @@ const StudyFormFields = () => {
 
     const { fields: curriculumFields, append: appendCurriculum, remove: removeCurriculum } = curriculumFieldArray;
     const { fields: requirementFields, append: appendRequirement, remove: removeRequirement } = requirementFieldArray;
+
     return (
         <>
             <Card className="border-gray-200">

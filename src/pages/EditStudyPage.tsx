@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
+import StudyFormContent from "@/components/study/StudyFormContent";
 
 interface EditStudyProps {
     studyId: number;
@@ -40,7 +41,6 @@ const existingStudyData = {
         ],
     },
 };
-
 
 const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     const existingData = existingStudyData[studyId as keyof typeof existingStudyData];
@@ -108,7 +108,5 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         </div>
     );
 }
-
-import StudyFormContent from "@/components/study/StudyFormContent";
 
 export default EditStudyPage;
