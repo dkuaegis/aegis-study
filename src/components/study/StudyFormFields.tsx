@@ -1,10 +1,5 @@
 import { Calendar, Plus, Users, X } from "lucide-react";
-import type {
-    Control,
-    FieldArrayWithId,
-    FieldError,
-    FieldErrors,
-} from "react-hook-form";
+import type { FieldError } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,53 +14,22 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useStudyFormContext } from "@/hooks/useStudyForm";
 
-type CurriculumItem = { value: string };
-type RequirementItem = { value: string };
+const StudyFormFields = () => {
+    const {
+        form: { control, formState: { errors, isDirty } },
+        categories,
+        difficulties,
+        curriculumFieldArray,
+        requirementFieldArray,
+    } = useStudyFormContext();
 
-export interface FormValues {
-    title: string;
-    category: string;
-    difficulty: string;
-    introduction: string;
-    recruitmentMethod: string;
-    maxParticipants: string;
-    schedule: string;
-    curriculum: CurriculumItem[];
-    requirements: RequirementItem[];
-}
+    const { fields: curriculumFields, append: appendCurriculum, remove: removeCurriculum } = curriculumFieldArray;
+    const { fields: requirementFields, append: appendRequirement, remove: removeRequirement } = requirementFieldArray;
 
-interface StudyFormFieldsProps {
-    control: Control<FormValues>;
-    errors: FieldErrors<FormValues>;
-    isDirty?: boolean;
-    categories: { value: string; label: string }[];
-    difficulties: { value: string; label: string }[];
-    curriculumFields: FieldArrayWithId<FormValues, "curriculum">[];
-    appendCurriculum: (value: CurriculumItem) => void;
-    removeCurriculum: (index: number) => void;
-    requirementFields: FieldArrayWithId<FormValues, "requirements">[];
-    appendRequirement: (value: RequirementItem) => void;
-    removeRequirement: (index: number) => void;
-    isSubmitting?: boolean;
-}
-
-const StudyFormFields = ({
-    control,
-    errors,
-    isDirty,
-    categories,
-    difficulties,
-    curriculumFields,
-    appendCurriculum,
-    removeCurriculum,
-    requirementFields,
-    appendRequirement,
-    removeRequirement,
-}: StudyFormFieldsProps) => {
     return (
         <>
-            {/* 기본 정보 */}
             <Card className="border-gray-200">
                 <CardHeader>
                     <CardTitle className="font-semibold text-gray-900 text-lg">
@@ -210,7 +174,6 @@ const StudyFormFields = ({
                 </CardContent>
             </Card>
 
-            {/* 모집 설정 */}
             <Card className="border-gray-200">
                 <CardHeader>
                     <CardTitle className="font-semibold text-gray-900 text-lg">
@@ -311,7 +274,6 @@ const StudyFormFields = ({
                 </CardContent>
             </Card>
 
-            {/* 일정 정보 */}
             <Card className="border-gray-200">
                 <CardHeader>
                     <CardTitle className="font-semibold text-gray-900 text-lg">
@@ -345,7 +307,6 @@ const StudyFormFields = ({
                 </CardContent>
             </Card>
 
-            {/* 커리큘럼 */}
             <Card className="border-gray-200">
                 <CardHeader>
                     <div className="flex items-center justify-between">
@@ -425,7 +386,6 @@ const StudyFormFields = ({
                 </CardContent>
             </Card>
 
-            {/* 지원 자격 */}
             <Card className="border-gray-200">
                 <CardHeader>
                     <div className="flex items-center justify-between">
