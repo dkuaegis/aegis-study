@@ -291,11 +291,9 @@ export function StudyFormFields({
                                     <Input
                                         {...field}
                                         id="maxParticipants"
-                                        type="string"
+                                        type="text"
                                         placeholder="예: 제한 없음, 5명 이내"
                                         className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.maxParticipants && isDirty ? "border-red-500" : ""}`}
-                                        min="1"
-                                        max="50"
                                         aria-invalid={!!errors.maxParticipants}
                                     />
                                 )}
