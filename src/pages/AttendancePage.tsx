@@ -349,7 +349,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                                                                                               "absent"
                                                                                                                   ? currentTime
                                                                                                                   : undefined,
-                                                                                                          isManuallyModified: true,
                                                                                                       }
                                                                                                     : s
                                                                                         ),
