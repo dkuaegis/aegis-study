@@ -32,11 +32,11 @@ const studyDetailData: Record<number, Study> = {
         maxParticipants: 20,
         currentParticipants: 10,
         schedule: "매주 화, 목 19:00-21:00",
-        introduction: `Spring Framework를 활용한 백엔드 개발 스터디입니다. 
-    실무에서 사용되는 Spring Boot, Spring Security, JPA 등을 학습하며 
+        introduction: `Spring Framework를 활용한 백엔드 개발 스터디입니다.
+    실무에서 사용되는 Spring Boot, Spring Security, JPA 등을 학습하며
     실제 프로젝트를 통해 백엔드 개발 역량을 키워나갑니다.
     
-    초보자도 참여할 수 있도록 기초부터 차근차근 진행하며, 
+    초보자도 참여할 수 있도록 기초부터 차근차근 진행하며,
     팀 프로젝트를 통해 협업 경험도 쌓을 수 있습니다.`,
         curriculum: [
             "1주차: Spring Boot 기초 및 환경 설정",
@@ -90,6 +90,63 @@ const studyDetailData: Record<number, Study> = {
         ],
         ownerId: "user124",
     },
+    3: {
+        id: 3,
+        title: "Python 데이터 분석",
+        status: "진행중",
+        category: "DATA",
+        difficulty: "중급",
+        participants: "15/20명",
+        manager: "관리자",
+        recruitmentMethod: "지원서",
+        maxParticipants: 20,
+        currentParticipants: 15,
+        schedule: "주 2회",
+        introduction: `Python과 데이터 분석 라이브러리(Pandas, Numpy 등)를 활용한 데이터 분석 실습 중심 스터디입니다.
+실제 데이터셋을 다루며 데이터 전처리, 시각화, 통계 분석, 간단한 머신러닝까지 경험할 수 있습니다.`,
+        curriculum: [
+            "1주차: Python 데이터 분석 환경 구축",
+            "2주차: Pandas 기초와 데이터 다루기",
+            "3주차: 데이터 시각화(Matplotlib, Seaborn)",
+            "4주차: 통계 분석 기초",
+            "5주차: 머신러닝 개요 및 실습",
+            "6주차: 프로젝트 실습",
+        ],
+        requirements: [
+            "Python 기초 문법 이해",
+            "데이터 분석에 관심 있는 분",
+            "노트북 지참 가능자",
+        ],
+        ownerId: "user125",
+    },
+    4: {
+        id: 4,
+        title: "Flutter 모바일 앱 개발",
+        status: "모집중",
+        category: "MOBILE",
+        difficulty: "고급",
+        participants: "8/15명",
+        manager: "관리자",
+        recruitmentMethod: "선착순",
+        maxParticipants: 15,
+        currentParticipants: 8,
+        schedule: "주 3회",
+        introduction: `Flutter를 활용한 모바일 앱 개발 심화 스터디입니다.
+실제 앱을 기획하고 개발하며, 퍼블리싱까지 경험할 수 있습니다.`,
+        curriculum: [
+            "1주차: Flutter 개발 환경 구축",
+            "2주차: 위젯과 레이아웃 이해",
+            "3주차: 상태 관리(BLoC, Provider)",
+            "4주차: 네트워크 통신 및 API 연동",
+            "5주차: 실전 앱 프로젝트",
+        ],
+        requirements: [
+            "Dart/Flutter 개발 경험",
+            "모바일 앱 개발에 관심 있는 분",
+            "팀 프로젝트 경험자 우대",
+        ],
+        ownerId: "user126",
+    },
 };
 
 export default function StudyDetailWrapper() {
@@ -99,6 +156,10 @@ export default function StudyDetailWrapper() {
 
     const currentUserId = "user123";
     const study = studyDetailData[numericStudyId];
+
+    // 스터디 id가 3이면 스터디원 권한으로 "참여 중" 상태로 전달
+    const initialUserApplicationStatus =
+        numericStudyId === 3 ? "approved" : undefined;
 
     if (!study) {
         return <div>스터디를 찾을 수 없습니다.</div>;
@@ -119,6 +180,8 @@ export default function StudyDetailWrapper() {
             onEdit={(id) => navigate(`/edit/${id}`)}
             onViewApplications={(id) => navigate(`/applications/${id}`)}
             onViewMembers={(id) => navigate(`/members/${id}`)}
+            onManageAttendance={(id) => navigate(`/attendance/${id}`)}
+            initialUserApplicationStatus={initialUserApplicationStatus}
         />
     );
 }

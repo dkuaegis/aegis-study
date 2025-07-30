@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
+import StudyFormContent from "@/components/study/StudyFormContent";
 import { Button } from "@/components/ui/button";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
-import StudyFormContent from "@/components/study/StudyFormContent";
 
 interface EditStudyProps {
     studyId: number;
@@ -43,13 +43,16 @@ const existingStudyData = {
 };
 
 const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
-    const existingData = existingStudyData[studyId as keyof typeof existingStudyData];
+    const existingData =
+        existingStudyData[studyId as keyof typeof existingStudyData];
     const initialValues = existingData
         ? {
-            ...existingData,
-            curriculum: existingData.curriculum.map((v) => ({ value: v })),
-            requirements: existingData.requirements.map((v) => ({ value: v })),
-        }
+              ...existingData,
+              curriculum: existingData.curriculum.map((v) => ({ value: v })),
+              requirements: existingData.requirements.map((v) => ({
+                  value: v,
+              })),
+          }
         : undefined;
 
     const handleSuccess = () => {
@@ -97,7 +100,10 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
                     </p>
                 </div>
 
-                <StudyFormProvider initialValues={initialValues} onSuccess={handleSuccess}>
+                <StudyFormProvider
+                    initialValues={initialValues}
+                    onSuccess={handleSuccess}
+                >
                     <StudyFormContent
                         onCancel={onBack}
                         submitText="수정 완료"
@@ -107,6 +113,6 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
             </div>
         </div>
     );
-}
+};
 
 export default EditStudyPage;

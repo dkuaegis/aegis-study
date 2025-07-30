@@ -1,8 +1,8 @@
 import { ArrowLeft } from "lucide-react";
-import { StudyFormProvider } from "@/hooks/useStudyForm";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import StudyFormContent from "@/components/study/StudyFormContent";
+import { Button } from "@/components/ui/button";
+import { StudyFormProvider } from "@/hooks/useStudyForm";
 
 const CreateStudyPage = () => {
     const navigate = useNavigate();
@@ -67,6 +67,6 @@ const CreateStudyPage = () => {
             </div>
         </div>
     );
-}
+};
 
 export default CreateStudyPage;

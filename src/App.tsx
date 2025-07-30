@@ -1,10 +1,10 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-
 import useAuth, { AuthStatus } from "./hooks/useAuth";
 import CreateStudyPage from "./pages/CreateStudyPage";
 import LoginPage from "./pages/LoginPage";
 import StudyListPage from "./pages/StudyListPage";
 import ApplicationStatusWrapper from "./pages/wrappers/ApplicationStatusWrapper";
+import AttendanceWrapper from "./pages/wrappers/AttendanceWrapper";
 import EditStudyWrapper from "./pages/wrappers/EditStudyWrapper";
 import StudyDetailWrapper from "./pages/wrappers/StudyDetailWrapper";
 import StudyMembersWrapper from "./pages/wrappers/StudyMemberWrapper";
@@ -31,15 +31,10 @@ const App = () => {
                         />
                     }
                 />
-                <Route
-                    path="/create"
-                    element={<CreateStudyPage />}
-                />
+                <Route path="/create" element={<CreateStudyPage />} />
                 <Route
                     path="/detail/:studyId"
-                    element={
-                        <StudyDetailWrapper />
-                    }
+                    element={<StudyDetailWrapper />}
                 />
                 <Route path="/edit/:studyId" element={<EditStudyWrapper />} />
                 <Route
@@ -50,9 +45,13 @@ const App = () => {
                     path="/members/:studyId"
                     element={<StudyMembersWrapper />}
                 />
+                <Route
+                    path="/attendance/:studyId"
+                    element={<AttendanceWrapper />}
+                />
             </Routes>
         </div>
     );
-}
+};
 
 export default App;
