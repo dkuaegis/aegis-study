@@ -1,6 +1,5 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import useAuth, { AuthStatus } from "./hooks/useAuth";
-import AttendencePage from "./pages/AttendencePage";
 import CreateStudyPage from "./pages/CreateStudyPage";
 import LoginPage from "./pages/LoginPage";
 import StudyListPage from "./pages/StudyListPage";
@@ -8,6 +7,7 @@ import ApplicationStatusWrapper from "./pages/wrappers/ApplicationStatusWrapper"
 import EditStudyWrapper from "./pages/wrappers/EditStudyWrapper";
 import StudyDetailWrapper from "./pages/wrappers/StudyDetailWrapper";
 import StudyMembersWrapper from "./pages/wrappers/StudyMemberWrapper";
+import AttendanceWrapper from "./pages/wrappers/AttendanceWrapper";
 
 const App = () => {
     const { isAuthenticated } = useAuth();
@@ -47,7 +47,7 @@ const App = () => {
                 />
                 <Route
                     path="/attendence/:studyId"
-                    element={<AttendencePage />}
+                    element={<AttendanceWrapper />}
                 />
             </Routes>
         </div>

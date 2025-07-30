@@ -1,5 +1,6 @@
 import {
     AlertCircle,
+    ArrowLeft,
     Calendar,
     CheckCircle,
     Clock,
@@ -20,44 +21,48 @@ import { cn } from "@/lib/utils";
 
 type AttendanceStatus = "present" | "late" | "absent";
 
+interface AttendanceProps {
+    studyId: number;
+    onBack: (id: number) => void;
+}
+
 interface Student {
     id: string;
     name: string;
     status: AttendanceStatus;
     checkTime?: string;
-    isManuallyModified: boolean;
 }
 
 interface WeeklyAttendance {
     [week: number]: Student[];
 }
 
-export default function AttendanceSystem() {
+const AttendancePage = ({ studyId, onBack }: AttendanceProps)=> {
     const [attendanceCode, setAttendanceCode] = useState<string>("");
     const [timer, setTimer] = useState<number>(0);
     const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
     const [currentWeek, setCurrentWeek] = useState<number>(1);
     const [weeklyAttendance, setWeeklyAttendance] = useState<WeeklyAttendance>({
         1: [
-            { id: "1", name: "김철수", status: "absent", isManuallyModified: false },
-            { id: "2", name: "이영희", status: "absent", isManuallyModified: false },
-            { id: "3", name: "박민수", status: "absent", isManuallyModified: false },
-            { id: "4", name: "정수진", status: "absent", isManuallyModified: false },
-            { id: "5", name: "최동현", status: "absent", isManuallyModified: false },
+            { id: "1", name: "김철수", status: "absent",},
+            { id: "2", name: "이영희", status: "absent",  },
+            { id: "3", name: "박민수", status: "absent",  },
+            { id: "4", name: "정수진", status: "absent",  },
+            { id: "5", name: "최동현", status: "absent",  },
         ],
         2: [
-            { id: "1", name: "김철수", status: "present", checkTime: "14:30:15", isManuallyModified: false },
-            { id: "2", name: "이영희", status: "late", checkTime: "14:35:22", isManuallyModified: false },
-            { id: "3", name: "박민수", status: "absent", isManuallyModified: false },
-            { id: "4", name: "정수진", status: "present", checkTime: "14:29:45", isManuallyModified: false },
-            { id: "5", name: "최동현", status: "present", checkTime: "14:28:10", isManuallyModified: false },
+            { id: "1", name: "김철수", status: "present", checkTime: "14:30:15",  },
+            { id: "2", name: "이영희", status: "late", checkTime: "14:35:22",  },
+            { id: "3", name: "박민수", status: "absent",   },
+            { id: "4", name: "정수진", status: "present", checkTime: "14:29:45",  },
+            { id: "5", name: "최동현", status: "present", checkTime: "14:28:10",  },
         ],
         3: [
-            { id: "1", name: "김철수", status: "present", checkTime: "14:25:30", isManuallyModified: false },
-            { id: "2", name: "이영희", status: "present", checkTime: "14:27:18", isManuallyModified: false },
-            { id: "3", name: "박민수", status: "late", checkTime: "14:40:12", isManuallyModified: true },
-            { id: "4", name: "정수진", status: "absent", isManuallyModified: false },
-            { id: "5", name: "최동현", status: "present", checkTime: "14:26:55", isManuallyModified: false },
+            { id: "1", name: "김철수", status: "present", checkTime: "14:25:30",  },
+            { id: "2", name: "이영희", status: "present", checkTime: "14:27:18",  },
+            { id: "3", name: "박민수", status: "late", checkTime: "14:40:12",  },
+            { id: "4", name: "정수진", status: "absent",  },
+            { id: "5", name: "최동현", status: "present", checkTime: "14:26:55",  },
         ],
     });
 
@@ -80,7 +85,7 @@ export default function AttendanceSystem() {
     const generateAttendanceCode = () => {
         const code = Math.floor(10000 + Math.random() * 90000).toString();
         setAttendanceCode(code);
-        setTimer(60); // 1분
+        setTimer(60);
         setIsTimerActive(true);
     };
 
@@ -105,7 +110,7 @@ export default function AttendanceSystem() {
         setSubmittedWeeks((prev) => new Set([...prev, currentWeek]));
         const isResubmit = submittedWeeks.has(currentWeek);
         alert(
-            `${currentWeek}주차 출석 현황이 ${isResubmit ? "재" : ""}제출되었습니다.`
+            `${currentWeek}주차 출석 현황이 ${isResubmit ? "정정" : "제출"}되었습니다.`
         );
     };
 
@@ -116,13 +121,10 @@ export default function AttendanceSystem() {
                     <Button
                         variant="ghost"
                         size="sm"
-                        disabled
+                        onClick={() => onBack(studyId)}
                         className="mr-4 text-gray-600 hover:text-gray-900"
                     >
-                        <svg className="mr-1 h-4 w-4" viewBox="0 0 24 24" fill="none">
-                            <title>뒤로가기</title>
-                            <path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
+                        <ArrowLeft className="mr-1 h-4 w-4" />
                         뒤로가기
                     </Button>
                     <div className="flex items-center">
@@ -143,7 +145,6 @@ export default function AttendanceSystem() {
             </header>
             <div className="mx-auto max-w-6xl space-y-6">
 
-                {/* 주차별 출석 현황 */}
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
@@ -156,7 +157,6 @@ export default function AttendanceSystem() {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            {/* 주차 선택 */}
                             <div className="flex items-center gap-4">
                                 <label className="font-medium text-sm" htmlFor="week-select">
                                     주차 선택:
@@ -184,7 +184,6 @@ export default function AttendanceSystem() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            {/* 전체 주차 요약 표 */}
                             <div className="overflow-x-auto">
                                 <table className="w-full border-collapse rounded-lg border border-gray-200">
                                     <thead>
@@ -343,11 +342,7 @@ export default function AttendanceSystem() {
                                                                             </SelectItem>
                                                                         </SelectContent>
                                                                     </Select>
-                                                                    {studentData?.isManuallyModified && (
-                                                                        <span className="text-blue-600 text-xs">
-                                                                            수정됨
-                                                                        </span>
-                                                                    )}
+
                                                                 </div>
                                                             </td>
                                                         );
@@ -378,9 +373,7 @@ export default function AttendanceSystem() {
                     </CardContent>
                 </Card>
 
-                {/* 스터디장 뷰 */}
                 <div className="space-y-6">
-                    {/* 출석 코드 생성 */}
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
@@ -424,7 +417,6 @@ export default function AttendanceSystem() {
                         </CardContent>
                     </Card>
 
-                    {/* 출석 현황 제출 */}
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
@@ -465,3 +457,5 @@ export default function AttendanceSystem() {
         </div>
     );
 }
+
+export default AttendancePage;
