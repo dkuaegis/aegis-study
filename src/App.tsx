@@ -46,7 +46,7 @@ const App = () => {
                     element={<StudyMembersWrapper />}
                 />
                 <Route
-                    path="/attendence/:studyId"
+                    path="/attendance/:studyId"
                     element={<AttendanceWrapper />}
                 />
             </Routes>

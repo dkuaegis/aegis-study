@@ -180,7 +180,7 @@ export default function StudyDetailWrapper() {
             onEdit={(id) => navigate(`/edit/${id}`)}
             onViewApplications={(id) => navigate(`/applications/${id}`)}
             onViewMembers={(id) => navigate(`/members/${id}`)}
-            onManageAttendance={(id) => navigate(`/attendence/${id}`)}
+            onManageAttendance={(id) => navigate(`/attendance/${id}`)}
             initialUserApplicationStatus={initialUserApplicationStatus}
         />
     );
