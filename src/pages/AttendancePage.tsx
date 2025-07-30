@@ -16,7 +16,13 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 type AttendanceStatus = "present" | "late" | "absent";
@@ -37,37 +43,69 @@ interface WeeklyAttendance {
     [week: number]: Student[];
 }
 
-const AttendancePage = ({ studyId, onBack }: AttendanceProps)=> {
+const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     const [attendanceCode, setAttendanceCode] = useState<string>("");
     const [timer, setTimer] = useState<number>(0);
     const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
     const [currentWeek, setCurrentWeek] = useState<number>(1);
     const [weeklyAttendance, setWeeklyAttendance] = useState<WeeklyAttendance>({
         1: [
-            { id: "1", name: "김철수", status: "absent",},
-            { id: "2", name: "이영희", status: "absent",  },
-            { id: "3", name: "박민수", status: "absent",  },
-            { id: "4", name: "정수진", status: "absent",  },
-            { id: "5", name: "최동현", status: "absent",  },
+            { id: "1", name: "김철수", status: "absent" },
+            { id: "2", name: "이영희", status: "absent" },
+            { id: "3", name: "박민수", status: "absent" },
+            { id: "4", name: "정수진", status: "absent" },
+            { id: "5", name: "최동현", status: "absent" },
         ],
         2: [
-            { id: "1", name: "김철수", status: "present", checkTime: "14:30:15",  },
-            { id: "2", name: "이영희", status: "late", checkTime: "14:35:22",  },
-            { id: "3", name: "박민수", status: "absent",   },
-            { id: "4", name: "정수진", status: "present", checkTime: "14:29:45",  },
-            { id: "5", name: "최동현", status: "present", checkTime: "14:28:10",  },
+            {
+                id: "1",
+                name: "김철수",
+                status: "present",
+                checkTime: "14:30:15",
+            },
+            { id: "2", name: "이영희", status: "late", checkTime: "14:35:22" },
+            { id: "3", name: "박민수", status: "absent" },
+            {
+                id: "4",
+                name: "정수진",
+                status: "present",
+                checkTime: "14:29:45",
+            },
+            {
+                id: "5",
+                name: "최동현",
+                status: "present",
+                checkTime: "14:28:10",
+            },
         ],
         3: [
-            { id: "1", name: "김철수", status: "present", checkTime: "14:25:30",  },
-            { id: "2", name: "이영희", status: "present", checkTime: "14:27:18",  },
-            { id: "3", name: "박민수", status: "late", checkTime: "14:40:12",  },
-            { id: "4", name: "정수진", status: "absent",  },
-            { id: "5", name: "최동현", status: "present", checkTime: "14:26:55",  },
+            {
+                id: "1",
+                name: "김철수",
+                status: "present",
+                checkTime: "14:25:30",
+            },
+            {
+                id: "2",
+                name: "이영희",
+                status: "present",
+                checkTime: "14:27:18",
+            },
+            { id: "3", name: "박민수", status: "late", checkTime: "14:40:12" },
+            { id: "4", name: "정수진", status: "absent" },
+            {
+                id: "5",
+                name: "최동현",
+                status: "present",
+                checkTime: "14:26:55",
+            },
         ],
     });
 
     const students = weeklyAttendance[currentWeek] || [];
-    const [submittedWeeks, setSubmittedWeeks] = useState<Set<number>>(new Set());
+    const [submittedWeeks, setSubmittedWeeks] = useState<Set<number>>(
+        new Set()
+    );
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
@@ -144,7 +182,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps)=> {
                 </div>
             </header>
             <div className="mx-auto max-w-6xl space-y-6">
-
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
@@ -158,7 +195,10 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps)=> {
                     <CardContent>
                         <div className="space-y-4">
                             <div className="flex items-center gap-4">
-                                <label className="font-medium text-sm" htmlFor="week-select">
+                                <label
+                                    className="font-medium text-sm"
+                                    htmlFor="week-select"
+                                >
                                     주차 선택:
                                 </label>
                                 <Select
@@ -167,7 +207,10 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps)=> {
                                         setCurrentWeek(Number(value))
                                     }
                                 >
-                                    <SelectTrigger className="w-32" id="week-select">
+                                    <SelectTrigger
+                                        className="w-32"
+                                        id="week-select"
+                                    >
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -342,7 +385,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps)=> {
                                                                             </SelectItem>
                                                                         </SelectContent>
                                                                     </Select>
-
                                                                 </div>
                                                             </td>
                                                         );
@@ -424,8 +466,8 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps)=> {
                                 출석 현황 제출
                             </CardTitle>
                             <CardDescription>
-                                현재 주차의 출석 현황을 제출합니다. 제출
-                                후에도 수정 및 재제출이 가능합니다.
+                                현재 주차의 출석 현황을 제출합니다. 제출 후에도
+                                수정 및 재제출이 가능합니다.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -456,6 +498,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps)=> {
             </div>
         </div>
     );
-}
+};
 
 export default AttendancePage;

@@ -4,10 +4,10 @@ import CreateStudyPage from "./pages/CreateStudyPage";
 import LoginPage from "./pages/LoginPage";
 import StudyListPage from "./pages/StudyListPage";
 import ApplicationStatusWrapper from "./pages/wrappers/ApplicationStatusWrapper";
+import AttendanceWrapper from "./pages/wrappers/AttendanceWrapper";
 import EditStudyWrapper from "./pages/wrappers/EditStudyWrapper";
 import StudyDetailWrapper from "./pages/wrappers/StudyDetailWrapper";
 import StudyMembersWrapper from "./pages/wrappers/StudyMemberWrapper";
-import AttendanceWrapper from "./pages/wrappers/AttendanceWrapper";
 
 const App = () => {
     const { isAuthenticated } = useAuth();
