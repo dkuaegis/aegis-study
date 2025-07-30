@@ -18,15 +18,26 @@ import { useStudyFormContext } from "@/hooks/useStudyForm";
 
 const StudyFormFields = () => {
     const {
-        form: { control, formState: { errors, isDirty } },
+        form: {
+            control,
+            formState: { errors, isDirty },
+        },
         categories,
         difficulties,
         curriculumFieldArray,
         requirementFieldArray,
     } = useStudyFormContext();
 
-    const { fields: curriculumFields, append: appendCurriculum, remove: removeCurriculum } = curriculumFieldArray;
-    const { fields: requirementFields, append: appendRequirement, remove: removeRequirement } = requirementFieldArray;
+    const {
+        fields: curriculumFields,
+        append: appendCurriculum,
+        remove: removeCurriculum,
+    } = curriculumFieldArray;
+    const {
+        fields: requirementFields,
+        append: appendRequirement,
+        remove: removeRequirement,
+    } = requirementFieldArray;
 
     return (
         <>
@@ -263,13 +274,10 @@ const StudyFormFields = () => {
                             />
                         </div>
                         {errors.maxParticipants && (
-                                <span className="mt-1 block text-red-500 text-xs">
-                                    {
-                                        (errors.maxParticipants as FieldError)
-                                            .message
-                                    }
-                                </span>
-                            )}
+                            <span className="mt-1 block text-red-500 text-xs">
+                                {(errors.maxParticipants as FieldError).message}
+                            </span>
+                        )}
                     </div>
                 </CardContent>
             </Card>
@@ -464,6 +472,6 @@ const StudyFormFields = () => {
             </Card>
         </>
     );
-}
+};
 
 export default StudyFormFields;

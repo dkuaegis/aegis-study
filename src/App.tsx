@@ -1,6 +1,6 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-
 import useAuth, { AuthStatus } from "./hooks/useAuth";
+import AttendencePage from "./pages/AttendencePage";
 import CreateStudyPage from "./pages/CreateStudyPage";
 import LoginPage from "./pages/LoginPage";
 import StudyListPage from "./pages/StudyListPage";
@@ -31,15 +31,10 @@ const App = () => {
                         />
                     }
                 />
-                <Route
-                    path="/create"
-                    element={<CreateStudyPage />}
-                />
+                <Route path="/create" element={<CreateStudyPage />} />
                 <Route
                     path="/detail/:studyId"
-                    element={
-                        <StudyDetailWrapper />
-                    }
+                    element={<StudyDetailWrapper />}
                 />
                 <Route path="/edit/:studyId" element={<EditStudyWrapper />} />
                 <Route
@@ -50,9 +45,13 @@ const App = () => {
                     path="/members/:studyId"
                     element={<StudyMembersWrapper />}
                 />
+                <Route
+                    path="/attendence/:studyId"
+                    element={<AttendencePage />}
+                />
             </Routes>
         </div>
     );
-}
+};
 
 export default App;

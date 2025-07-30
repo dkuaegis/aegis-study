@@ -59,10 +59,7 @@ const applicationsData: Record<number, StudyData> = {
     },
 };
 
-const ApplicationStatusPage = ({
-    studyId,
-    onBack,
-}: ApplicationStatusProps) => {
+const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     const [selectedFilter, setSelectedFilter] = useState("all");
     const [applications, setApplications] = useState(
         applicationsData[studyId as keyof typeof applicationsData]
@@ -453,4 +450,4 @@ const ApplicationCard = ({
             </CardContent>
         </Card>
     );
-}
+};

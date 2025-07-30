@@ -149,6 +149,6 @@ const StudyList = ({
             </main>
         </div>
     );
-}
+};
 
 export default StudyList;
