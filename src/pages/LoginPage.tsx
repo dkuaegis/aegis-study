@@ -132,19 +132,6 @@ const LoginPage = () => {
                 ></div>
             </div>
 
-            <div className="absolute top-6 left-6 flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black">
-                    <img
-                        src="/aegis-logo-2500w-opti.png"
-                        alt="Aegis Logo"
-                        width={56}
-                        height={56}
-                        className="rounded-full"
-                    />
-                </div>
-                <span className="font-bold text-gray-900 text-xl">Aegis</span>
-            </div>
-
             <Card
                 ref={cardRef}
                 className="w-full max-w-md border border-gray-200/50 bg-white/90 shadow-2xl shadow-gray-500/10 backdrop-blur-sm"
