@@ -342,8 +342,8 @@ const StudyDetailPage = ({
                     </Button>
                     <div className="flex items-center">
                         <span className="font-bold text-gray-900 text-xl">
-                            스터디 지원하기
-                        </span>
+                        스터디 지원하기
+                    </span>
                     </div>
                 </div>
             </header>
