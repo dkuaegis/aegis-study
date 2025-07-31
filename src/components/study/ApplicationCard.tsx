@@ -18,15 +18,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-
-interface Application {
-    id: number;
-    name: string;
-    email: string;
-    appliedAt: string;
-    status: "pending" | "approved" | "rejected";
-    applicationText: string;
-}
+import type { Application } from "@/hooks/useApplications";
 
 type ApplicationCardProps = {
     application: Application;
