@@ -336,9 +336,6 @@ const StudyFormFields = () => {
                 <CardContent className="space-y-3">
                     {curriculumFields.map((field, index: number) => (
                         <div key={field.id} className="flex items-center gap-2">
-                            <span className="w-8 text-gray-500 text-sm">
-                                {index + 1}.
-                            </span>
                             <Controller
                                 name={`curriculum.${index}.value`}
                                 control={control}
@@ -357,7 +354,7 @@ const StudyFormFields = () => {
                                         name={field.name}
                                         onBlur={field.onBlur}
                                         ref={field.ref}
-                                        placeholder={`${index + 1}주차 내용을 입력하세요`}
+                                        placeholder={"학습할 내용을 나열해주세요."}
                                         className={`flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.curriculum?.[index] && isDirty ? "border-red-500" : ""}`}
                                         aria-invalid={
                                             !!errors.curriculum?.[index]
@@ -415,7 +412,6 @@ const StudyFormFields = () => {
                 <CardContent className="space-y-3">
                     {requirementFields.map((field, index: number) => (
                         <div key={field.id} className="flex items-center gap-2">
-                            <span className="text-gray-500 text-sm">•</span>
                             <Controller
                                 name={`requirements.${index}.value`}
                                 control={control}
