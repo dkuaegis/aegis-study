@@ -1,16 +1,6 @@
-import { useNavigate, useParams } from "react-router-dom";
 import StudyMembersPage from "../StudyMembersPage";
+import StudyPageWrapper from "../../components/wrappers/StudyPageWrapper";
 
-function StudyMembersWrapper() {
-    const { studyId } = useParams<{ studyId: string }>();
-    const navigate = useNavigate();
-
-    return (
-        <StudyMembersPage
-            studyId={Number(studyId)}
-            onBack={() => navigate(`/detail/${studyId}`)}
-        />
-    );
+export default function StudyMembersWrapper() {
+  return <StudyPageWrapper PageComponent={StudyMembersPage} />;
 }
-
-export default StudyMembersWrapper;

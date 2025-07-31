@@ -1,16 +1,6 @@
-import { useNavigate, useParams } from "react-router-dom";
 import AttendancePage from "../AttendancePage";
+import StudyPageWrapper from "../../components/wrappers/StudyPageWrapper";
 
-function AttendanceWrapper() {
-    const { studyId } = useParams<{ studyId: string }>();
-    const navigate = useNavigate();
-
-    return (
-        <AttendancePage
-            studyId={Number(studyId)}
-            onBack={() => navigate(`/detail/${studyId}`)}
-        />
-    );
+export default function AttendanceWrapper() {
+  return <StudyPageWrapper PageComponent={AttendancePage} />;
 }
-
-export default AttendanceWrapper;
