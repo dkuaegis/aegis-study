@@ -1,14 +1,8 @@
-import {
-    ArrowLeft,
-    CheckCircle,
-    Clock,
-    User,
-    XCircle,
-} from "lucide-react";
+import { ArrowLeft, CheckCircle, Clock, User, XCircle } from "lucide-react";
+import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ApplicationCard from "@/components/study/ApplicationCard";
 import { useApplications } from "@/hooks/useApplications";
 
 interface Application {
