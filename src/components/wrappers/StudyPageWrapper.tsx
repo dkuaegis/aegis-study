@@ -9,11 +9,11 @@ function StudyPageWrapper({ PageComponent }: StudyPageWrapperProps) {
     const navigate = useNavigate();
     const numericStudyId = Number(studyId);
     if (Number.isNaN(numericStudyId)) {
-       return <div>유효하지 않은 스터디 ID입니다.</div>;
-      }
+        return <div>유효하지 않은 스터디 ID입니다.</div>;
+    }
     return (
         <PageComponent
-           studyId={numericStudyId}
+            studyId={numericStudyId}
             onBack={() => navigate(`/detail/${studyId}`)}
         />
     );
