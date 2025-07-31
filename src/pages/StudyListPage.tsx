@@ -10,7 +10,7 @@ const studyData = [
         status: "모집중",
         category: "WEB",
         difficulty: "중급",
-        schedule: "한번 더 공부",
+        schedule: "모집 후 결정",
         participants: "10/20명",
         manager: "관리자",
     },
@@ -20,7 +20,7 @@ const studyData = [
         status: "모집중",
         category: "WEB",
         difficulty: "입문",
-        schedule: "한번 더 공부",
+        schedule: "모집 후 결정",
         participants: "10/20명",
         manager: "관리자",
     },
@@ -59,25 +59,15 @@ const StudyList = ({
         <div className="flex min-h-screen flex-col bg-gray-50 ">
             <header className="border-gray-200 border-b bg-white px-6 py-4">
                 <div className="flex items-center">
-                    <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-black">
-                        <img
-                            src="/aegis-logo-2500w-opti.png"
-                            alt="Aegis Logo"
-                            width={56}
-                            height={56}
-                            className="rounded-full"
-                        />
-                    </div>
-                    <span className="font-bold text-gray-900 text-xl">
-                        Aegis
+                    <span className="pl-[20%] font-bold text-gray-900 text-xl">
+                        스터디 목록
                     </span>
                 </div>
             </header>
             <main className="mx-auto max-w-6xl items-center p-6">
+
                 <div className="mb-6 flex items-center justify-between">
-                    <h2 className="font-bold text-2xl text-gray-900">
-                        스터디 목록
-                    </h2>
+                    <div></div>
                     <Button
                         onClick={onCreateStudy}
                         className="bg-blue-600 text-white hover:bg-blue-700"
@@ -85,7 +75,6 @@ const StudyList = ({
                         스터디 개설하기
                     </Button>
                 </div>
-
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {studyData.map((study) => (
                         <Card

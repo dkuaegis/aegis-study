@@ -166,17 +166,8 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                         뒤로가기
                     </Button>
                     <div className="flex items-center">
-                        <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-black">
-                            <img
-                                src="/aegis-logo-2500w-opti.png"
-                                alt="Aegis Logo"
-                                width={56}
-                                height={56}
-                                className="rounded-full"
-                            />
-                        </div>
                         <span className="font-bold text-gray-900 text-xl">
-                            Aegis
+                            출석 관리
                         </span>
                     </div>
                 </div>
