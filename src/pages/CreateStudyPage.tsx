@@ -38,7 +38,6 @@ const CreateStudyPage = () => {
             </header>
 
             <div className="mx-auto max-w-4xl p-6">
-
                 <StudyFormProvider onSuccess={handleSuccess}>
                     <StudyFormContent
                         onCancel={handleBack}

@@ -82,7 +82,6 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
             </header>
 
             <div className="mx-auto max-w-4xl p-6">
-
                 <StudyFormProvider
                     initialValues={initialValues}
                     onSuccess={handleSuccess}
