@@ -354,7 +354,9 @@ const StudyFormFields = () => {
                                         name={field.name}
                                         onBlur={field.onBlur}
                                         ref={field.ref}
-                                        placeholder={"학습할 내용을 나열해주세요."}
+                                        placeholder={
+                                            "학습할 내용을 나열해주세요."
+                                        }
                                         className={`flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.curriculum?.[index] && isDirty ? "border-red-500" : ""}`}
                                         aria-invalid={
                                             !!errors.curriculum?.[index]

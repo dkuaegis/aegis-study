@@ -65,7 +65,6 @@ const StudyList = ({
                 </div>
             </header>
             <main className="mx-auto max-w-6xl items-center p-6">
-
                 <div className="mb-6 flex justify-end">
                     <Button
                         onClick={onCreateStudy}
