@@ -377,7 +377,7 @@ const StudyDetailPage = ({
                                             className="border-green-600 text-green-600 hover:bg-green-50"
                                         >
                                             <UsersIcon className="mr-1 h-4 w-4" />
-                                            지원 현황 보기
+                                            스터디 지원현황
                                         </Button>
                                         <Button
                                             variant="outline"
