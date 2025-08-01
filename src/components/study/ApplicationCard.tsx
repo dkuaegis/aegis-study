@@ -1,9 +1,7 @@
 import {
-    Calendar,
     CheckCircle,
     Eye,
     FileText,
-    Mail,
     XCircle,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -75,12 +73,12 @@ const ApplicationCard = ({
                                 {application.name}
                             </h3>
                             <div className="mt-1 flex items-center text-gray-500 text-sm">
-                                <Mail className="mr-2 h-4 w-4" />
-                                {application.email}
+                                <span className="mr-2 font-medium">📞</span>
+                                {application.phone}
                             </div>
                             <div className="mt-1 flex items-center text-gray-500 text-sm">
-                                <Calendar className="mr-2 h-4 w-4" />
-                                지원일: {application.appliedAt}
+                                <span className="mr-2 font-medium">🎓</span>
+                                학번: {application.studentNumber}
                             </div>
                         </div>
                     </div>
@@ -117,8 +115,7 @@ const ApplicationCard = ({
                                                     지원자: {application.name}
                                                 </span>
                                                 <span>
-                                                    지원일:{" "}
-                                                    {application.appliedAt}
+                                                    학번: {application.studentNumber}
                                                 </span>
                                             </div>
                                         </div>

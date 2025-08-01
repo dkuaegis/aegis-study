@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ title, onBack, right }) => (
-    <header className="border-gray-200 border-b bg-white px-6 py-4">
+    <header className="sticky top-0 z-50 border-gray-200 border-b bg-white px-6 py-4">
         <div className="flex items-center">
             {onBack && (
                 <Button

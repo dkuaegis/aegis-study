@@ -3,8 +3,8 @@ import { useState } from "react";
 export interface Application {
     id: number;
     name: string;
-    email: string;
-    appliedAt: string;
+    phone: string;
+    studentNumber: string;
     status: "pending" | "approved" | "rejected";
     applicationText: string;
 }
