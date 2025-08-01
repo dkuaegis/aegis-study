@@ -1,5 +1,6 @@
-import { ArrowLeft, Calendar, Crown, Mail, User, UserX } from "lucide-react";
+import { Calendar, Crown, Mail, User, UserX } from "lucide-react";
 import { useState } from "react";
+import Header from "@/components/ui/Header";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -108,25 +109,7 @@ export default function StudyMembersPage({
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            <header className="border-gray-200 border-b bg-white px-6 py-4">
-                <div className="flex items-center">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={onBack}
-                        className="mr-4 text-gray-600 hover:text-gray-900"
-                    >
-                        <ArrowLeft className="mr-1 h-4 w-4" />
-                        뒤로가기
-                    </Button>
-                    <div className="flex items-center">
-                        <span className="font-bold text-gray-900 text-xl">
-                            스터디원 관리
-                        </span>
-                    </div>
-                </div>
-            </header>
+            <Header title="스터디원 관리" onBack={onBack} />
 
             <div className="mx-auto max-w-4xl p-6">
                 <Card className="border-gray-200">

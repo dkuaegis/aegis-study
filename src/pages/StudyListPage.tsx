@@ -2,6 +2,7 @@ import { BarChart3, Clock, User, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Header from "@/components/ui/Header";
 
 const studyData = [
     {
@@ -57,13 +58,7 @@ const StudyList = ({
 }: StudyListMainProps) => {
     return (
         <div className="flex min-h-screen flex-col bg-gray-50 ">
-            <header className="border-gray-200 border-b bg-white px-6 py-4">
-                <div className="flex items-center">
-                    <span className="pl-[10%] font-bold text-gray-900 text-xl">
-                        스터디 목록
-                    </span>
-                </div>
-            </header>
+            <Header title="스터디 목록" />
             <main className="mx-auto max-w-6xl items-center p-6">
                 <div className="mb-6 flex justify-end">
                     <Button

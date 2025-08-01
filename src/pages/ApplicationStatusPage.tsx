@@ -1,9 +1,9 @@
-import { ArrowLeft, CheckCircle, Clock, User, XCircle } from "lucide-react";
+import { CheckCircle, Clock, User, XCircle } from "lucide-react";
 import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApplications } from "@/hooks/useApplications";
+import Header from "@/components/ui/Header";
 
 interface Application {
     id: number;
@@ -101,24 +101,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <header className="border-gray-200 border-b bg-white px-6 py-4">
-                <div className="flex items-center">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={onBack}
-                        className="mr-4 text-gray-600 hover:text-gray-900"
-                    >
-                        <ArrowLeft className="mr-1 h-4 w-4" />
-                        뒤로가기
-                    </Button>
-                    <div className="flex items-center">
-                        <span className="font-bold text-gray-900 text-xl">
-                            스터디 지원현황
-                        </span>
-                    </div>
-                </div>
-            </header>
+            <Header title="스터디 지원현황" onBack={onBack} />
 
             <div className="mx-auto max-w-7xl p-6">
                 <div className="flex flex-col gap-6 lg:flex-row">
