@@ -1,6 +1,7 @@
 import StudyFormContent from "@/components/study/StudyFormContent";
 import Header from "@/components/ui/Header";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
+import { useToast } from "@/components/ui/useToast";
 
 interface EditStudyProps {
     studyId: number;
@@ -54,8 +55,9 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
           }
         : undefined;
 
+    const toast = useToast();
     const handleSuccess = () => {
-        alert("스터디가 성공적으로 수정되었습니다!");
+        toast({ description: "스터디가 성공적으로 수정되었습니다!" });
         onBack();
     };
 

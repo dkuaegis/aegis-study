@@ -11,6 +11,7 @@ import {
     X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/useToast";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -200,6 +201,7 @@ const StudyDetailPage = ({
     const [applicationText, setApplicationText] = useState("");
     const [isApplying, setIsApplying] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
+    const toast = useToast();
 
     // 출석 관련 상태
     const [attendanceCode, setAttendanceCode] = useState<string>("");
@@ -248,11 +250,11 @@ const StudyDetailPage = ({
         if (study.recruitmentMethod === "선착순") {
             // 선착순인 경우 바로 승인
             setUserApplicationStatus("approved");
-            alert("지원이 완료되었습니다! 스터디에 참여하게 되었습니다.");
+            toast({ description: "지원이 완료되었습니다! 스터디에 참여하게 되었습니다." });
         } else {
             // 지원서인 경우 대기 상태
             setUserApplicationStatus("pending");
-            alert("지원서가 제출되었습니다! 검토 후 결과를 알려드리겠습니다.");
+            toast({ description: "지원서가 제출되었습니다! 검토 후 결과를 알려드리겠습니다." });
         }
         setIsApplying(false);
         setApplicationText("");
@@ -265,9 +267,9 @@ const StudyDetailPage = ({
         // 상태를 null로 변경하여 다시 지원하기 버튼이 나타나도록 함
         setUserApplicationStatus(null);
         if (userApplicationStatus === "approved") {
-            alert("스터디에서 탈퇴되었습니다.");
+            toast({ description: "스터디에서 탈퇴되었습니다." });
         } else {
-            alert("스터디 신청이 취소되었습니다.");
+            toast({ description: "스터디 신청이 취소되었습니다." });
         }
         setIsCancelling(false);
     };
@@ -278,7 +280,7 @@ const StudyDetailPage = ({
         setAttendanceCode(code);
         setTimer(60); // 1분
         setIsTimerActive(true);
-        alert(`출석 코드가 생성되었습니다: ${code}`);
+        toast({ description: `출석 코드가 생성되었습니다: ${code}` });
     };
 
     // 출석 체크 (스터디원용)
@@ -288,11 +290,11 @@ const StudyDetailPage = ({
             const status = remainingTime > 30 ? "checked" : "late";
             setAttendanceStatus(status);
             setInputCode("");
-            alert(
-                `출석이 완료되었습니다! ${status === "late" ? "(지각)" : ""}`
-            );
+            toast({
+                description: `출석이 완료되었습니다! ${status === "late" ? "(지각)" : ""}`,
+            });
         } else {
-            alert("올바르지 않은 출석 코드입니다.");
+            toast({ description: "올바르지 않은 출석 코드입니다." });
         }
     };
 

@@ -1,5 +1,6 @@
 import { Crown, User, UserX } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/components/ui/useToast";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -92,6 +93,7 @@ export default function StudyMembersPage({
         studyMembersData[studyId as keyof typeof studyMembersData]?.members ||
             []
     );
+    const toast = useToast();
 
     const studyInfo =
         studyMembersData[studyId as keyof typeof studyMembersData];
@@ -102,7 +104,7 @@ export default function StudyMembersPage({
 
     const handleKickMember = (memberId: string) => {
         setMembers((prev) => prev.filter((member) => member.id !== memberId));
-        alert("스터디원이 추방되었습니다.");
+        toast({ description: "스터디원이 추방되었습니다." });
     };
 
     const allMembers = [studyInfo.owner, ...members];

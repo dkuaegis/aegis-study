@@ -7,6 +7,7 @@ import {
     XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/useToast";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -101,6 +102,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
             },
         ],
     });
+    const toast = useToast();
 
     const students = weeklyAttendance[currentWeek] || [];
     const [submittedWeeks, setSubmittedWeeks] = useState<Set<number>>(
@@ -147,9 +149,9 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     const submitAttendance = () => {
         setSubmittedWeeks((prev) => new Set([...prev, currentWeek]));
         const isResubmit = submittedWeeks.has(currentWeek);
-        alert(
-            `${currentWeek}주차 출석 현황이 ${isResubmit ? "정정" : "제출"}되었습니다.`
-        );
+        toast({
+            description: `${currentWeek}주차 출석 현황이 ${isResubmit ? "정정" : "제출"}되었습니다.`,
+        });
     };
 
     return (
