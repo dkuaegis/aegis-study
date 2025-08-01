@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import StudyFormContent from "@/components/study/StudyFormContent";
-import { StudyFormProvider } from "@/hooks/useStudyForm";
 import Header from "@/components/ui/Header";
+import { StudyFormProvider } from "@/hooks/useStudyForm";
 
 const CreateStudyPage = () => {
     const navigate = useNavigate();

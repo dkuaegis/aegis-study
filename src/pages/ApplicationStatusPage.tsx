@@ -2,8 +2,8 @@ import { CheckCircle, Clock, User, XCircle } from "lucide-react";
 import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useApplications } from "@/hooks/useApplications";
 import Header from "@/components/ui/Header";
+import { useApplications } from "@/hooks/useApplications";
 
 interface Application {
     id: number;

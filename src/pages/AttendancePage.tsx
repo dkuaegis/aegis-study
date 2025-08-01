@@ -15,6 +15,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import Header from "@/components/ui/Header";
 import {
     Select,
     SelectContent,
@@ -23,7 +24,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import Header from "@/components/ui/Header";
 
 type AttendanceStatus = "present" | "late" | "absent";
 

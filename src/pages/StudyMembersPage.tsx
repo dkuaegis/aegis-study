@@ -1,6 +1,5 @@
 import { Calendar, Crown, Mail, User, UserX } from "lucide-react";
 import { useState } from "react";
-import Header from "@/components/ui/Header";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Header from "@/components/ui/Header";
 
 interface StudyMember {
     id: string;
