@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, Crown, Mail, User, UserX } from "lucide-react";
+import { Crown, User, UserX } from "lucide-react";
 import { useState } from "react";
 import {
     AlertDialog,
@@ -14,12 +14,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Header from "@/components/ui/Header";
 
 interface StudyMember {
     id: string;
     name: string;
-    email: string;
-    joinedAt: string;
+    phone: string;
+    studentNumber: string; // 8자리 숫자
     role: "스터디원" | "스터디장";
     status?: "active";
 }
@@ -42,40 +43,40 @@ const studyMembersData: Record<
         owner: {
             id: "user123",
             name: "김스터디",
-            email: "kim.study@example.com",
-            joinedAt: "2024-01-01",
+            phone: "010-1234-5678",
+            studentNumber: "20181234",
             role: "스터디장",
         },
         members: [
             {
                 id: "user456",
                 name: "이자바",
-                email: "lee.java@example.com",
-                joinedAt: "2024-01-15",
+                phone: "010-2345-6789",
+                studentNumber: "20192345",
                 role: "스터디원",
                 status: "active",
             },
             {
                 id: "user789",
                 name: "박스프링",
-                email: "park.spring@example.com",
-                joinedAt: "2024-01-16",
+                phone: "010-3456-7890",
+                studentNumber: "20203456",
                 role: "스터디원",
                 status: "active",
             },
             {
                 id: "user101",
                 name: "최코딩",
-                email: "choi.coding@example.com",
-                joinedAt: "2024-01-18",
+                phone: "010-4567-8901",
+                studentNumber: "20214567",
                 role: "스터디원",
                 status: "active",
             },
             {
                 id: "user202",
                 name: "정개발",
-                email: "jung.dev@example.com",
-                joinedAt: "2024-01-20",
+                phone: "010-5678-9012",
+                studentNumber: "20225678",
                 role: "스터디원",
                 status: "active",
             },
@@ -108,25 +109,7 @@ export default function StudyMembersPage({
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            <header className="border-gray-200 border-b bg-white px-6 py-4">
-                <div className="flex items-center">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={onBack}
-                        className="mr-4 text-gray-600 hover:text-gray-900"
-                    >
-                        <ArrowLeft className="mr-1 h-4 w-4" />
-                        뒤로가기
-                    </Button>
-                    <div className="flex items-center">
-                        <span className="font-bold text-gray-900 text-xl">
-                            스터디원 관리
-                        </span>
-                    </div>
-                </div>
-            </header>
+            <Header title="스터디원 관리" onBack={onBack} />
 
             <div className="mx-auto max-w-4xl p-6">
                 <Card className="border-gray-200">
@@ -191,12 +174,12 @@ function MemberCard({
                                 </Badge>
                             </div>
                             <div className="mt-1 flex items-center text-gray-500 text-sm">
-                                <Mail className="mr-1 h-4 w-4" />
-                                {member.email}
+                                <span className="mr-2 font-medium">📞</span>
+                                {member.phone}
                             </div>
                             <div className="mt-1 flex items-center text-gray-500 text-sm">
-                                <Calendar className="mr-1 h-4 w-4" />
-                                가입일: {member.joinedAt}
+                                <span className="mr-2 font-medium">🎓</span>
+                                학번: {member.studentNumber}
                             </div>
                         </div>
                     </div>

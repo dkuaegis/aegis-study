@@ -1,6 +1,5 @@
-import { ArrowLeft } from "lucide-react";
 import StudyFormContent from "@/components/study/StudyFormContent";
-import { Button } from "@/components/ui/button";
+import Header from "@/components/ui/Header";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
 
 interface EditStudyProps {
@@ -62,24 +61,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <header className="border-gray-200 border-b bg-white px-6 py-4">
-                <div className="flex items-center">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={onBack}
-                        className="mr-4 text-gray-600 hover:text-gray-900"
-                    >
-                        <ArrowLeft className="mr-1 h-4 w-4" />
-                        뒤로가기
-                    </Button>
-                    <div className="flex items-center">
-                        <span className="font-bold text-gray-900 text-xl">
-                            스터디 수정하기
-                        </span>
-                    </div>
-                </div>
-            </header>
+            <Header title="스터디 수정하기" onBack={onBack} />
 
             <div className="mx-auto max-w-4xl p-6">
                 <StudyFormProvider

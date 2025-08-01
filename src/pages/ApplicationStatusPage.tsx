@@ -1,15 +1,15 @@
-import { ArrowLeft, CheckCircle, Clock, User, XCircle } from "lucide-react";
+import { CheckCircle, Clock, User, XCircle } from "lucide-react";
 import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Header from "@/components/ui/Header";
 import { useApplications } from "@/hooks/useApplications";
 
 interface Application {
     id: number;
     name: string;
-    email: string;
-    appliedAt: string;
+    phone: string;
+    studentNumber: string;
     status: "pending" | "approved" | "rejected";
     applicationText: string;
 }
@@ -32,8 +32,8 @@ const applicationsData: Record<number, StudyData> = {
             {
                 id: 1,
                 name: "김개발",
-                email: "kim.dev@example.com",
-                appliedAt: "2024-01-15",
+                phone: "010-1234-5678",
+                studentNumber: "20181234",
                 status: "pending",
                 applicationText: `안녕하세요...`,
             },
@@ -100,29 +100,10 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            <header className="border-gray-200 border-b bg-white px-6 py-4">
-                <div className="flex items-center">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={onBack}
-                        className="mr-4 text-gray-600 hover:text-gray-900"
-                    >
-                        <ArrowLeft className="mr-1 h-4 w-4" />
-                        뒤로가기
-                    </Button>
-                    <div className="flex items-center">
-                        <span className="font-bold text-gray-900 text-xl">
-                            스터디 지원현황
-                        </span>
-                    </div>
-                </div>
-            </header>
+            <Header title="스터디 지원현황" onBack={onBack} />
 
             <div className="mx-auto max-w-7xl p-6">
                 <div className="flex flex-col gap-6 lg:flex-row">
-                    {/* Left Sidebar - Filters */}
                     <aside className="w-full rounded-lg border border-gray-200 bg-white p-6 lg:h-fit lg:w-80">
                         <h2 className="mb-4 font-semibold text-gray-900 text-lg">
                             지원자 필터
