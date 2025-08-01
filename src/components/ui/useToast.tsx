@@ -16,11 +16,13 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   const [toasts, setToasts] = React.useState<Toast[]>([]);
 
   const toast = ({ description }: { description: string }) => {
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     setToasts((prev) => [...prev, { id, description }]);
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 2500);
+
+    return () => clearTimeout(timeoutId);
   };
 
   return (
