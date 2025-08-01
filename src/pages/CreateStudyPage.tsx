@@ -2,16 +2,18 @@ import { useNavigate } from "react-router-dom";
 import StudyFormContent from "@/components/study/StudyFormContent";
 import Header from "@/components/ui/Header";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
+import { useToast } from "@/components/ui/useToast";
 
 const CreateStudyPage = () => {
     const navigate = useNavigate();
+    const toast = useToast();
 
     const handleBack = () => {
         navigate("/");
     };
 
     const handleSuccess = () => {
-        alert("스터디가 성공적으로 개설되었습니다!");
+        toast({ description: "스터디가 성공적으로 개설되었습니다!" });
         handleBack();
     };
 
