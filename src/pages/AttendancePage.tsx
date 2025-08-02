@@ -24,6 +24,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/components/ui/useToast";
 import { cn } from "@/lib/utils";
 
 type AttendanceStatus = "present" | "late" | "absent";

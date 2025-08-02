@@ -1,9 +1,4 @@
-import {
-    CheckCircle,
-    Eye,
-    FileText,
-    XCircle,
-} from "lucide-react";
+import { CheckCircle, Eye, FileText, XCircle } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -115,7 +110,8 @@ const ApplicationCard = ({
                                                     지원자: {application.name}
                                                 </span>
                                                 <span>
-                                                    학번: {application.studentNumber}
+                                                    학번:{" "}
+                                                    {application.studentNumber}
                                                 </span>
                                             </div>
                                         </div>

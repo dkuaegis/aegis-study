@@ -1,5 +1,6 @@
 import StudyFormContent from "@/components/study/StudyFormContent";
 import Header from "@/components/ui/Header";
+import { useToast } from "@/components/ui/useToast";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
 import { useToast } from "@/components/ui/useToast";
 
