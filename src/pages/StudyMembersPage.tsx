@@ -1,5 +1,6 @@
 import { Crown, User, UserX } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/components/ui/useToast";
 import {
     AlertDialog,
     AlertDialogAction,
