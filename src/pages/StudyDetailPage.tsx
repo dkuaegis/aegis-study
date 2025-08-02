@@ -1,16 +1,14 @@
 import {
     BarChart3,
     CheckCircle,
-    Clock,
     Settings,
-    Timer,
     User,
     UserCheck,
     Users,
     UsersIcon,
     X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useToast } from "@/components/ui/useToast";
 import {
     AlertDialog,
@@ -27,7 +25,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
@@ -203,14 +200,6 @@ const StudyDetailPage = ({
     const [isCancelling, setIsCancelling] = useState(false);
     const toast = useToast();
 
-    // 출석 관련 상태
-    const [attendanceCode, setAttendanceCode] = useState<string>("");
-    const [inputCode, setInputCode] = useState<string>("");
-    const [timer, setTimer] = useState<number>(0);
-    const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
-    const [attendanceStatus, setAttendanceStatus] = useState<
-        "none" | "checked" | "late"
-    >("none");
 
     // 사용자의 신청 상태를 로컬 state로 관리
     const [userApplicationStatus, setUserApplicationStatus] = useState<
@@ -226,18 +215,6 @@ const StudyDetailPage = ({
     const study = studyDetailData[studyId as keyof typeof studyDetailData];
 
     // 타이머 효과
-    useEffect(() => {
-        let interval: NodeJS.Timeout;
-        if (isTimerActive && timer > 0) {
-            interval = setInterval(() => {
-                setTimer((timer) => timer - 1);
-            }, 1000);
-        } else if (timer === 0 && isTimerActive) {
-            setIsTimerActive(false);
-            setAttendanceCode("");
-        }
-        return () => clearInterval(interval);
-    }, [isTimerActive, timer]);
 
     if (!study) {
         return <div>스터디를 찾을 수 없습니다.</div>;
@@ -274,35 +251,6 @@ const StudyDetailPage = ({
         setIsCancelling(false);
     };
 
-    // 출석 코드 생성 (스터디장용)
-    const generateAttendanceCode = () => {
-        const code = Math.floor(10000 + Math.random() * 90000).toString();
-        setAttendanceCode(code);
-        setTimer(60); // 1분
-        setIsTimerActive(true);
-        toast({ description: `출석 코드가 생성되었습니다: ${code}` });
-    };
-
-    // 출석 체크 (스터디원용)
-    const checkAttendance = () => {
-        if (inputCode === attendanceCode && attendanceCode) {
-            const remainingTime = timer;
-            const status = remainingTime > 30 ? "checked" : "late";
-            setAttendanceStatus(status);
-            setInputCode("");
-            toast({
-                description: `출석이 완료되었습니다! ${status === "late" ? "(지각)" : ""}`,
-            });
-        } else {
-            toast({ description: "올바르지 않은 출석 코드입니다." });
-        }
-    };
-
-    const formatTime = (seconds: number) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, "0")}`;
-    };
 
     const getApplicationStatusBadge = (status: string | null) => {
         switch (status) {
@@ -530,46 +478,6 @@ const StudyDetailPage = ({
                             </CardContent>
                         </Card>
 
-                        {/* 스터디장용 출석 코드 생성 */}
-                        {isOwner && (
-                            <Card className="border-gray-200">
-                                <CardHeader>
-                                    <CardTitle className="font-semibold text-gray-900 text-lg">
-                                        출석 코드 생성
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <Button
-                                        onClick={generateAttendanceCode}
-                                        disabled={isTimerActive}
-                                        className="w-full bg-blue-600 text-white hover:bg-blue-700"
-                                    >
-                                        <Timer className="mr-2 h-4 w-4" />
-                                        출석 코드 생성
-                                    </Button>
-                                    {attendanceCode && (
-                                        <div className="space-y-2 text-center">
-                                            <div className="rounded-lg bg-blue-50 p-4">
-                                                <p className="mb-1 text-blue-600 text-sm">
-                                                    출석 코드
-                                                </p>
-                                                <p className="font-bold font-mono text-2xl text-blue-800">
-                                                    {attendanceCode}
-                                                </p>
-                                            </div>
-                                            {isTimerActive && (
-                                                <div className="flex items-center justify-center gap-2 text-orange-600">
-                                                    <Clock className="h-4 w-4" />
-                                                    <span className="font-bold font-mono">
-                                                        {formatTime(timer)}
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </CardContent>
-                            </Card>
-                        )}
 
                         {!isOwner && (
                             <Card className="border-gray-200">
@@ -644,96 +552,8 @@ const StudyDetailPage = ({
                                                 <p className="mb-2 font-medium text-green-600">
                                                     스터디에 참여 중입니다!
                                                 </p>
-                                                {attendanceStatus ===
-                                                    "checked" && (
-                                                    <Badge className="bg-green-100 text-green-800">
-                                                        ✅ 출석 완료
-                                                    </Badge>
-                                                )}
-                                                {attendanceStatus ===
-                                                    "late" && (
-                                                    <Badge className="bg-yellow-100 text-yellow-800">
-                                                        ⚠️ 지각
-                                                    </Badge>
-                                                )}
                                             </div>
-
-                                            {/* 출석 체크 섹션 */}
-                                            {attendanceCode &&
-                                                attendanceStatus === "none" && (
-                                                    <div className="space-y-3">
-                                                        <Separator className="bg-gray-200" />
-                                                        <div>
-                                                            <Label className="font-medium text-gray-900 text-sm">
-                                                                출석 체크
-                                                            </Label>
-                                                            <div className="mt-2 space-y-3">
-                                                                <Input
-                                                                    placeholder="출석 코드 입력 (숫자 5자리)"
-                                                                    value={
-                                                                        inputCode
-                                                                    }
-                                                                    onChange={(
-                                                                        e
-                                                                    ) =>
-                                                                        setInputCode(
-                                                                            e
-                                                                                .target
-                                                                                .value
-                                                                        )
-                                                                    }
-                                                                    maxLength={
-                                                                        5
-                                                                    }
-                                                                    className="text-center font-mono text-lg"
-                                                                    type="number"
-                                                                />
-                                                                <Button
-                                                                    onClick={
-                                                                        checkAttendance
-                                                                    }
-                                                                    disabled={
-                                                                        inputCode.length !==
-                                                                            5 ||
-                                                                        !attendanceCode
-                                                                    }
-                                                                    className="w-full bg-green-600 text-white hover:bg-green-700"
-                                                                >
-                                                                    <UserCheck className="mr-2 h-4 w-4" />
-                                                                    출석하기
-                                                                </Button>
-                                                                {isTimerActive && (
-                                                                    <div className="rounded-lg bg-blue-50 p-3 text-center">
-                                                                        <p className="text-blue-600 text-sm">
-                                                                            출석
-                                                                            체크
-                                                                            가능
-                                                                            시간:{" "}
-                                                                            <span className="font-bold font-mono">
-                                                                                {formatTime(
-                                                                                    timer
-                                                                                )}
-                                                                            </span>
-                                                                        </p>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                            {!attendanceCode &&
-                                                attendanceStatus === "none" && (
-                                                    <div className="rounded-lg bg-gray-50 p-4 text-center">
-                                                        <p className="text-gray-500 text-sm">
-                                                            현재 활성화된 출석
-                                                            코드가 없습니다.
-                                                        </p>
-                                                    </div>
-                                                )}
-
                                             <Separator className="bg-gray-200" />
-
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <Button
