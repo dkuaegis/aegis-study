@@ -7,7 +7,6 @@ import {
     XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useToast } from "@/components/ui/useToast";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -24,6 +23,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/components/ui/useToast";
 import { cn } from "@/lib/utils";
 
 type AttendanceStatus = "present" | "late" | "absent";

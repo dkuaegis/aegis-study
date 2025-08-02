@@ -9,7 +9,6 @@ import {
     X,
 } from "lucide-react";
 import { useState } from "react";
-import { useToast } from "@/components/ui/useToast";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -28,6 +27,7 @@ import Header from "@/components/ui/Header";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/useToast";
 
 interface StudyDetailProps {
     studyId: number;
@@ -200,7 +200,6 @@ const StudyDetailPage = ({
     const [isCancelling, setIsCancelling] = useState(false);
     const toast = useToast();
 
-
     // 사용자의 신청 상태를 로컬 state로 관리
     const [userApplicationStatus, setUserApplicationStatus] = useState<
         "approved" | "pending" | "rejected" | null
@@ -227,11 +226,17 @@ const StudyDetailPage = ({
         if (study.recruitmentMethod === "선착순") {
             // 선착순인 경우 바로 승인
             setUserApplicationStatus("approved");
-            toast({ description: "지원이 완료되었습니다! 스터디에 참여하게 되었습니다." });
+            toast({
+                description:
+                    "지원이 완료되었습니다! 스터디에 참여하게 되었습니다.",
+            });
         } else {
             // 지원서인 경우 대기 상태
             setUserApplicationStatus("pending");
-            toast({ description: "지원서가 제출되었습니다! 검토 후 결과를 알려드리겠습니다." });
+            toast({
+                description:
+                    "지원서가 제출되었습니다! 검토 후 결과를 알려드리겠습니다.",
+            });
         }
         setIsApplying(false);
         setApplicationText("");
@@ -250,7 +255,6 @@ const StudyDetailPage = ({
         }
         setIsCancelling(false);
     };
-
 
     const getApplicationStatusBadge = (status: string | null) => {
         switch (status) {
@@ -477,7 +481,6 @@ const StudyDetailPage = ({
                                 </div>
                             </CardContent>
                         </Card>
-
 
                         {!isOwner && (
                             <Card className="border-gray-200">

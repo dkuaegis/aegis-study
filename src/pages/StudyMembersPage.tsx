@@ -1,6 +1,5 @@
 import { Crown, User, UserX } from "lucide-react";
 import { useState } from "react";
-import { useToast } from "@/components/ui/useToast";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
+import { useToast } from "@/components/ui/useToast";
 
 interface StudyMember {
     id: string;
