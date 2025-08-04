@@ -254,22 +254,28 @@ const StudyFormFields = () => {
                                     },
                                     max: {
                                         value: 50,
-                                        message:
-                                            "최대 50명까지 입력 가능합니다.",
+                                        message: "최대 50명까지 입력 가능합니다.",
                                     },
-                                    validate: (value: string) =>
-                                        value.trim() !== "" ||
+                                    validate: (value) =>
+                                        value !== "" ||
                                         "모집 인원을 입력하세요.",
                                 }}
                                 render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        id="maxParticipants"
-                                        type="text"
-                                        placeholder="예: 제한 없음, 5명 이내"
-                                        className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.maxParticipants && isDirty ? "border-red-500" : ""}`}
-                                        aria-invalid={!!errors.maxParticipants}
-                                    />
+                                    <>
+                                        <Input
+                                            {...field}
+                                            id="maxParticipants"
+                                            type="number"
+                                            placeholder="최대 인원수"
+                                            className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.maxParticipants && isDirty ? "border-red-500" : ""}`}
+                                            min="1"
+                                            max="50"
+                                            aria-invalid={!!errors.maxParticipants}
+                                        />
+                                        <span className="ml-2 text-gray-500 text-sm">
+                                            명
+                                        </span>
+                                    </>
                                 )}
                             />
                         </div>
