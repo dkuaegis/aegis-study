@@ -1,8 +1,6 @@
 import {
-    BarChart3,
     CheckCircle,
     Settings,
-    User,
     UserCheck,
     Users,
     UsersIcon,
@@ -50,7 +48,7 @@ const studyDetailData = {
         difficulty: "중급",
         participants: "10/20명",
         manager: "관리자",
-        recruitmentMethod: "지원서", // "선착순" or "지원서"
+        recruitmentMethod: "지원서",
         maxParticipants: 20,
         currentParticipants: 10,
         schedule: "매주 화, 목 19:00-21:00",
@@ -198,9 +196,9 @@ const StudyDetailPage = ({
     const [applicationText, setApplicationText] = useState("");
     const [isApplying, setIsApplying] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
+    const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
     const toast = useToast();
 
-    // 사용자의 신청 상태를 로컬 state로 관리
     const [userApplicationStatus, setUserApplicationStatus] = useState<
         "approved" | "pending" | "rejected" | null
     >(
@@ -213,25 +211,20 @@ const StudyDetailPage = ({
 
     const study = studyDetailData[studyId as keyof typeof studyDetailData];
 
-    // 타이머 효과
-
     if (!study) {
         return <div>스터디를 찾을 수 없습니다.</div>;
     }
 
     const handleApply = async () => {
         setIsApplying(true);
-        // 지원 로직 시뮬레이션
         await new Promise((resolve) => setTimeout(resolve, 1000));
         if (study.recruitmentMethod === "선착순") {
-            // 선착순인 경우 바로 승인
             setUserApplicationStatus("approved");
             toast({
                 description:
                     "지원이 완료되었습니다! 스터디에 참여하게 되었습니다.",
             });
         } else {
-            // 지원서인 경우 대기 상태
             setUserApplicationStatus("pending");
             toast({
                 description:
@@ -244,9 +237,7 @@ const StudyDetailPage = ({
 
     const handleCancelApplication = async () => {
         setIsCancelling(true);
-        // 신청 취소 로직 시뮬레이션
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        // 상태를 null로 변경하여 다시 지원하기 버튼이 나타나도록 함
         setUserApplicationStatus(null);
         if (userApplicationStatus === "approved") {
             toast({ description: "스터디에서 탈퇴되었습니다." });
@@ -308,11 +299,11 @@ const StudyDetailPage = ({
                                             userApplicationStatus
                                         )}
                                 </div>
-                                <CardTitle className="mb-4 font-bold text-2xl text-gray-900">
+                                <CardTitle className="font-bold text-2xl text-gray-900">
                                     {study.title}
                                 </CardTitle>
                                 {isOwner && (
-                                    <div className="mb-4 flex flex-wrap gap-2">
+                                    <div className="mt-4 flex flex-wrap gap-2">
                                         <Button
                                             variant="outline"
                                             size="sm"
@@ -357,29 +348,13 @@ const StudyDetailPage = ({
                                         </Button>
                                     </div>
                                 )}
-                                <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-3">
-                                    <div className="flex items-center text-gray-600">
-                                        <BarChart3 className="mr-2 h-4 w-4" />
-                                        <span>{study.difficulty}</span>
-                                    </div>
-                                    <div className="flex items-center text-gray-600">
-                                        <Users className="mr-2 h-4 w-4" />
-                                        <span>{study.participants}</span>
-                                    </div>
-                                    <div className="flex items-center text-gray-600">
-                                        <User className="mr-2 h-4 w-4" />
-                                        <span>{study.manager}</span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </CardHeader>
                 </Card>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    {/* Main Content */}
                     <div className="space-y-6 lg:col-span-2">
-                        {/* Study Introduction */}
                         <Card className="border-gray-200">
                             <CardHeader>
                                 <CardTitle className="font-semibold text-gray-900 text-lg">
@@ -393,7 +368,6 @@ const StudyDetailPage = ({
                             </CardContent>
                         </Card>
 
-                        {/* Curriculum */}
                         <Card className="border-gray-200">
                             <CardHeader>
                                 <CardTitle className="font-semibold text-gray-900 text-lg">
@@ -417,7 +391,6 @@ const StudyDetailPage = ({
                             </CardContent>
                         </Card>
 
-                        {/* Requirements */}
                         <Card className="border-gray-200">
                             <CardHeader>
                                 <CardTitle className="font-semibold text-gray-900 text-lg">
@@ -452,6 +425,15 @@ const StudyDetailPage = ({
                             <CardContent className="space-y-4">
                                 <div>
                                     <Label className="font-medium text-gray-900 text-sm">
+                                        스터디장
+                                    </Label>
+                                    <p className="mt-1 text-gray-700">
+                                        {study.manager}
+                                    </p>
+                                </div>
+                                <Separator className="bg-gray-200" />
+                                <div>
+                                    <Label className="font-medium text-gray-900 text-sm">
                                         모집 방법
                                     </Label>
                                     <p className="mt-1 text-gray-700">
@@ -479,6 +461,7 @@ const StudyDetailPage = ({
                                         {study.schedule}
                                     </p>
                                 </div>
+                                <Separator className="bg-gray-200" />
                             </CardContent>
                         </Card>
 
@@ -501,7 +484,6 @@ const StudyDetailPage = ({
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
-                                    {/* 신청 상태에 따른 UI 분기 */}
                                     {userApplicationStatus === "pending" && (
                                         <div className="space-y-4 text-center">
                                             <p className="text-gray-600">
@@ -623,53 +605,73 @@ const StudyDetailPage = ({
                                     )}
 
                                     {!userApplicationStatus && (
-                                        <>
-                                            {study.recruitmentMethod ===
-                                                "지원서" && (
-                                                <div>
-                                                    <Label
-                                                        htmlFor="application"
-                                                        className="font-medium text-gray-900 text-sm"
+                                        study.recruitmentMethod === "지원서" ? (
+                                                <>
+                                                    <p className="mb-2 text-center text-gray-500 text-xs">
+                                                        지원 동기 및 각오를 작성해주세요
+                                                    </p>
+                                                    <Button
+                                                        onClick={() => setIsApplicationModalOpen(true)}
+                                                        className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                                                        disabled={isApplying}
                                                     >
-                                                        지원 동기 및 각오를
-                                                        작성해주세요
-                                                    </Label>
-                                                    <Textarea
-                                                        id="application"
-                                                        placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
-                                                        value={applicationText}
-                                                        onChange={(e) =>
-                                                            setApplicationText(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        className="mt-2 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                                    />
-                                                </div>
-                                            )}
-                                            <Button
-                                                onClick={handleApply}
-                                                disabled={
-                                                    isApplying ||
-                                                    (study.recruitmentMethod ===
-                                                        "지원서" &&
-                                                        !applicationText.trim())
-                                                }
-                                                className="w-full bg-blue-600 text-white hover:bg-blue-700"
-                                            >
-                                                {isApplying
-                                                    ? "처리 중..."
-                                                    : "지원하기"}
-                                            </Button>
-                                            {study.recruitmentMethod ===
-                                                "선착순" && (
-                                                <p className="text-center text-gray-500 text-xs">
-                                                    선착순으로 모집되며, 정원이
-                                                    마감되면 자동으로
-                                                    마감됩니다.
-                                                </p>
-                                            )}
-                                        </>
+                                                        {isApplying ? "처리 중..." : "지원서 작성하기"}
+                                                    </Button>
+                                                    <AlertDialog open={isApplicationModalOpen} onOpenChange={setIsApplicationModalOpen}>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    지원서 작성
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    지원 동기 및 각오를 작성해주세요.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <Textarea
+                                                                id="application"
+                                                                placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
+                                                                value={applicationText}
+                                                                onChange={(e) =>
+                                                                    setApplicationText(e.target.value)
+                                                                }
+                                                                className="mt-2 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                                            />
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel
+                                                                    onClick={() => setIsApplicationModalOpen(false)}
+                                                                >
+                                                                    닫기
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    onClick={async () => {
+                                                                        await handleApply();
+                                                                        setIsApplicationModalOpen(false);
+                                                                    }}
+                                                                    disabled={!applicationText.trim() || isApplying}
+                                                                    className="bg-blue-600 hover:bg-blue-700"
+                                                                >
+                                                                    {isApplying ? "처리 중..." : "제출"}
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Button
+                                                        onClick={handleApply}
+                                                        disabled={isApplying}
+                                                        className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                                                    >
+                                                        {isApplying ? "처리 중..." : "지원하기"}
+                                                    </Button>
+                                                    <p className="text-center text-gray-500 text-xs">
+                                                        선착순으로 모집되며, 정원이
+                                                        마감되면 자동으로
+                                                        마감됩니다.
+                                                    </p>
+                                                </>
+                                            )
                                     )}
                                 </CardContent>
                             </Card>
@@ -682,3 +684,4 @@ const StudyDetailPage = ({
 };
 
 export default StudyDetailPage;
+
