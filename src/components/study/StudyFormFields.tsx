@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
+import { useWatch } from "react-hook-form";
 
 const StudyFormFields = () => {
     const {
@@ -38,6 +39,11 @@ const StudyFormFields = () => {
         append: appendRequirement,
         remove: removeRequirement,
     } = requirementFieldArray;
+
+    const maxParticipantsLimitType = useWatch({
+        control,
+        name: "maxParticipantsLimitType",
+    });
 
     return (
         <>
@@ -235,55 +241,86 @@ const StudyFormFields = () => {
                         />
                     </div>
                     <div>
-                        <Label
-                            htmlFor="maxParticipants"
-                            className="font-medium text-gray-900 text-sm"
-                        >
+                        <Label className="font-medium text-gray-900 text-sm">
                             모집 인원
                         </Label>
-                        <div className="mt-1 flex items-center">
-                            <Users className="mr-2 h-4 w-4 text-gray-400" />
-                            <Controller
-                                name="maxParticipants"
-                                control={control}
-                                rules={{
-                                    required: "모집 인원을 입력하세요.",
-                                    min: {
-                                        value: 1,
-                                        message: "최소 1명 이상 입력하세요.",
-                                    },
-                                    max: {
-                                        value: 50,
-                                        message: "최대 50명까지 입력 가능합니다.",
-                                    },
-                                    validate: (value) =>
-                                        value !== "" ||
-                                        "모집 인원을 입력하세요.",
-                                }}
-                                render={({ field }) => (
-                                    <>
-                                        <Input
-                                            {...field}
-                                            id="maxParticipants"
-                                            type="number"
-                                            placeholder="최대 인원수"
-                                            className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.maxParticipants && isDirty ? "border-red-500" : ""}`}
-                                            min="1"
-                                            max="50"
-                                            aria-invalid={!!errors.maxParticipants}
+                        <Controller
+                            name="maxParticipantsLimitType"
+                            control={control}
+                            defaultValue="unlimited"
+                            render={({ field }) => (
+                                <RadioGroup
+                                    {...field}
+                                    value={field.value}
+                                    onValueChange={field.onChange}
+                                    className="mt-1 flex gap-6"
+                                >
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem
+                                            value="unlimited"
+                                            id="unlimited"
                                         />
-                                        <span className="ml-2 text-gray-500 text-sm">
-                                            명
+                                        <Label
+                                            htmlFor="unlimited"
+                                            className="cursor-pointer text-gray-700 text-sm"
+                                        >
+                                            제한 없음
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem
+                                            value="limited"
+                                            id="limited"
+                                        />
+                                        <Label
+                                            htmlFor="limited"
+                                            className="cursor-pointer text-gray-700 text-sm"
+                                        >
+                                            제한 있음
+                                        </Label>
+                                    </div>
+                                </RadioGroup>
+                            )}
+                        />
+                        <Controller
+                            name="maxParticipants"
+                            control={control}
+                            rules={{
+                                validate: (value) =>
+                                    maxParticipantsLimitType === "limited"
+                                        ? value && Number(value) >= 1 && Number(value) <= 50
+                                            ? true
+                                            : "1~50명 사이로 입력하세요."
+                                        : true,
+                            }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    {maxParticipantsLimitType === "limited" && (
+                                        <div className="mt-2 flex items-center">
+                                            <Users className="mr-2 h-4 w-4 text-gray-400" />
+                                            <Input
+                                                {...field}
+                                                id="maxParticipants"
+                                                type="number"
+                                                placeholder="최대 인원수"
+                                                className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${fieldState.invalid && isDirty ? "border-red-500" : ""}`}
+                                                min="1"
+                                                max="50"
+                                                aria-invalid={fieldState.invalid}
+                                            />
+                                            <span className="ml-2 text-gray-500 text-sm">
+                                                명
+                                            </span>
+                                        </div>
+                                    )}
+                                    {fieldState.invalid && (
+                                        <span className="mt-1 block text-red-500 text-xs">
+                                            {fieldState.error?.message}
                                         </span>
-                                    </>
-                                )}
-                            />
-                        </div>
-                        {errors.maxParticipants && (
-                            <span className="mt-1 block text-red-500 text-xs">
-                                {(errors.maxParticipants as FieldError).message}
-                            </span>
-                        )}
+                                    )}
+                                </>
+                            )}
+                        />
                     </div>
                 </CardContent>
             </Card>
