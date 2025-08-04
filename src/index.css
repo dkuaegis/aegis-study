@@ -126,6 +126,7 @@
     * {
         @apply border-border outline-ring/50;
         word-break: keep-all;
+        overflow-wrap: anywhere;
     }
 
     body {
