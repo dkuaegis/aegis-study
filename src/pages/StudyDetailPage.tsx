@@ -718,3 +718,4 @@ const StudyDetailPage = ({
 };
 
 export default StudyDetailPage;
+
