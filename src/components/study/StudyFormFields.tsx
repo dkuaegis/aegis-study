@@ -1,6 +1,6 @@
 import { Calendar, Plus, Users, X } from "lucide-react";
 import type { FieldError } from "react-hook-form";
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
-import { useWatch } from "react-hook-form";
 
 const StudyFormFields = () => {
     const {
@@ -288,7 +287,9 @@ const StudyFormFields = () => {
                             rules={{
                                 validate: (value) =>
                                     maxParticipantsLimitType === "limited"
-                                        ? value && Number(value) >= 1 && Number(value) <= 50
+                                        ? value &&
+                                          Number(value) >= 1 &&
+                                          Number(value) <= 50
                                             ? true
                                             : "1~50명 사이로 입력하세요."
                                         : true,
@@ -306,7 +307,9 @@ const StudyFormFields = () => {
                                                 className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${fieldState.invalid && isDirty ? "border-red-500" : ""}`}
                                                 min="1"
                                                 max="50"
-                                                aria-invalid={fieldState.invalid}
+                                                aria-invalid={
+                                                    fieldState.invalid
+                                                }
                                             />
                                             <span className="ml-2 text-gray-500 text-sm">
                                                 명
