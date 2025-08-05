@@ -1,6 +1,8 @@
+// 원본: 파일 분리 전 전체 코드 복원
 import type React from "react";
 import { createContext, useContext } from "react";
-import ky from "ky";
+import { createStudy } from "../lib/studyApi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     StudyCategory,
     StudyLevel,
@@ -21,7 +23,6 @@ export interface CurriculumItem {
 export interface RequirementItem {
     value: string;
 }
-
 export interface FormValues extends FieldValues {
     title: string;
     category: string;
@@ -41,7 +42,7 @@ interface StudyFormContextProps {
     requirementFieldArray: UseFieldArrayReturn<FormValues, "requirements">;
     categories: { value: string; label: string }[];
     difficulties: { value: string; label: string }[];
-    onSubmit: (data: FormValues) => Promise<void>;
+    onSubmit: (data: FormValues) => void;
     setError: UseFormReturn<FormValues>["setError"];
 }
 
@@ -98,7 +99,23 @@ export const useStudyForm = (
         name: "requirements",
     });
 
-    const onSubmit = async (data: FormValues) => {
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: createStudy,
+        onSuccess: (res: unknown) => {
+            queryClient.invalidateQueries({ queryKey: ["studies"] });
+            if (onSuccess) onSuccess(res as FormValues);
+        },
+        onError: (_err: unknown) => {
+            form.setError("title", {
+                type: "manual",
+                message: "스터디 개설 중 오류가 발생했습니다.",
+            });
+        },
+    });
+
+    const onSubmit = (data: FormValues) => {
         const filteredCurriculum = data.curriculum
             .map((item) => item.value)
             .filter((v) => v.trim() !== "");
@@ -145,21 +162,7 @@ export const useStudyForm = (
             qualifications: filteredRequirements,
         };
 
-        try {
-            await ky.post(`${import.meta.env.VITE_API_URL}/studies`, {
-                json: payload,
-                credentials: "include",
-            }).json();
-            if (onSuccess) {
-                onSuccess(data);
-            }
-        } catch (err) {
-            console.error(err);
-            form.setError("title", {
-                type: "manual",
-                message: "스터디 개설 중 오류가 발생했습니다.",
-            });
-        }
+        mutation.mutate(payload);
     };
 
     return {
