@@ -123,8 +123,12 @@ export const useStudyForm = (
 
         const payload = {
             title: data.title,
-            category: data.category as StudyCategory ?? "ETC",
-            level: data.difficulty as StudyLevel ?? "BASIC",
+            category: Object.values(StudyCategory).includes(data.category as StudyCategory)
+                ? data.category as StudyCategory
+                : StudyCategory.ETC,
+            level: Object.values(StudyLevel).includes(data.difficulty as StudyLevel)
+                ? data.difficulty as StudyLevel
+                : StudyLevel.BASIC,
             description: data.introduction,
             recruitmentMethod: data.recruitmentMethod as StudyRecruitmentMethod ?? "FCFS",
             maxParticipants: data.maxParticipants ? Number(data.maxParticipants) : null,
