@@ -131,7 +131,12 @@ export const useStudyForm = (
                 : StudyLevel.BASIC,
             description: data.introduction,
             recruitmentMethod: data.recruitmentMethod as StudyRecruitmentMethod ?? "FCFS",
-            maxParticipants: data.maxParticipants ? Number(data.maxParticipants) : null,
+            maxParticipants:
+                data.maxParticipantsLimitType === "unlimited"
+                    ? 0
+                    : data.maxParticipants
+                        ? Number(data.maxParticipants)
+                        : null,
             schedule: data.schedule,
             curricula: filteredCurriculum,
             qualifications: filteredRequirements,
