@@ -16,6 +16,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
 
+const MAX_PARTICIPANTS = 50;
+const MIN_PARTICIPANTS = 1;
+
 const StudyFormFields = () => {
     const {
         form: {
@@ -102,7 +105,7 @@ const StudyFormFields = () => {
                                             <SelectValue placeholder="카테고리를 선택하세요" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {categories.map((category) => (
+                                            {categories.map((category: { value: string; label: string }) => (
                                                 <SelectItem
                                                     key={category.value}
                                                     value={category.value}
@@ -141,7 +144,7 @@ const StudyFormFields = () => {
                                             <SelectValue placeholder="난이도를 선택하세요" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {difficulties.map((difficulty) => (
+                                            {difficulties.map((difficulty: { value: string; label: string }) => (
                                                 <SelectItem
                                                     key={difficulty.value}
                                                     value={difficulty.value}
@@ -292,9 +295,9 @@ const StudyFormFields = () => {
                                     if (
                                         !value ||
                                         Number.isNaN(numValue) ||
-                                        !Number.isInteger(numValue) || // 정수 여부 추가
-                                        numValue < 1 ||
-                                        numValue > 50
+                                        !Number.isInteger(numValue) ||
+                                        numValue < MIN_PARTICIPANTS ||
+                                        numValue > MAX_PARTICIPANTS
                                     ) {
                                         return "1~50명 사이로 입력하세요.";
                                     }
@@ -312,8 +315,8 @@ const StudyFormFields = () => {
                                                 type="number"
                                                 placeholder="최대 인원수"
                                                 className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${fieldState.invalid && isDirty ? "border-red-500" : ""}`}
-                                                min="1"
-                                                max="50"
+                                                min={MIN_PARTICIPANTS}
+                                                max={MAX_PARTICIPANTS}
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
@@ -387,7 +390,7 @@ const StudyFormFields = () => {
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                    {curriculumFields.map((field, index: number) => (
+                    {curriculumFields.map((field: { id: string; value: string }, index: number) => (
                         <div key={field.id} className="flex items-center gap-2">
                             <Controller
                                 name={`curriculum.${index}.value`}
@@ -438,7 +441,7 @@ const StudyFormFields = () => {
                     ))}
                     {errors.curriculum &&
                         typeof (errors.curriculum as FieldError).message ===
-                            "string" && (
+                        "string" && (
                             <span className="mt-1 block text-red-500 text-xs">
                                 {(errors.curriculum as FieldError).message}
                             </span>
@@ -465,7 +468,7 @@ const StudyFormFields = () => {
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                    {requirementFields.map((field, index: number) => (
+                    {requirementFields.map((field: { id: string; value: string }, index: number) => (
                         <div key={field.id} className="flex items-center gap-2">
                             <Controller
                                 name={`requirements.${index}.value`}
@@ -514,7 +517,7 @@ const StudyFormFields = () => {
                     ))}
                     {errors.requirements &&
                         typeof (errors.requirements as FieldError).message ===
-                            "string" && (
+                        "string" && (
                             <span className="mt-1 block text-red-500 text-xs">
                                 {(errors.requirements as FieldError).message}
                             </span>
