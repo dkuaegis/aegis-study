@@ -1,5 +1,12 @@
 import type React from "react";
 import { createContext, useContext } from "react";
+import {
+    StudyCategory,
+    StudyLevel,
+    StudyRecruitmentMethod,
+    StudyCategoryLabels,
+    StudyLevelLabels,
+} from "@/types/study";
 import type {
     FieldValues,
     UseFieldArrayReturn,
@@ -21,6 +28,7 @@ export interface FormValues extends FieldValues {
     introduction: string;
     recruitmentMethod: string;
     maxParticipants: string;
+    maxParticipantsLimitType?: string;
     schedule: string;
     curriculum: CurriculumItem[];
     requirements: RequirementItem[];
@@ -69,22 +77,15 @@ export const useStudyForm = (
         mode: "onBlur",
     });
 
-    const categories = [
-        { value: "WEB", label: "웹 개발" },
-        { value: "MOBILE", label: "모바일" },
-        { value: "AI", label: "AI/ML" },
-        { value: "DATA", label: "데이터" },
-        { value: "BACKEND", label: "백엔드" },
-        { value: "FRONTEND", label: "프론트엔드" },
-        { value: "DEVOPS", label: "DevOps" },
-        { value: "DESIGN", label: "디자인" },
-    ];
+    const categories = Object.values(StudyCategory).map((value) => ({
+        value,
+        label: StudyCategoryLabels[value],
+    }));
 
-    const difficulties = [
-        { value: "입문", label: "입문" },
-        { value: "초급", label: "초급" },
-        { value: "중급 이상", label: "중급 이상" },
-    ];
+    const difficulties = Object.values(StudyLevel).map((value) => ({
+        value,
+        label: StudyLevelLabels[value],
+    }));
 
     const curriculumFieldArray = useFieldArray<FormValues, "curriculum">({
         control: form.control,
@@ -121,14 +122,46 @@ export const useStudyForm = (
         }
         if (hasError) return;
 
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        const payload = {
+            title: data.title,
+            category: Object.values(StudyCategory).includes(data.category as StudyCategory)
+                ? data.category as StudyCategory
+                : StudyCategory.ETC,
+            level: Object.values(StudyLevel).includes(data.difficulty as StudyLevel)
+                ? data.difficulty as StudyLevel
+                : StudyLevel.BASIC,
+            description: data.introduction,
+            recruitmentMethod: Object.values(StudyRecruitmentMethod).includes(data.recruitmentMethod as StudyRecruitmentMethod)
+                ? data.recruitmentMethod as StudyRecruitmentMethod
+                : "FCFS" as StudyRecruitmentMethod, maxParticipants:
+                data.maxParticipantsLimitType === "unlimited"
+                    ? 0
+                    : data.maxParticipants
+                        ? Number(data.maxParticipants)
+                        : null,
+            schedule: data.schedule,
+            curricula: filteredCurriculum,
+            qualifications: filteredRequirements,
+        };
 
-        if (onSuccess) {
-            // FormValues 타입에 맞게 변환
-            onSuccess({
-                ...data,
-                curriculum: filteredCurriculum.map((v) => ({ value: v })),
-                requirements: filteredRequirements.map((v) => ({ value: v })),
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/studies`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(payload),
+            });
+            if (!res.ok) {
+                throw new Error("스터디 개설 실패");
+            }
+            if (onSuccess) {
+                onSuccess(data);
+            }
+        } catch (err) {
+            console.error(err);
+            form.setError("title", {
+                type: "manual",
+                message: "스터디 개설 중 오류가 발생했습니다.",
             });
         }
     };
