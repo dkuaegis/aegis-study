@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useStudyFormContext } from "../../hooks/useStudyForm";
+import { useStudyFormContext } from "@/hooks/useStudyForm";
 
 const StudyFormFields = () => {
     const {

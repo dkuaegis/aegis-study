@@ -1,4 +1,3 @@
-// 원본: 파일 분리 전 전체 코드 복원
 import type React from "react";
 import { createContext, useContext } from "react";
 import { createStudy } from "../lib/studyApi";
