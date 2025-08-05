@@ -604,75 +604,109 @@ const StudyDetailPage = ({
                                         </div>
                                     )}
 
-                                    {!userApplicationStatus && (
-                                        study.recruitmentMethod === "지원서" ? (
-                                                <>
-                                                    <p className="mb-2 text-center text-gray-500 text-xs">
-                                                        지원 동기 및 각오를 작성해주세요
-                                                    </p>
-                                                    <Button
-                                                        onClick={() => setIsApplicationModalOpen(true)}
-                                                        className="w-full bg-blue-600 text-white hover:bg-blue-700"
-                                                        disabled={isApplying}
-                                                    >
-                                                        {isApplying ? "처리 중..." : "지원서 작성하기"}
-                                                    </Button>
-                                                    <AlertDialog open={isApplicationModalOpen} onOpenChange={setIsApplicationModalOpen}>
-                                                        <AlertDialogContent>
-                                                            <AlertDialogHeader>
-                                                                <AlertDialogTitle>
-                                                                    지원서 작성
-                                                                </AlertDialogTitle>
-                                                                <AlertDialogDescription>
-                                                                    지원 동기 및 각오를 작성해주세요.
-                                                                </AlertDialogDescription>
-                                                            </AlertDialogHeader>
-                                                            <Textarea
-                                                                id="application"
-                                                                placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
-                                                                value={applicationText}
-                                                                onChange={(e) =>
-                                                                    setApplicationText(e.target.value)
+                                    {!userApplicationStatus &&
+                                        (study.recruitmentMethod ===
+                                        "지원서" ? (
+                                            <>
+                                                <p className="mb-2 text-center text-gray-500 text-xs">
+                                                    지원 동기 및 각오를
+                                                    작성해주세요
+                                                </p>
+                                                <Button
+                                                    onClick={() =>
+                                                        setIsApplicationModalOpen(
+                                                            true
+                                                        )
+                                                    }
+                                                    className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                                                    disabled={isApplying}
+                                                >
+                                                    {isApplying
+                                                        ? "처리 중..."
+                                                        : "지원서 작성하기"}
+                                                </Button>
+                                                <AlertDialog
+                                                    open={
+                                                        isApplicationModalOpen
+                                                    }
+                                                    onOpenChange={
+                                                        setIsApplicationModalOpen
+                                                    }
+                                                >
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                지원서 작성
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                지원 동기 및
+                                                                각오를
+                                                                작성해주세요.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <Textarea
+                                                            id="application"
+                                                            placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
+                                                            value={
+                                                                applicationText
+                                                            }
+                                                            onChange={(e) =>
+                                                                setApplicationText(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            className="mt-2 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                                        />
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel
+                                                                onClick={() =>
+                                                                    setIsApplicationModalOpen(
+                                                                        false
+                                                                    )
                                                                 }
-                                                                className="mt-2 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                                            />
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel
-                                                                    onClick={() => setIsApplicationModalOpen(false)}
-                                                                >
-                                                                    닫기
-                                                                </AlertDialogCancel>
-                                                                <AlertDialogAction
-                                                                    onClick={async () => {
-                                                                        await handleApply();
-                                                                        setIsApplicationModalOpen(false);
-                                                                    }}
-                                                                    disabled={!applicationText.trim() || isApplying}
-                                                                    className="bg-blue-600 hover:bg-blue-700"
-                                                                >
-                                                                    {isApplying ? "처리 중..." : "제출"}
-                                                                </AlertDialogAction>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    </AlertDialog>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Button
-                                                        onClick={handleApply}
-                                                        disabled={isApplying}
-                                                        className="w-full bg-blue-600 text-white hover:bg-blue-700"
-                                                    >
-                                                        {isApplying ? "처리 중..." : "지원하기"}
-                                                    </Button>
-                                                    <p className="text-center text-gray-500 text-xs">
-                                                        선착순으로 모집되며, 정원이
-                                                        마감되면 자동으로
-                                                        마감됩니다.
-                                                    </p>
-                                                </>
-                                            )
-                                    )}
+                                                            >
+                                                                닫기
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={async () => {
+                                                                    await handleApply();
+                                                                    setIsApplicationModalOpen(
+                                                                        false
+                                                                    );
+                                                                }}
+                                                                disabled={
+                                                                    !applicationText.trim() ||
+                                                                    isApplying
+                                                                }
+                                                                className="bg-blue-600 hover:bg-blue-700"
+                                                            >
+                                                                {isApplying
+                                                                    ? "처리 중..."
+                                                                    : "제출"}
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Button
+                                                    onClick={handleApply}
+                                                    disabled={isApplying}
+                                                    className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                                                >
+                                                    {isApplying
+                                                        ? "처리 중..."
+                                                        : "지원하기"}
+                                                </Button>
+                                                <p className="text-center text-gray-500 text-xs">
+                                                    선착순으로 모집되며, 정원이
+                                                    마감되면 자동으로
+                                                    마감됩니다.
+                                                </p>
+                                            </>
+                                        ))}
                                 </CardContent>
                             </Card>
                         )}
