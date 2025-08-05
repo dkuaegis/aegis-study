@@ -288,7 +288,13 @@ const StudyFormFields = () => {
                                 validate: (value) => {
                                     if (maxParticipantsLimitType !== "limited") return true;
                                     const numValue = Number(value);
-                                    if (!value || Number.isNaN(numValue) || numValue < 1 || numValue > 50) {
+                                    if (
+                                        !value ||
+                                        Number.isNaN(numValue) ||
+                                        !Number.isInteger(numValue) ||   // 정수 여부 추가
+                                        numValue < 1 ||
+                                        numValue > 50
+                                    ) {
                                         return "1~50명 사이로 입력하세요.";
                                     }
                                     return true;
