@@ -286,12 +286,13 @@ const StudyFormFields = () => {
                             control={control}
                             rules={{
                                 validate: (value) => {
-                                    if (maxParticipantsLimitType !== "limited") return true;
+                                    if (maxParticipantsLimitType !== "limited")
+                                        return true;
                                     const numValue = Number(value);
                                     if (
                                         !value ||
                                         Number.isNaN(numValue) ||
-                                        !Number.isInteger(numValue) ||   // 정수 여부 추가
+                                        !Number.isInteger(numValue) || // 정수 여부 추가
                                         numValue < 1 ||
                                         numValue > 50
                                     ) {
@@ -300,7 +301,6 @@ const StudyFormFields = () => {
                                     return true;
                                 },
                             }}
-
                             render={({ field, fieldState }) => (
                                 <>
                                     {maxParticipantsLimitType === "limited" && (
@@ -438,7 +438,7 @@ const StudyFormFields = () => {
                     ))}
                     {errors.curriculum &&
                         typeof (errors.curriculum as FieldError).message ===
-                        "string" && (
+                            "string" && (
                             <span className="mt-1 block text-red-500 text-xs">
                                 {(errors.curriculum as FieldError).message}
                             </span>
@@ -514,7 +514,7 @@ const StudyFormFields = () => {
                     ))}
                     {errors.requirements &&
                         typeof (errors.requirements as FieldError).message ===
-                        "string" && (
+                            "string" && (
                             <span className="mt-1 block text-red-500 text-xs">
                                 {(errors.requirements as FieldError).message}
                             </span>
