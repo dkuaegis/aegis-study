@@ -285,14 +285,21 @@ const StudyFormFields = () => {
                             name="maxParticipants"
                             control={control}
                             rules={{
-                                validate: (value) =>
-                                    maxParticipantsLimitType === "limited"
-                                        ? value &&
-                                          Number(value) >= 1 &&
-                                          Number(value) <= 50
-                                            ? true
-                                            : "1~50명 사이로 입력하세요."
-                                        : true,
+                                validate: (value) => {
+                                    if (maxParticipantsLimitType !== "limited")
+                                        return true;
+                                    const numValue = Number(value);
+                                    if (
+                                        !value ||
+                                        Number.isNaN(numValue) ||
+                                        !Number.isInteger(numValue) || // 정수 여부 추가
+                                        numValue < 1 ||
+                                        numValue > 50
+                                    ) {
+                                        return "1~50명 사이로 입력하세요.";
+                                    }
+                                    return true;
+                                },
                             }}
                             render={({ field, fieldState }) => (
                                 <>
