@@ -1,5 +1,6 @@
 import type React from "react";
 import { createContext, useContext } from "react";
+import ky from "ky";
 import {
     StudyCategory,
     StudyLevel,
@@ -145,15 +146,10 @@ export const useStudyForm = (
         };
 
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/studies`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            await ky.post(`${import.meta.env.VITE_API_URL}/studies`, {
+                json: payload,
                 credentials: "include",
-                body: JSON.stringify(payload),
-            });
-            if (!res.ok) {
-                throw new Error("스터디 개설 실패");
-            }
+            }).json();
             if (onSuccess) {
                 onSuccess(data);
             }
