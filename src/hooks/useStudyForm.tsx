@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 import {
     StudyCategory,
     StudyLevel,
-    type StudyRecruitmentMethod,
+    StudyRecruitmentMethod,
     StudyCategoryLabels,
     StudyLevelLabels,
 } from "@/types/study";
@@ -28,6 +28,7 @@ export interface FormValues extends FieldValues {
     introduction: string;
     recruitmentMethod: string;
     maxParticipants: string;
+    maxParticipantsLimitType?: string;
     schedule: string;
     curriculum: CurriculumItem[];
     requirements: RequirementItem[];
@@ -130,8 +131,9 @@ export const useStudyForm = (
                 ? data.difficulty as StudyLevel
                 : StudyLevel.BASIC,
             description: data.introduction,
-            recruitmentMethod: data.recruitmentMethod as StudyRecruitmentMethod ?? "FCFS",
-            maxParticipants:
+            recruitmentMethod: Object.values(StudyRecruitmentMethod).includes(data.recruitmentMethod as StudyRecruitmentMethod)
+                ? data.recruitmentMethod as StudyRecruitmentMethod
+                : "FCFS" as StudyRecruitmentMethod, maxParticipants:
                 data.maxParticipantsLimitType === "unlimited"
                     ? 0
                     : data.maxParticipants
