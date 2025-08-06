@@ -3,7 +3,13 @@ import { Controller } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
 
@@ -11,7 +17,7 @@ const BasicInfoFields = () => {
     const {
         form: {
             control,
-            formState: { errors, dirtyFields }
+            formState: { errors, dirtyFields },
         },
         categories,
         difficulties,
@@ -74,14 +80,19 @@ const BasicInfoFields = () => {
                                         <SelectValue placeholder="카테고리를 선택하세요" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {categories.map((category: { value: string; label: string }) => (
-                                            <SelectItem
-                                                key={category.value}
-                                                value={category.value}
-                                            >
-                                                {category.label}
-                                            </SelectItem>
-                                        ))}
+                                        {categories.map(
+                                            (category: {
+                                                value: string;
+                                                label: string;
+                                            }) => (
+                                                <SelectItem
+                                                    key={category.value}
+                                                    value={category.value}
+                                                >
+                                                    {category.label}
+                                                </SelectItem>
+                                            )
+                                        )}
                                     </SelectContent>
                                 </Select>
                             )}
@@ -113,14 +124,19 @@ const BasicInfoFields = () => {
                                         <SelectValue placeholder="난이도를 선택하세요" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {difficulties.map((difficulty: { value: string; label: string }) => (
-                                            <SelectItem
-                                                key={difficulty.value}
-                                                value={difficulty.value}
-                                            >
-                                                {difficulty.label}
-                                            </SelectItem>
-                                        ))}
+                                        {difficulties.map(
+                                            (difficulty: {
+                                                value: string;
+                                                label: string;
+                                            }) => (
+                                                <SelectItem
+                                                    key={difficulty.value}
+                                                    value={difficulty.value}
+                                                >
+                                                    {difficulty.label}
+                                                </SelectItem>
+                                            )
+                                        )}
                                     </SelectContent>
                                 </Select>
                             )}

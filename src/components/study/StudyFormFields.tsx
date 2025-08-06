@@ -1,9 +1,9 @@
 import { useStudyFormContext } from "@/hooks/useStudyForm";
 import BasicInfoFields from "./fields/BasicInfoFields";
-import RecruitmentFields from "./fields/RecruitmentFields";
-import ScheduleFields from "./fields/ScheduleFields";
 import CurriculumFields from "./fields/CurriculumFields";
+import RecruitmentFields from "./fields/RecruitmentFields";
 import RequirementsFields from "./fields/RequirementsFields";
+import ScheduleFields from "./fields/ScheduleFields";
 
 const StudyFormFields = () => {
     useStudyFormContext();

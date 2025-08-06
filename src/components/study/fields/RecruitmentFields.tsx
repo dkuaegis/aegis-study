@@ -1,9 +1,9 @@
+import { Users } from "lucide-react";
 import { Controller, useWatch } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Users } from "lucide-react";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
 
 const MAX_PARTICIPANTS = 50;
@@ -147,9 +147,7 @@ const RecruitmentFields = () => {
                                             className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${fieldState.invalid && isDirty ? "border-red-500" : ""}`}
                                             min={MIN_PARTICIPANTS}
                                             max={MAX_PARTICIPANTS}
-                                            aria-invalid={
-                                                fieldState.invalid
-                                            }
+                                            aria-invalid={fieldState.invalid}
                                         />
                                         <span className="ml-2 text-gray-500 text-sm">
                                             명
