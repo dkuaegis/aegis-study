@@ -1,20 +1,20 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type React from "react";
 import { createContext, useContext } from "react";
-import { createStudy } from "../lib/studyApi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-    StudyCategory,
-    StudyLevel,
-    StudyRecruitmentMethod,
-    StudyCategoryLabels,
-    StudyLevelLabels,
-} from "@/types/study";
 import type {
     FieldValues,
     UseFieldArrayReturn,
     UseFormReturn,
 } from "react-hook-form";
 import { useFieldArray, useForm } from "react-hook-form";
+import {
+    StudyCategory,
+    StudyCategoryLabels,
+    StudyLevel,
+    StudyLevelLabels,
+    StudyRecruitmentMethod,
+} from "@/types/study";
+import { createStudy } from "../lib/studyApi";
 
 export interface CurriculumItem {
     value: string;
@@ -141,21 +141,28 @@ export const useStudyForm = (
 
         const payload = {
             title: data.title,
-            category: Object.values(StudyCategory).includes(data.category as StudyCategory)
-                ? data.category as StudyCategory
+            category: Object.values(StudyCategory).includes(
+                data.category as StudyCategory
+            )
+                ? (data.category as StudyCategory)
                 : StudyCategory.ETC,
-            level: Object.values(StudyLevel).includes(data.difficulty as StudyLevel)
-                ? data.difficulty as StudyLevel
+            level: Object.values(StudyLevel).includes(
+                data.difficulty as StudyLevel
+            )
+                ? (data.difficulty as StudyLevel)
                 : StudyLevel.BASIC,
             description: data.introduction,
-            recruitmentMethod: Object.values(StudyRecruitmentMethod).includes(data.recruitmentMethod as StudyRecruitmentMethod)
-                ? data.recruitmentMethod as StudyRecruitmentMethod
-                : "FCFS" as StudyRecruitmentMethod, maxParticipants:
+            recruitmentMethod: Object.values(StudyRecruitmentMethod).includes(
+                data.recruitmentMethod as StudyRecruitmentMethod
+            )
+                ? (data.recruitmentMethod as StudyRecruitmentMethod)
+                : ("FCFS" as StudyRecruitmentMethod),
+            maxParticipants:
                 data.maxParticipantsLimitType === "unlimited"
                     ? 0
                     : data.maxParticipants
-                        ? Number(data.maxParticipants)
-                        : null,
+                      ? Number(data.maxParticipants)
+                      : null,
             schedule: data.schedule,
             curricula: filteredCurriculum,
             qualifications: filteredRequirements,
