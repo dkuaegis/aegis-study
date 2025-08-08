@@ -14,7 +14,7 @@ import {
     StudyLevelLabels,
     StudyRecruitmentMethod,
 } from "@/types/study";
-import { createStudy } from "../lib/studyApi";
+import { useCreateStudyMutation } from "../lib/studyApi";
 
 export interface CurriculumItem {
     value: string;
@@ -98,21 +98,17 @@ export const useStudyForm = (
         name: "requirements",
     });
 
-    const queryClient = useQueryClient();
-
-    const mutation = useMutation({
-        mutationFn: createStudy,
-        onSuccess: (res: unknown) => {
-            queryClient.invalidateQueries({ queryKey: ["studies"] });
+    const mutation = useCreateStudyMutation(
+        (res: unknown) => {
             if (onSuccess) onSuccess(res as FormValues);
         },
-        onError: (_err: unknown) => {
+        (_err: unknown) => {
             form.setError("title", {
                 type: "manual",
                 message: "스터디 개설 중 오류가 발생했습니다.",
             });
-        },
-    });
+        }
+    );
 
     const onSubmit = (data: FormValues) => {
         const filteredCurriculum = data.curriculum
