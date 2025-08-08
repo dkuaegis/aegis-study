@@ -1,4 +1,5 @@
 import ky from "ky";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
     StudyCategory,
     StudyLevel,
@@ -27,3 +28,21 @@ export async function createStudy(
         })
         .json();
 }
+
+export const useCreateStudyMutation = (
+    onSuccess?: (data: unknown) => void,
+    onError?: (error: unknown) => void
+) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: createStudy,
+        onSuccess: (res: unknown) => {
+            queryClient.invalidateQueries({ queryKey: ["studies"] });
+            if (onSuccess) onSuccess(res);
+        },
+        onError: (err: unknown) => {
+            if (onError) onError(err);
+        },
+    });
+};
