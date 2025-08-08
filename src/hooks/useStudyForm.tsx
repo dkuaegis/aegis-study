@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type React from "react";
 import { createContext, useContext } from "react";
 import type {
@@ -156,8 +157,8 @@ export const useStudyForm = (
                 data.maxParticipantsLimitType === "unlimited"
                     ? 0
                     : data.maxParticipants
-                        ? Number(data.maxParticipants)
-                        : null,
+                      ? Number(data.maxParticipants)
+                      : null,
             schedule: data.schedule,
             curricula: filteredCurriculum,
             qualifications: filteredRequirements,
