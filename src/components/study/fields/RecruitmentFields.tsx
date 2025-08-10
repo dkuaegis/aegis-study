@@ -148,7 +148,11 @@ const RecruitmentFields = () => {
                                             min={MIN_PARTICIPANTS}
                                             max={MAX_PARTICIPANTS}
                                             aria-invalid={fieldState.invalid}
-                                            aria-describedby={fieldState.invalid ? "maxParticipants-error" : undefined}
+                                            aria-describedby={
+                                                fieldState.invalid
+                                                    ? "maxParticipants-error"
+                                                    : undefined
+                                            }
                                         />
                                         <span className="ml-2 text-gray-500 text-sm">
                                             명
@@ -156,7 +160,11 @@ const RecruitmentFields = () => {
                                     </div>
                                 )}
                                 {fieldState.invalid && (
-                                    <span id="maxParticipants-error" className="mt-1 block text-red-500 text-xs" role="alert">
+                                    <span
+                                        id="maxParticipants-error"
+                                        className="mt-1 block text-red-500 text-xs"
+                                        role="alert"
+                                    >
                                         {fieldState.error?.message}
                                     </span>
                                 )}

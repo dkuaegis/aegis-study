@@ -119,7 +119,8 @@ const BasicInfoFields = () => {
                                     aria-invalid={!!errors.difficulty}
                                 >
                                     <SelectTrigger
-                                        className={`mt-1 border-gray-300 focus:border-blue-500 ${errors.difficulty && dirtyFields.difficulty ? "border-red-500" : ""}`}                                    >
+                                        className={`mt-1 border-gray-300 focus:border-blue-500 ${errors.difficulty && dirtyFields.difficulty ? "border-red-500" : ""}`}
+                                    >
                                         <SelectValue placeholder="난이도를 선택하세요" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -163,7 +164,8 @@ const BasicInfoFields = () => {
                                 {...field}
                                 id="introduction"
                                 placeholder="스터디에 대한 자세한 소개를 작성해주세요"
-                                className={`mt-1 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.introduction && dirtyFields.introduction ? "border-red-500" : ""}`} aria-invalid={!!errors.introduction}
+                                className={`mt-1 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.introduction && dirtyFields.introduction ? "border-red-500" : ""}`}
+                                aria-invalid={!!errors.introduction}
                             />
                         )}
                     />

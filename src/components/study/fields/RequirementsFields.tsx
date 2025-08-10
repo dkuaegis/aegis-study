@@ -82,7 +82,10 @@ const RequirementsFields = () => {
                                 </Button>
                             )}
                             {errors.requirements?.[index] && (
-                                <span className="ml-2 text-red-500 text-xs" role="alert">
+                                <span
+                                    className="ml-2 text-red-500 text-xs"
+                                    role="alert"
+                                >
                                     {(errors.requirements[index] as FieldError)
                                         ?.message ?? ""}
                                 </span>
@@ -92,8 +95,11 @@ const RequirementsFields = () => {
                 )}
                 {errors.requirements &&
                     typeof (errors.requirements as FieldError).message ===
-                    "string" && (
-                        <span className="mt-1 block text-red-500 text-xs" role="alert">
+                        "string" && (
+                        <span
+                            className="mt-1 block text-red-500 text-xs"
+                            role="alert"
+                        >
                             {(errors.requirements as FieldError).message}
                         </span>
                     )}
