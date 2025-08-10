@@ -1,5 +1,5 @@
-import ky from "ky";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import ky from "ky";
 import type {
     StudyCategory,
     StudyLevel,
