@@ -280,7 +280,7 @@ const StudyDetailPage = ({
             <div className="mx-auto max-w-4xl p-6">
                 <Card className="mb-6 border-gray-200">
                     <CardHeader>
-                        <div className="flex flex-col items-start justify-between gap-4 md:flex-row">
+                        <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between">
                             <div className="flex-1">
                                 <div className="mb-2 flex items-center gap-2">
                                     <Badge
@@ -352,18 +352,18 @@ const StudyDetailPage = ({
                             </div>
                             {userApplicationStatus === "approved" &&
                                 !isOwner && (
-                                    <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-t-0 md:border-l md:pl-4">
+                                <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
                                         <div className="flex items-end gap-2">
                                             <div className="grid w-full max-w-sm items-center gap-1.5">
                                                 <Label
-                                                    htmlFor="attendance-code"
+                                                    htmlFor={`attendance-code-${studyId}`}
                                                     className="font-medium text-sm"
                                                 >
                                                     출석코드
                                                 </Label>
                                                 <Input
                                                     type="text"
-                                                    id="attendance-code"
+                                                    id={`attendance-code-${studyId}`}
                                                     placeholder="코드를 입력하세요"
                                                     className="h-9"
                                                 />
