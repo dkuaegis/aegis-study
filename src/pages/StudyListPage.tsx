@@ -1,11 +1,10 @@
 import { BarChart3, Clock, User, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { StudyListItem } from "src/types/study";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
-import { StudyCategoryLabels, StudyLevelLabels } from "@/types/study";
+import { StudyCategoryLabels, StudyLevelLabels,type StudyListItem  } from "@/types/study";
 
 interface StudyListMainProps {
     onCreateStudy: () => void;
@@ -25,7 +24,7 @@ const StudyList = ({
                 const response = await fetch(
                     `${import.meta.env.VITE_API_URL}/studies`,
                     {
-                        credentials: "include",
+                        //credentials: "include",
                     }
                 );
                 if (!response.ok) {
