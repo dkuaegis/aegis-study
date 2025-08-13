@@ -3,49 +3,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
+import { type StudyCategory, type StudyLevel, StudyLevelLabels, StudyCategoryLabels } from "@/types/study";
+import { useEffect, useState } from "react";
 
-const studyData = [
-    {
-        id: 1,
-        title: "Spring과 함께 백엔드 개발자 되기",
-        status: "모집중",
-        category: "WEB",
-        difficulty: "중급",
-        schedule: "모집 후 결정",
-        participants: "10/20명",
-        manager: "관리자",
-    },
-    {
-        id: 2,
-        title: "React 입문",
-        status: "모집중",
-        category: "WEB",
-        difficulty: "입문",
-        schedule: "모집 후 결정",
-        participants: "10/20명",
-        manager: "관리자",
-    },
-    {
-        id: 3,
-        title: "Python 데이터 분석",
-        status: "진행중",
-        category: "DATA",
-        difficulty: "중급",
-        schedule: "주 2회",
-        participants: "15/20명",
-        manager: "관리자",
-    },
-    {
-        id: 4,
-        title: "Flutter 모바일 앱 개발",
-        status: "모집중",
-        category: "MOBILE",
-        difficulty: "고급",
-        schedule: "주 3회",
-        participants: "8/15명",
-        manager: "관리자",
-    },
-];
+interface Study {
+    id: number;
+    title: string;
+    category: StudyCategory;
+    level: StudyLevel;
+    participantCount: number;
+    maxParticipants: number;
+    schedule: string;
+    instructor: string;
+}
 
 interface StudyListMainProps {
     onCreateStudy: () => void;
@@ -56,6 +26,24 @@ const StudyList = ({
     onCreateStudy,
     onViewStudyDetail,
 }: StudyListMainProps) => {
+    const [studies, setStudies] = useState<Study[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStudies = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/studies`);
+                const data = await response.json();
+                setStudies(data);
+            } catch (error) {
+                console.error('Failed to fetch studies:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStudies();
+    }, []);
     return (
         <div className="flex min-h-screen flex-col bg-gray-50 ">
             <Header title="스터디 목록" />
@@ -69,64 +57,70 @@ const StudyList = ({
                     </Button>
                 </div>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {studyData.map((study) => (
-                        <Card
-                            key={study.id}
-                            className="cursor-pointer border-gray-200 transition-shadow hover:shadow-md"
-                            onClick={() => onViewStudyDetail(study.id)}
-                        >
-                            <CardContent className="p-6">
-                                <div className="space-y-3">
-                                    <div>
-                                        <Badge
-                                            variant="secondary"
-                                            className={`${
-                                                study.status === "모집중"
-                                                    ? "bg-blue-100 text-blue-800"
-                                                    : study.status === "진행중"
-                                                      ? "bg-gray-100 text-gray-800"
-                                                      : "bg-gray-100 text-gray-600"
-                                            }`}
-                                        >
-                                            {study.status}
-                                        </Badge>
-                                    </div>
+                    {loading ? (
+                        <div className="col-span-full flex items-center justify-center py-8">
+                            <div className="text-gray-500">로딩 중...</div>
+                        </div>
+                    ) : (
+                        studies.map((study) => (
+                            <Card
+                                key={study.id}
+                                className="cursor-pointer border-gray-200 transition-shadow hover:shadow-md"
+                                onClick={() => onViewStudyDetail(study.id)}
+                            >
+                                <CardContent className="p-6">
+                                    <div className="space-y-3">
+                                        <div>
+                                            <Badge
+                                                variant="secondary"
+                                                className={`${
+                                                    study.participantCount < study.maxParticipants
+                                                        ? "bg-blue-100 text-blue-800"
+                                                        : "bg-gray-100 text-gray-800"
+                                                }`}
+                                            >
+                                                {study.participantCount < study.maxParticipants ? "모집중" : "진행중"}
+                                            </Badge>
+                                        </div>
 
-                                    <h3 className="font-semibold text-gray-900 text-lg leading-tight">
-                                        {study.title}
-                                    </h3>
+                                        <h3 className="font-semibold text-gray-900 text-lg leading-tight">
+                                            {study.title}
+                                        </h3>
 
-                                    <div className="space-y-3 text-gray-600 text-sm">
-                                        <div className="flex items-center">
-                                            <BarChart3 className="mr-2 h-4 w-4" />
-                                            <span>{study.difficulty}</span>
+                                        <div className="space-y-3 text-gray-600 text-sm">
+                                            <div className="flex items-center">
+                                                <BarChart3 className="mr-2 h-4 w-4" />
+                                                <span>{StudyLevelLabels[study.level]}</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <Clock className="mr-2 h-4 w-4" />
+                                                <span>{study.schedule}</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <Users className="mr-2 h-4 w-4" />
+                                                <span>
+                                                    {study.participantCount}{study.maxParticipants === 0 ? "제한 없음" : `/${study.maxParticipants}명`}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <User className="mr-2 h-4 w-4" />
+                                                <span>{study.instructor}</span>
+                                            </div>
                                         </div>
-                                        <div className="flex items-center">
-                                            <Clock className="mr-2 h-4 w-4" />
-                                            <span>{study.schedule}</span>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <Users className="mr-2 h-4 w-4" />
-                                            <span>{study.participants}</span>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <User className="mr-2 h-4 w-4" />
-                                            <span>{study.manager}</span>
+
+                                        <div className="flex justify-end">
+                                            <Badge
+                                                variant="outline"
+                                                className="border-gray-300 text-gray-600"
+                                            >
+                                                #{StudyCategoryLabels[study.category]}
+                                            </Badge>
                                         </div>
                                     </div>
-
-                                    <div className="flex justify-end">
-                                        <Badge
-                                            variant="outline"
-                                            className="border-gray-300 text-gray-600"
-                                        >
-                                            #{study.category}
-                                        </Badge>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
+                                </CardContent>
+                            </Card>
+                        ))
+                    )}
                 </div>
             </main>
         </div>
