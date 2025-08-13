@@ -50,12 +50,12 @@ export const StudyRecruitmentMethodLabels: Record<
 };
 
 export interface StudyListItem {
-  id: number
-  title: string
-  category: StudyCategory
-  level: StudyLevel
-  participantCount: number
-  maxParticipants: number
-  schedule: string
-  instructor: string
+    id: number;
+    title: string;
+    category: StudyCategory;
+    level: StudyLevel;
+    participantCount: number;
+    maxParticipants: number;
+    schedule: string;
+    instructor: string;
 }
