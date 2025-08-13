@@ -24,7 +24,7 @@ const StudyList = ({
                 const response = await fetch(
                     `${import.meta.env.VITE_API_URL}/studies`,
                     {
-                        //credentials: "include",
+                        ...(import.meta.env.PROD && { credentials: "include" }),
                     }
                 );
                 if (!response.ok) {

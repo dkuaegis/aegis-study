@@ -17,7 +17,7 @@ const useAuth = () => {
                 const response = await fetch(
                     `${import.meta.env.VITE_API_URL}/payments/status`,
                     {
-                        credentials: "include",
+                        ...(import.meta.env.PROD && { credentials: "include" }),
                     }
                 );
 

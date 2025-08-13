@@ -24,7 +24,7 @@ export async function createStudy(
     return ky
         .post(`${import.meta.env.VITE_API_URL}/studies`, {
             json: payload,
-            credentials: "include",
+                        ...(import.meta.env.PROD && { credentials: "include" }),
         })
         .json();
 }
