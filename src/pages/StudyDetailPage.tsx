@@ -352,7 +352,7 @@ const StudyDetailPage = ({
                             </div>
                             {userApplicationStatus === "approved" &&
                                 !isOwner && (
-                                <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
+                                    <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
                                         <div className="flex items-end gap-2">
                                             <div className="grid w-full max-w-sm items-center gap-1.5">
                                                 <Label

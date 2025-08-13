@@ -1,10 +1,15 @@
 import { BarChart3, Clock, User, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
-import { type StudyCategory, type StudyLevel, StudyLevelLabels, StudyCategoryLabels } from "@/types/study";
-import { useEffect, useState } from "react";
+import {
+    type StudyCategory,
+    StudyCategoryLabels,
+    type StudyLevel,
+    StudyLevelLabels,
+} from "@/types/study";
 
 interface Study {
     id: number;
@@ -32,11 +37,16 @@ const StudyList = ({
     useEffect(() => {
         const fetchStudies = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/studies`);
+                const response = await fetch(
+                    `${import.meta.env.VITE_API_URL}/studies`,
+                    {
+                        credentials: "include",
+                    }
+                );
                 const data = await response.json();
                 setStudies(data);
             } catch (error) {
-                console.error('Failed to fetch studies:', error);
+                console.error("Failed to fetch studies:", error);
             } finally {
                 setLoading(false);
             }
@@ -74,12 +84,16 @@ const StudyList = ({
                                             <Badge
                                                 variant="secondary"
                                                 className={`${
-                                                    study.participantCount < study.maxParticipants
+                                                    study.participantCount <
+                                                    study.maxParticipants
                                                         ? "bg-blue-100 text-blue-800"
                                                         : "bg-gray-100 text-gray-800"
                                                 }`}
                                             >
-                                                {study.participantCount < study.maxParticipants ? "모집중" : "진행중"}
+                                                {study.participantCount <
+                                                study.maxParticipants
+                                                    ? "모집중"
+                                                    : "진행중"}
                                             </Badge>
                                         </div>
 
@@ -90,7 +104,13 @@ const StudyList = ({
                                         <div className="space-y-3 text-gray-600 text-sm">
                                             <div className="flex items-center">
                                                 <BarChart3 className="mr-2 h-4 w-4" />
-                                                <span>{StudyLevelLabels[study.level]}</span>
+                                                <span>
+                                                    {
+                                                        StudyLevelLabels[
+                                                            study.level
+                                                        ]
+                                                    }
+                                                </span>
                                             </div>
                                             <div className="flex items-center">
                                                 <Clock className="mr-2 h-4 w-4" />
@@ -99,7 +119,10 @@ const StudyList = ({
                                             <div className="flex items-center">
                                                 <Users className="mr-2 h-4 w-4" />
                                                 <span>
-                                                    {study.participantCount}{study.maxParticipants === 0 ? "제한 없음" : `/${study.maxParticipants}명`}
+                                                    {study.participantCount}
+                                                    {study.maxParticipants === 0
+                                                        ? "제한 없음"
+                                                        : `/${study.maxParticipants}명`}
                                                 </span>
                                             </div>
                                             <div className="flex items-center">
@@ -113,7 +136,12 @@ const StudyList = ({
                                                 variant="outline"
                                                 className="border-gray-300 text-gray-600"
                                             >
-                                                #{StudyCategoryLabels[study.category]}
+                                                #
+                                                {
+                                                    StudyCategoryLabels[
+                                                        study.category
+                                                    ]
+                                                }
                                             </Badge>
                                         </div>
                                     </div>
