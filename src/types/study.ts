@@ -48,3 +48,14 @@ export const StudyRecruitmentMethodLabels: Record<
     [StudyRecruitmentMethod.FCFS]: "선착순",
     [StudyRecruitmentMethod.APPLICATION]: "지원서",
 };
+
+export interface StudyListItem {
+    id: number;
+    title: string;
+    category: StudyCategory;
+    level: StudyLevel;
+    participantCount: number;
+    maxParticipants: number;
+    schedule: string;
+    instructor: string;
+}
