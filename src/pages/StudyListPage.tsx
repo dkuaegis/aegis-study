@@ -88,13 +88,13 @@ const StudyList = ({
                                                 variant="secondary"
                                                 className={`${
                                                     study.participantCount <
-                                                    study.maxParticipants
+                                                study.maxParticipants || study.maxParticipants === 0
                                                         ? "bg-blue-100 text-blue-800"
                                                         : "bg-gray-100 text-gray-800"
                                                 }`}
                                             >
                                                 {study.participantCount <
-                                                study.maxParticipants
+                                                study.maxParticipants || study.maxParticipants === 0
                                                     ? "모집중"
                                                     : "진행중"}
                                             </Badge>
@@ -122,11 +122,10 @@ const StudyList = ({
                                             <div className="flex items-center">
                                                 <Users className="mr-2 h-4 w-4" />
                                                 <span>
-                                                    {study.participantCount}
-                                                    {study.maxParticipants === 0
-                                                        ? "제한 없음"
-                                                        : `/${study.maxParticipants}명`}
-                                                </span>
+                                                   {study.maxParticipants === 0
+                                                       ? "제한 없음"
+                                                       : `${study.participantCount}/${study.maxParticipants}명`}
+                                               </span>
                                             </div>
                                             <div className="flex items-center">
                                                 <User className="mr-2 h-4 w-4" />
