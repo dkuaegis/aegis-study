@@ -43,6 +43,9 @@ const StudyList = ({
                         credentials: "include",
                     }
                 );
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 const data = await response.json();
                 setStudies(data);
             } catch (error) {
