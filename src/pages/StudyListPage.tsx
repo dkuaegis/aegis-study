@@ -5,22 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import {
-    type StudyCategory,
     StudyCategoryLabels,
-    type StudyLevel,
     StudyLevelLabels,
 } from "@/types/study";
+import type { Study } from 'src/types/study'
 
-interface Study {
-    id: number;
-    title: string;
-    category: StudyCategory;
-    level: StudyLevel;
-    participantCount: number;
-    maxParticipants: number;
-    schedule: string;
-    instructor: string;
-}
 
 interface StudyListMainProps {
     onCreateStudy: () => void;
