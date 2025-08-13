@@ -49,7 +49,7 @@ export const StudyRecruitmentMethodLabels: Record<
     [StudyRecruitmentMethod.APPLICATION]: "지원서",
 };
 
-export interface Study {
+export interface StudyListItem {
   id: number
   title: string
   category: StudyCategory

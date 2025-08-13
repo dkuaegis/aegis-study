@@ -8,7 +8,7 @@ import {
     StudyCategoryLabels,
     StudyLevelLabels,
 } from "@/types/study";
-import type { Study } from 'src/types/study'
+import type { StudyListItem } from 'src/types/study'
 
 
 interface StudyListMainProps {
@@ -20,7 +20,7 @@ const StudyList = ({
     onCreateStudy,
     onViewStudyDetail,
 }: StudyListMainProps) => {
-    const [studies, setStudies] = useState<Study[]>([]);
+    const [studies, setStudies] = useState<StudyListItem[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
