@@ -59,3 +59,18 @@ export interface StudyListItem {
     schedule: string;
     instructor: string;
 }
+
+export interface StudyDetail {
+    id: number;
+    title: string;
+    category: StudyCategory;
+    level: StudyLevel;
+    description: string;
+    recruitmentMethod: StudyRecruitmentMethod;
+    participantCount: number;
+    maxParticipants: number;
+    schedule: string;
+    curricula: string;
+    qualifications: string;
+    instructor: string;
+}
