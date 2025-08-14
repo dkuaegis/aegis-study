@@ -30,10 +30,11 @@ import { useToast } from "@/components/ui/useToast";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import {
-  StudyCategoryLabels,
-  StudyRecruitmentMethod,
-  type StudyDetail,
+    StudyCategoryLabels,
+    type StudyDetail,
+    StudyRecruitmentMethod,
 } from "@/types/study";
+
 interface StudyDetailProps {
     studyId: number;
     onBack: () => void;
@@ -69,15 +70,26 @@ const StudyDetailPage = ({
     >(null);
 
     useEffect(() => {
+        const controller = new AbortController();
         const fetchStudy = async () => {
             setLoading(true);
             setError(null);
             try {
-                const data: StudyDetail = await apiClient
-                    .get(`${API_ENDPOINTS.STUDIES}/${studyId}`)
-                    .json();
+                const data = await apiClient
+                    .get(`${API_ENDPOINTS.STUDIES}/${studyId}`, {
+                        signal: controller.signal,
+                    })
+                    .json<StudyDetail>();
                 setStudy(data);
             } catch (err) {
+                if (
+                    typeof err === "object" &&
+                    err !== null &&
+                    "name" in err &&
+                    (err as { name?: string }).name === "AbortError"
+                ) {
+                    return;
+                }
                 if (err instanceof Error) {
                     setError(err.message);
                 } else {
@@ -89,6 +101,7 @@ const StudyDetailPage = ({
         };
 
         fetchStudy();
+        return () => controller.abort();
     }, [studyId]);
 
     if (loading) {
@@ -204,7 +217,7 @@ const StudyDetailPage = ({
                                         variant="outline"
                                         className="border-gray-300 text-gray-600"
                                     >
-                                    #{StudyCategoryLabels[study.category]}
+                                        #{StudyCategoryLabels[study.category]}
                                     </Badge>
                                     {userApplicationStatus &&
                                         getApplicationStatusBadge(
@@ -384,7 +397,8 @@ const StudyDetailPage = ({
                                         모집 방법
                                     </Label>
                                     <p className="mt-1 text-gray-700">
-                                        {study.recruitmentMethod === StudyRecruitmentMethod.FCFS
+                                        {study.recruitmentMethod ===
+                                        StudyRecruitmentMethod.FCFS
                                             ? "선착순 모집"
                                             : "지원서 심사"}
                                     </p>
