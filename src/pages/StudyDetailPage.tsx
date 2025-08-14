@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/useToast";
 import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 import { StudyCategoryLabels, StudyRecruitmentMethod } from "@/types/study";
+import type { HTTPError } from "ky";
 
 interface StudyDetailProps {
     studyId: number;
@@ -82,7 +83,9 @@ const StudyDetailPage = ({
         return (
             <div className="flex min-h-screen items-center justify-center bg-gray-50">
                 <div className="text-red-500">
-                    {error?.message ?? "오류가 발생했습니다."}
+                    {(error as HTTPError)?.response?.status === 404
+                        ? "스터디를 찾을 수 없습니다."
+                        : "오류가 발생했습니다."}
                 </div>
             </div>
         );
