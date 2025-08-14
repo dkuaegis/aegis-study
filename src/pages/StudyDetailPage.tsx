@@ -1,3 +1,4 @@
+import type { HTTPError } from "ky";
 import {
     CheckCircle,
     Settings,
@@ -29,7 +30,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/useToast";
 import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 import { StudyCategoryLabels, StudyRecruitmentMethod } from "@/types/study";
-import type { HTTPError } from "ky";
 
 interface StudyDetailProps {
     studyId: number;
