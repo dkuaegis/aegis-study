@@ -29,8 +29,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/useToast";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
-import type { StudyDetail } from "@/types/study";
-
+import {
+  StudyCategoryLabels,
+  StudyRecruitmentMethod,
+  type StudyDetail,
+} from "@/types/study";
 interface StudyDetailProps {
     studyId: number;
     onBack: () => void;
@@ -117,7 +120,7 @@ const StudyDetailPage = ({
     const handleApply = async () => {
         setIsApplying(true);
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        if (study.recruitmentMethod === "FCFS") {
+        if (study.recruitmentMethod === StudyRecruitmentMethod.FCFS) {
             setUserApplicationStatus("approved");
             toast({
                 description:
@@ -201,7 +204,7 @@ const StudyDetailPage = ({
                                         variant="outline"
                                         className="border-gray-300 text-gray-600"
                                     >
-                                        #{study.category}
+                                    #{StudyCategoryLabels[study.category]}
                                     </Badge>
                                     {userApplicationStatus &&
                                         getApplicationStatusBadge(
@@ -381,7 +384,7 @@ const StudyDetailPage = ({
                                         모집 방법
                                     </Label>
                                     <p className="mt-1 text-gray-700">
-                                        {study.recruitmentMethod === "FCFS"
+                                        {study.recruitmentMethod === StudyRecruitmentMethod.FCFS
                                             ? "선착순 모집"
                                             : "지원서 심사"}
                                     </p>
@@ -422,7 +425,7 @@ const StudyDetailPage = ({
                                                   "rejected"
                                                 ? "신청 결과"
                                                 : study.recruitmentMethod ===
-                                                    "FCFS"
+                                                    StudyRecruitmentMethod.FCFS
                                                   ? "지원하기"
                                                   : "지원서 작성"}
                                     </CardTitle>
@@ -550,7 +553,7 @@ const StudyDetailPage = ({
 
                                     {!userApplicationStatus &&
                                         (study.recruitmentMethod ===
-                                        "APPLICATION" ? (
+                                        StudyRecruitmentMethod.APPLICATION ? (
                                             <>
                                                 <p className="mb-2 text-center text-gray-500 text-xs">
                                                     지원 동기 및 각오를
