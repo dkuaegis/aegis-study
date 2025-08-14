@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
+import { fetchStudies } from "@/lib/studyListApi";
 import {
     StudyCategoryLabels,
     StudyLevelLabels,
@@ -23,18 +24,9 @@ const StudyList = ({
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchStudies = async () => {
+        const getStudies = async () => {
             try {
-                const response = await fetch(
-                    `${import.meta.env.VITE_API_URL}/studies`,
-                    {
-                        credentials: "include",
-                    }
-                );
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                const data = await response.json();
+                const data = await fetchStudies();
                 setStudies(data);
             } catch (error) {
                 console.error("Failed to fetch studies:", error);
@@ -43,7 +35,7 @@ const StudyList = ({
             }
         };
 
-        fetchStudies();
+        getStudies();
     }, []);
     return (
         <div className="flex min-h-screen flex-col bg-gray-50 ">

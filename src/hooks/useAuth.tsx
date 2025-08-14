@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { apiClient } from "@/lib/apiClient";
+import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 
 export enum AuthStatus {
     UNAUTHORIZED = "UNAUTHORIZED",
@@ -14,11 +16,8 @@ const useAuth = () => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await fetch(
-                    `${import.meta.env.VITE_API_URL}/payments/status`,
-                    {
-                        credentials: "include",
-                    }
+                const response = await apiClient.get(
+                    API_ENDPOINTS.PAYMENTS_STATUS
                 );
 
                 if (response.status === 401) {
@@ -28,7 +27,7 @@ const useAuth = () => {
                 if (!response.ok) {
                     throw new Error("알 수 없는 에러 발생.");
                 }
-                const data = await response.json();
+                const data: { status: string } = await response.json();
                 if (data.status === "COMPLETED" || data.status === "OVERPAID") {
                     setAuthenticated(AuthStatus.COMPLETED);
                 } else {
