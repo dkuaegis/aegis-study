@@ -1,13 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import ky from "ky";
+import { apiClient } from "@/lib/apiClient";
+import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import type { StudyListItem } from "@/types/study";
 
 export async function fetchStudies(): Promise<StudyListItem[]> {
-    return ky
-        .get(`${import.meta.env.VITE_API_URL}/studies`, {
-            credentials: "include",
-        })
-        .json();
+    return apiClient.get(API_ENDPOINTS.STUDIES).json<StudyListItem[]>();
 }
 
 export const useStudyListQuery = (

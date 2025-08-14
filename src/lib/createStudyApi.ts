@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import ky from "ky";
+import { apiClient } from "@/lib/apiClient";
+import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import type {
     StudyCategory,
     StudyLevel,
@@ -21,10 +22,9 @@ export interface CreateStudyPayload {
 export async function createStudy(
     payload: CreateStudyPayload
 ): Promise<unknown> {
-    return ky
-        .post(`${import.meta.env.VITE_API_URL}/studies`, {
+    return apiClient
+        .post(API_ENDPOINTS.STUDIES, {
             json: payload,
-            credentials: "include",
         })
         .json();
 }
