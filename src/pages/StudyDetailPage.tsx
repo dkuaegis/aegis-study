@@ -6,7 +6,7 @@ import {
     UsersIcon,
     X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -27,13 +27,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/useToast";
-import { apiClient } from "@/lib/apiClient";
-import { API_ENDPOINTS } from "@/lib/apiEndpoints";
-import {
-    StudyCategoryLabels,
-    type StudyDetail,
-    StudyRecruitmentMethod,
-} from "@/types/study";
+import { useStudyDetailQuery } from "@/lib/studyDetailApi";
+import { StudyCategoryLabels, StudyRecruitmentMethod } from "@/types/study";
 
 interface StudyDetailProps {
     studyId: number;
@@ -60,51 +55,20 @@ const StudyDetailPage = ({
     const [isApplying, setIsApplying] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
     const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
-    const [study, setStudy] = useState<StudyDetail | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const toast = useToast();
 
     const [userApplicationStatus, setUserApplicationStatus] = useState<
         "approved" | "pending" | "rejected" | null
     >(null);
 
-    useEffect(() => {
-        const controller = new AbortController();
-        const fetchStudy = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const data = await apiClient
-                    .get(`${API_ENDPOINTS.STUDIES}/${studyId}`, {
-                        signal: controller.signal,
-                    })
-                    .json<StudyDetail>();
-                setStudy(data);
-            } catch (err) {
-                if (
-                    typeof err === "object" &&
-                    err !== null &&
-                    "name" in err &&
-                    (err as { name?: string }).name === "AbortError"
-                ) {
-                    return;
-                }
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError("알 수 없는 오류가 발생했습니다.");
-                }
-            } finally {
-                setLoading(false);
-            }
-        };
+    const {
+        data: study,
+        isLoading,
+        isError,
+        error,
+    } = useStudyDetailQuery(studyId);
 
-        fetchStudy();
-        return () => controller.abort();
-    }, [studyId]);
-
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-gray-50">
                 <div className="text-gray-500">
@@ -114,10 +78,12 @@ const StudyDetailPage = ({
         );
     }
 
-    if (error) {
+    if (isError) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-gray-50">
-                <div className="text-red-500">{error}</div>
+                <div className="text-red-500">
+                    {error?.message ?? "오류가 발생했습니다."}
+                </div>
             </div>
         );
     }
