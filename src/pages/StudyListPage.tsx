@@ -1,10 +1,10 @@
 import { BarChart3, Clock, User, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { fetchStudies } from "@/lib/studyListApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
+import { fetchStudies } from "@/lib/studyListApi";
 import {
     StudyCategoryLabels,
     StudyLevelLabels,

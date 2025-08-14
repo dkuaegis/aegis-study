@@ -1,5 +1,5 @@
 export const API_ENDPOINTS = {
-  STUDIES: "studies",
-  PAYMENTS_STATUS: "payments/status",
-  OAUTH_GOOGLE: "oauth2/authorization/google",
+    STUDIES: "studies",
+    PAYMENTS_STATUS: "payments/status",
+    OAUTH_GOOGLE: "oauth2/authorization/google",
 } as const;

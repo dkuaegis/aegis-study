@@ -7,9 +7,7 @@ export async function fetchStudies(): Promise<StudyListItem[]> {
     return apiClient.get(API_ENDPOINTS.STUDIES).json<StudyListItem[]>();
 }
 
-export const useStudyListQuery = (
-    onError?: (error: unknown) => void
-) => {
+export const useStudyListQuery = (onError?: (error: Error) => void) => {
     return useQuery<StudyListItem[], Error>({
         queryKey: ["studies"],
         queryFn: fetchStudies,

@@ -16,7 +16,9 @@ const useAuth = () => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await apiClient.get(API_ENDPOINTS.PAYMENTS_STATUS);
+                const response = await apiClient.get(
+                    API_ENDPOINTS.PAYMENTS_STATUS
+                );
 
                 if (response.status === 401) {
                     setAuthenticated(AuthStatus.UNAUTHORIZED);
