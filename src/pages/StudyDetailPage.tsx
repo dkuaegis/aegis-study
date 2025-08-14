@@ -7,7 +7,6 @@ import {
     X,
 } from "lucide-react";
 import { useState } from "react";
-import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -28,10 +27,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/useToast";
-import {
-    StudyCategoryLabels,
-    StudyRecruitmentMethod,
-} from "@/types/study";
+import { useStudyDetailQuery } from "@/lib/studyDetailApi";
+import { StudyCategoryLabels, StudyRecruitmentMethod } from "@/types/study";
 
 interface StudyDetailProps {
     studyId: number;
@@ -84,7 +81,9 @@ const StudyDetailPage = ({
     if (isError) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-gray-50">
-                <div className="text-red-500">{error?.message ?? "오류가 발생했습니다."}</div>
+                <div className="text-red-500">
+                    {error?.message ?? "오류가 발생했습니다."}
+                </div>
             </div>
         );
     }
