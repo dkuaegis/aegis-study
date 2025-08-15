@@ -1,14 +1,12 @@
 import { BarChart3, Clock, User, Users } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
-import { fetchStudies } from "@/lib/studyListApi";
+import { useStudyListQuery } from "@/lib/studyListApi";
 import {
     StudyCategoryLabels,
     StudyLevelLabels,
-    type StudyListItem,
 } from "@/types/study";
 
 interface StudyListMainProps {
@@ -20,23 +18,8 @@ const StudyList = ({
     onCreateStudy,
     onViewStudyDetail,
 }: StudyListMainProps) => {
-    const [studies, setStudies] = useState<StudyListItem[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data: studies = [], isLoading: loading, error } = useStudyListQuery();
 
-    useEffect(() => {
-        const getStudies = async () => {
-            try {
-                const data = await fetchStudies();
-                setStudies(data);
-            } catch (error) {
-                console.error("Failed to fetch studies:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        getStudies();
-    }, []);
     return (
         <div className="flex min-h-screen flex-col bg-gray-50 ">
             <Header title="스터디 목록" />
@@ -53,6 +36,10 @@ const StudyList = ({
                     {loading ? (
                         <div className="col-span-full flex items-center justify-center py-8">
                             <div className="text-gray-500">로딩 중...</div>
+                        </div>
+                    ) : error ? (
+                        <div className="col-span-full flex items-center justify-center py-8">
+                            <div className="text-red-500">스터디 목록을 불러오는데 실패했습니다.</div>
                         </div>
                     ) : (
                         studies.map((study) => (
