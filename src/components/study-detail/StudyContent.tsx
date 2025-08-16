@@ -9,7 +9,6 @@ interface StudyContentProps {
 export const StudyContent = ({ study }: StudyContentProps) => {
   return (
     <div className="space-y-6 lg:col-span-2">
-      {/* 스터디 소개 */}
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle className="font-semibold text-gray-900 text-lg">
@@ -23,7 +22,6 @@ export const StudyContent = ({ study }: StudyContentProps) => {
         </CardContent>
       </Card>
 
-      {/* 커리큘럼 */}
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle className="font-semibold text-gray-900 text-lg">
@@ -45,7 +43,6 @@ export const StudyContent = ({ study }: StudyContentProps) => {
         </CardContent>
       </Card>
 
-      {/* 지원 자격 */}
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle className="font-semibold text-gray-900 text-lg">

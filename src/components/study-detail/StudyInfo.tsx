@@ -1,19 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { StudyRecruitmentMethod, type StudyDetail } from "@/types/study";
+import type { StudyDetail } from "@/types/study";
+import { getRecruitmentMethodText } from "@/utils/studyStatusHelpers";
 
 interface StudyInfoProps {
   study: StudyDetail;
 }
 
 export const StudyInfo = ({ study }: StudyInfoProps) => {
-  const getRecruitmentMethodText = (method: StudyRecruitmentMethod) => {
-    return method === StudyRecruitmentMethod.FCFS 
-      ? "선착순 모집" 
-      : "지원서 심사";
-  };
-
   return (
     <Card className="border-gray-200">
       <CardHeader>

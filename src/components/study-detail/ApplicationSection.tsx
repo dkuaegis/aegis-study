@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { StudyRecruitmentMethod, type StudyDetail } from "@/types/study";
+import { getApplicationSectionTitle } from "@/utils/studyStatusHelpers";
 
 interface ApplicationSectionProps {
   study: StudyDetail;
@@ -55,17 +56,7 @@ export const ApplicationSection = ({
     return null; // 스터디장은 신청 섹션이 불필요
   }
 
-  const getCardTitle = () => {
-    switch (userApplicationStatus) {
-      case "pending": return "신청 현황";
-      case "approved": return "참여 현황";
-      case "rejected": return "신청 결과";
-      default:
-        return study.recruitmentMethod === StudyRecruitmentMethod.FCFS 
-          ? "지원하기" 
-          : "지원서 작성";
-    }
-  };
+  const cardTitle = getApplicationSectionTitle(userApplicationStatus, study.recruitmentMethod);
 
   const renderPendingStatus = () => (
     <div className="space-y-4 text-center">
@@ -234,7 +225,7 @@ export const ApplicationSection = ({
     <Card className="border-gray-200">
       <CardHeader>
         <CardTitle className="font-semibold text-gray-900 text-lg">
-          {getCardTitle()}
+          {cardTitle}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
