@@ -6,7 +6,6 @@ import {
     UsersIcon,
     X,
 } from "lucide-react";
-import { useState } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -26,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/useToast";
+import { useStudyApplication } from "@/hooks/useStudyApplication";
 import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 import { StudyCategoryLabels, StudyRecruitmentMethod } from "@/types/study";
 
@@ -51,22 +50,28 @@ const StudyDetailPage = ({
     onManageAttendance,
     isOwner = false,
 }: StudyDetailProps) => {
-    const [applicationText, setApplicationText] = useState("");
-    const [isApplying, setIsApplying] = useState(false);
-    const [isCancelling, setIsCancelling] = useState(false);
-    const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
-    const toast = useToast();
-
-    const [userApplicationStatus, setUserApplicationStatus] = useState<
-        "approved" | "pending" | "rejected" | null
-    >(null);
-
     const {
         data: study,
         isLoading,
         isError,
         error,
     } = useStudyDetailQuery(studyId);
+
+    const {
+        applicationText,
+        isApplying,
+        isCancelling,
+        isApplicationModalOpen,
+        userApplicationStatus,
+        setApplicationText,
+        setIsApplicationModalOpen,
+        setUserApplicationStatus,
+        handleApply,
+        handleCancelApplication,
+    } = useStudyApplication({
+        studyId,
+        recruitmentMethod: study?.recruitmentMethod ?? StudyRecruitmentMethod.APPLICATION,
+    });
 
     if (isLoading) {
         return (
@@ -95,38 +100,6 @@ const StudyDetailPage = ({
             </div>
         );
     }
-
-    const handleApply = async () => {
-        setIsApplying(true);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        if (study.recruitmentMethod === StudyRecruitmentMethod.FCFS) {
-            setUserApplicationStatus("approved");
-            toast({
-                description:
-                    "지원이 완료되었습니다! 스터디에 참여하게 되었습니다.",
-            });
-        } else {
-            setUserApplicationStatus("pending");
-            toast({
-                description:
-                    "지원서가 제출되었습니다! 검토 후 결과를 알려드리겠습니다.",
-            });
-        }
-        setIsApplying(false);
-        setApplicationText("");
-    };
-
-    const handleCancelApplication = async () => {
-        setIsCancelling(true);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setUserApplicationStatus(null);
-        if (userApplicationStatus === "approved") {
-            toast({ description: "스터디에서 탈퇴되었습니다." });
-        } else {
-            toast({ description: "스터디 신청이 취소되었습니다." });
-        }
-        setIsCancelling(false);
-    };
 
     const getApplicationStatusBadge = (status: string | null) => {
         switch (status) {
