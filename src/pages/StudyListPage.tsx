@@ -4,10 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import { useStudyListQuery } from "@/lib/studyListApi";
-import {
-    StudyCategoryLabels,
-    StudyLevelLabels,
-} from "@/types/study";
+import { StudyCategoryLabels, StudyLevelLabels } from "@/types/study";
 
 interface StudyListMainProps {
     onCreateStudy: () => void;
@@ -18,7 +15,11 @@ const StudyList = ({
     onCreateStudy,
     onViewStudyDetail,
 }: StudyListMainProps) => {
-    const { data: studies = [], isLoading: loading, error } = useStudyListQuery();
+    const {
+        data: studies = [],
+        isLoading: loading,
+        error,
+    } = useStudyListQuery();
 
     return (
         <div className="flex min-h-screen flex-col bg-gray-50 ">
@@ -39,7 +40,9 @@ const StudyList = ({
                         </div>
                     ) : error ? (
                         <div className="col-span-full flex items-center justify-center py-8">
-                            <div className="text-red-500">스터디 목록을 불러오는데 실패했습니다.</div>
+                            <div className="text-red-500">
+                                스터디 목록을 불러오는데 실패했습니다.
+                            </div>
                         </div>
                     ) : (
                         studies.map((study) => (

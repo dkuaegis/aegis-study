@@ -1,8 +1,8 @@
-import Header from "@/components/ui/Header";
 import ApplicationSection from "@/components/study-detail/ApplicationSection";
 import StudyContent from "@/components/study-detail/StudyContent";
 import StudyHeader from "@/components/study-detail/StudyHeader";
 import StudyInfo from "@/components/study-detail/StudyInfo";
+import Header from "@/components/ui/Header";
 import { useStudyApplication } from "@/hooks/useStudyApplication";
 import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 import { StudyRecruitmentMethod } from "@/types/study";
@@ -48,7 +48,8 @@ const StudyDetailPage = ({
         handleCancelApplication,
     } = useStudyApplication({
         studyId,
-        recruitmentMethod: study?.recruitmentMethod ?? StudyRecruitmentMethod.APPLICATION,
+        recruitmentMethod:
+            study?.recruitmentMethod ?? StudyRecruitmentMethod.APPLICATION,
     });
 
     if (isLoading) {
