@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { type StudyDetail, StudyRecruitmentMethod } from "@/types/study";
-import { getApplicationSectionTitle } from "@/utils/studyStatusHelpers";
+import { getApplicationSectionTitle, isStudyRecruiting } from "@/utils/studyStatusHelpers";
 
 interface ApplicationSectionProps {
     study: StudyDetail;
@@ -215,18 +215,20 @@ export const ApplicationSection = ({
             );
         } else {
             // 선착순 모집
+            const recruiting = isStudyRecruiting(study);
             return (
                 <>
                     <Button
                         onClick={handleApply}
-                        disabled={isApplying}
-                        className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                        disabled={isApplying || !recruiting}
+                        className="w-full bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
                     >
                         {isApplying ? "처리 중..." : "지원하기"}
                     </Button>
                     <p className="text-center text-gray-500 text-xs">
-                        선착순으로 모집되며, 정원이 마감되면 자동으로
-                        마감됩니다.
+                        {recruiting
+                            ? "선착순으로 모집되며, 정원이 마감되면 자동으로 마감됩니다."
+                            : "모집이 마감되었습니다."}
                     </p>
                 </>
             );
