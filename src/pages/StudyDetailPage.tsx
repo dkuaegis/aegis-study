@@ -1,9 +1,5 @@
 import {
     CheckCircle,
-    Settings,
-    UserCheck,
-    Users,
-    UsersIcon,
     X,
 } from "lucide-react";
 import {
@@ -17,17 +13,16 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import StudyHeader from "@/components/study-detail/StudyHeader";
 import { useStudyApplication } from "@/hooks/useStudyApplication";
 import { useStudyDetailQuery } from "@/lib/studyDetailApi";
-import { StudyCategoryLabels, StudyRecruitmentMethod } from "@/types/study";
+import { StudyRecruitmentMethod } from "@/types/study";
 
 interface StudyDetailProps {
     studyId: number;
@@ -101,149 +96,20 @@ const StudyDetailPage = ({
         );
     }
 
-    const getApplicationStatusBadge = (status: string | null) => {
-        switch (status) {
-            case "pending":
-                return (
-                    <Badge className="bg-yellow-100 text-yellow-800">
-                        신청 대기 중
-                    </Badge>
-                );
-            case "approved":
-                return (
-                    <Badge className="bg-green-100 text-green-800">
-                        참여 중
-                    </Badge>
-                );
-            case "rejected":
-                return (
-                    <Badge className="bg-red-100 text-red-800">
-                        신청 거절됨
-                    </Badge>
-                );
-            default:
-                return null;
-        }
-    };
-
     return (
         <div className="min-h-screen bg-gray-50">
             <Header title="스터디 지원하기" onBack={onBack} />
 
             <div className="mx-auto max-w-4xl p-6">
-                <Card className="mb-6 border-gray-200">
-                    <CardHeader>
-                        <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between">
-                            <div className="flex-1">
-                                <div className="mb-2 flex items-center gap-2">
-                                    <Badge
-                                        variant="secondary"
-                                        className={`${
-                                            study.participantCount <
-                                                study.maxParticipants ||
-                                            study.maxParticipants === 0
-                                                ? "bg-blue-100 text-blue-800"
-                                                : "bg-gray-100 text-gray-800"
-                                        }`}
-                                    >
-                                        {study.participantCount <
-                                            study.maxParticipants ||
-                                        study.maxParticipants === 0
-                                            ? "모집중"
-                                            : "진행중"}
-                                    </Badge>
-                                    <Badge
-                                        variant="outline"
-                                        className="border-gray-300 text-gray-600"
-                                    >
-                                        #{StudyCategoryLabels[study.category]}
-                                    </Badge>
-                                    {userApplicationStatus &&
-                                        getApplicationStatusBadge(
-                                            userApplicationStatus
-                                        )}
-                                </div>
-                                <CardTitle className="font-bold text-2xl text-gray-900">
-                                    {study.title}
-                                </CardTitle>
-                                {isOwner && (
-                                    <div className="mt-4 flex flex-wrap gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => onEdit?.(studyId)}
-                                            className="border-blue-600 text-blue-600 hover:bg-blue-50"
-                                        >
-                                            <Settings className="mr-1 h-4 w-4" />
-                                            스터디 수정
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() =>
-                                                onViewApplications?.(studyId)
-                                            }
-                                            className="border-green-600 text-green-600 hover:bg-green-50"
-                                        >
-                                            <UsersIcon className="mr-1 h-4 w-4" />
-                                            스터디 지원현황
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() =>
-                                                onViewMembers?.(studyId)
-                                            }
-                                            className="border-purple-600 text-purple-600 hover:bg-purple-50"
-                                        >
-                                            <Users className="mr-1 h-4 w-4" />
-                                            스터디원 관리
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() =>
-                                                onManageAttendance?.(studyId)
-                                            }
-                                            className="border-orange-600 text-orange-600 hover:bg-orange-50"
-                                        >
-                                            <UserCheck className="mr-1 h-4 w-4" />
-                                            출석 관리
-                                        </Button>
-                                    </div>
-                                )}
-                            </div>
-                            {userApplicationStatus === "approved" &&
-                                !isOwner && (
-                                    <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
-                                        <div className="flex items-end gap-2">
-                                            <div className="grid w-full max-w-sm items-center gap-1.5">
-                                                <Label
-                                                    htmlFor={`attendance-code-${studyId}`}
-                                                    className="font-medium text-sm"
-                                                >
-                                                    출석코드
-                                                </Label>
-                                                <Input
-                                                    type="text"
-                                                    id={`attendance-code-${studyId}`}
-                                                    placeholder="코드를 입력하세요"
-                                                    className="h-9"
-                                                />
-                                            </div>
-                                            <Button
-                                                type="submit"
-                                                size="sm"
-                                                className="h-9"
-                                            >
-                                                입력
-                                            </Button>
-                                        </div>
-                                    </div>
-                                )}
-                        </div>
-                    </CardHeader>
-                </Card>
+                <StudyHeader
+                    study={study}
+                    isOwner={isOwner}
+                    userApplicationStatus={userApplicationStatus}
+                    onEdit={onEdit}
+                    onViewApplications={onViewApplications}
+                    onViewMembers={onViewMembers}
+                    onManageAttendance={onManageAttendance}
+                />
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     <div className="space-y-6 lg:col-span-2">
