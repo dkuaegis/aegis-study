@@ -6,9 +6,7 @@ import type { StudyListItem } from "@/types/study";
 
 export const STUDIES_QUERY_KEY = ["studies"] as const;
 
-async function fetchStudies(
-    signal?: AbortSignal
-): Promise<StudyListItem[]> {
+async function fetchStudies(signal?: AbortSignal): Promise<StudyListItem[]> {
     return apiClient
         .get(API_ENDPOINTS.STUDIES, { signal })
         .json<StudyListItem[]>();
