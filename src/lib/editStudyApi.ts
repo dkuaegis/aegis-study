@@ -55,10 +55,12 @@ export async function updateStudy(
         maxParticipants: parseInt(data.maxParticipants),
         schedule: data.schedule,
         curricula: data.curriculum
-            .map((item: CurriculumItem) => item.value)
+            .map((item: CurriculumItem) => item.value.trim())
+            .filter((v) => v !== "")
             .join("\n"),
         qualifications: data.requirements
-            .map((item: RequirementItem) => item.value)
+            .map((item: RequirementItem) => item.value.trim())
+            .filter((v) => v !== "")
             .join("\n"),
     };
 

@@ -144,7 +144,6 @@ export const useStudyForm = (
             return;
         }
 
-        // 생성 모드인 경우 기존 로직 사용
         const payload = {
             title: data.title,
             category: Object.values(StudyCategory).includes(
