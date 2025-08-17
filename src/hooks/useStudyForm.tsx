@@ -59,7 +59,8 @@ export const useStudyFormContext = () => {
 
 export const useStudyForm = (
     initialValues?: Partial<FormValues>,
-    onSuccess?: (data: FormValues) => void
+    onSuccess?: (data: FormValues) => void,
+    isEditMode?: boolean
 ) => {
     const form = useForm<FormValues>({
         defaultValues: {
@@ -134,6 +135,15 @@ export const useStudyForm = (
         }
         if (hasError) return;
 
+        if (isEditMode && onSuccess) {
+            onSuccess({
+                ...data,
+                curriculum: filteredCurriculum.map((v) => ({ value: v })),
+                requirements: filteredRequirements.map((v) => ({ value: v })),
+            });
+            return;
+        }
+
         const payload = {
             title: data.title,
             category: Object.values(StudyCategory).includes(
@@ -181,8 +191,9 @@ export const StudyFormProvider: React.FC<{
     children: React.ReactNode;
     initialValues?: Partial<FormValues>;
     onSuccess?: (data: FormValues) => void;
-}> = ({ children, initialValues, onSuccess }) => {
-    const value = useStudyForm(initialValues, onSuccess);
+    isEditMode?: boolean;
+}> = ({ children, initialValues, onSuccess, isEditMode = false }) => {
+    const value = useStudyForm(initialValues, onSuccess, isEditMode);
     return (
         <StudyFormContext.Provider value={value}>
             {children}
