@@ -59,7 +59,8 @@ export const useStudyFormContext = () => {
 
 export const useStudyForm = (
     initialValues?: Partial<FormValues>,
-    onSuccess?: (data: FormValues) => void
+    onSuccess?: (data: FormValues) => void,
+    isEditMode?: boolean
 ) => {
     const form = useForm<FormValues>({
         defaultValues: {
@@ -134,6 +135,13 @@ export const useStudyForm = (
         }
         if (hasError) return;
 
+        // 수정 모드인 경우 onSuccess 콜백을 직접 호출
+        if (isEditMode && onSuccess) {
+            onSuccess(data);
+            return;
+        }
+
+        // 생성 모드인 경우 기존 로직 사용
         const payload = {
             title: data.title,
             category: Object.values(StudyCategory).includes(
@@ -181,8 +189,9 @@ export const StudyFormProvider: React.FC<{
     children: React.ReactNode;
     initialValues?: Partial<FormValues>;
     onSuccess?: (data: FormValues) => void;
-}> = ({ children, initialValues, onSuccess }) => {
-    const value = useStudyForm(initialValues, onSuccess);
+    isEditMode?: boolean;
+}> = ({ children, initialValues, onSuccess, isEditMode = false }) => {
+    const value = useStudyForm(initialValues, onSuccess, isEditMode);
     return (
         <StudyFormContext.Provider value={value}>
             {children}
