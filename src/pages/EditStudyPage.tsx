@@ -2,8 +2,8 @@ import StudyFormContent from "@/components/study/StudyFormContent";
 import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
-import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 import { useUpdateStudyMutation } from "@/lib/editStudyApi";
+import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 
 interface EditStudyProps {
     studyId: number;
@@ -24,21 +24,25 @@ interface FormValues {
 
 const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     const toast = useToast();
-    
+
     const { data: study, isLoading, isError } = useStudyDetailQuery(studyId);
-    
+
     const handleSuccess = () => {
         toast({ description: "스터디가 성공적으로 수정되었습니다!" });
         onBack();
     };
 
     const handleError = () => {
-        toast({ 
-            description: "스터디 수정 중 오류가 발생했습니다."
+        toast({
+            description: "스터디 수정 중 오류가 발생했습니다.",
         });
     };
 
-    const updateMutation = useUpdateStudyMutation(studyId, handleSuccess, handleError);
+    const updateMutation = useUpdateStudyMutation(
+        studyId,
+        handleSuccess,
+        handleError
+    );
 
     const handleUpdate = (data: FormValues) => {
         updateMutation.mutate(data);
@@ -49,7 +53,9 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
             <div className="min-h-screen bg-gray-50">
                 <Header title="스터디 수정하기" onBack={onBack} />
                 <div className="flex min-h-screen items-center justify-center">
-                    <div className="text-gray-500">스터디 정보를 불러오는 중...</div>
+                    <div className="text-gray-500">
+                        스터디 정보를 불러오는 중...
+                    </div>
                 </div>
             </div>
         );
@@ -60,7 +66,9 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
             <div className="min-h-screen bg-gray-50">
                 <Header title="스터디 수정하기" onBack={onBack} />
                 <div className="flex min-h-screen items-center justify-center">
-                    <div className="text-red-500">스터디 정보를 불러올 수 없습니다.</div>
+                    <div className="text-red-500">
+                        스터디 정보를 불러올 수 없습니다.
+                    </div>
                 </div>
             </div>
         );
@@ -71,11 +79,14 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         category: study.category,
         difficulty: study.level,
         introduction: study.description,
-        recruitmentMethod: study.recruitmentMethod === 'FCFS' ? '선착순' : '지원서',
+        recruitmentMethod:
+            study.recruitmentMethod === "FCFS" ? "선착순" : "지원서",
         maxParticipants: study.maxParticipants.toString(),
         schedule: study.schedule,
-        curriculum: study.curricula.split('\n').map(v => ({ value: v })),
-        requirements: study.qualifications.split('\n').map(v => ({ value: v })),
+        curriculum: study.curricula.split("\n").map((v) => ({ value: v })),
+        requirements: study.qualifications
+            .split("\n")
+            .map((v) => ({ value: v })),
     };
 
     return (

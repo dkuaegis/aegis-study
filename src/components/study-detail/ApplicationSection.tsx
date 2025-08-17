@@ -15,7 +15,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { type StudyDetail, StudyRecruitmentMethod } from "@/types/study";
-import { getApplicationSectionTitle, isStudyRecruiting } from "@/utils/studyStatusHelpers";
+import {
+    getApplicationSectionTitle,
+    isStudyRecruiting,
+} from "@/utils/studyStatusHelpers";
 
 interface ApplicationSectionProps {
     study: StudyDetail;
