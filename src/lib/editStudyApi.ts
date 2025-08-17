@@ -28,7 +28,7 @@ interface RequirementItem {
     value: string;
 }
 
-interface StudyFormData {
+export interface StudyFormData {
     title: string;
     category: string;
     difficulty: string;

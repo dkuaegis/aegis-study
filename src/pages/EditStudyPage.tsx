@@ -2,7 +2,7 @@ import StudyFormContent from "@/components/study/StudyFormContent";
 import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
-import { useUpdateStudyMutation } from "@/lib/editStudyApi";
+import { type StudyFormData, useUpdateStudyMutation } from "@/lib/editStudyApi";
 import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 
 interface EditStudyProps {
@@ -28,6 +28,23 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
 
     const { data: study, isLoading, isError } = useStudyDetailQuery(studyId);
 
+    // FormValues를 StudyFormData로 변환하는 함수
+    const mapFormValuesToStudyData = (
+        formValues: FormValues
+    ): StudyFormData => {
+        return {
+            title: formValues.title,
+            category: formValues.category,
+            difficulty: formValues.difficulty,
+            introduction: formValues.introduction,
+            recruitmentMethod: formValues.recruitmentMethod,
+            maxParticipants: formValues.maxParticipants,
+            schedule: formValues.schedule,
+            curriculum: formValues.curriculum,
+            requirements: formValues.requirements,
+        };
+    };
+
     const handleSuccess = () => {
         toast({ description: "스터디가 성공적으로 수정되었습니다!" });
         onBack();
@@ -45,8 +62,10 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         handleError
     );
 
-    const handleUpdate = (data: FormValues) => {
-        updateMutation.mutate(data);
+    const handleUpdate = (formValues: FormValues) => {
+        // FormValues를 API 페이로드 형식으로 변환
+        const payload: StudyFormData = mapFormValuesToStudyData(formValues);
+        updateMutation.mutate(payload);
     };
 
     if (isLoading) {
@@ -83,7 +102,8 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         recruitmentMethod:
             study.recruitmentMethod === "FCFS" ? "선착순" : "지원서",
         maxParticipants: study.maxParticipants.toString(),
-        maxParticipantsLimitType: study.maxParticipants === 0 ? "unlimited" : "limited",
+        maxParticipantsLimitType:
+            study.maxParticipants === 0 ? "unlimited" : "limited",
         schedule: study.schedule,
         curriculum: study.curricula.split("\n").map((v) => ({ value: v })),
         requirements: study.qualifications
