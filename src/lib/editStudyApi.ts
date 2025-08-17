@@ -80,15 +80,13 @@ export const useUpdateStudyMutation = (
     return useMutation<void, HTTPError, StudyFormData>({
         mutationFn: (data: StudyFormData) => updateStudy(studyId, data),
         onSuccess: () => {
-            // 해당 스터디의 상세 정보 캐시 무효화 (올바른 쿼리 키 사용)
             queryClient.invalidateQueries({
                 queryKey: STUDY_DETAIL_QUERY_KEY(studyId),
             });
-            // 스터디 목록 캐시도 무효화 (목록에서도 업데이트된 정보가 보이도록)
             queryClient.invalidateQueries({ queryKey: ["studies"] });
 
             if (onSuccess) onSuccess();
         },
-        ...(onError && { onError }),
+        onError,
     });
 };

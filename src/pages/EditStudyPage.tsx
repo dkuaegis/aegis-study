@@ -28,7 +28,6 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
 
     const { data: study, isLoading, isError } = useStudyDetailQuery(studyId);
 
-    // FormValues를 StudyFormData로 변환하는 함수
     const mapFormValuesToStudyData = (
         formValues: FormValues
     ): StudyFormData => {
@@ -63,7 +62,6 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     );
 
     const handleUpdate = (formValues: FormValues) => {
-        // FormValues를 API 페이로드 형식으로 변환
         const payload: StudyFormData = mapFormValuesToStudyData(formValues);
         updateMutation.mutate(payload);
     };
