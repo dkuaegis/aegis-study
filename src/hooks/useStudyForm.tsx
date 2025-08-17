@@ -135,9 +135,12 @@ export const useStudyForm = (
         }
         if (hasError) return;
 
-        // 수정 모드인 경우 onSuccess 콜백을 직접 호출
         if (isEditMode && onSuccess) {
-            onSuccess(data);
+            onSuccess({
+                ...data,
+                curriculum: filteredCurriculum.map((v) => ({ value: v })),
+                requirements: filteredRequirements.map((v) => ({ value: v })),
+            });
             return;
         }
 
