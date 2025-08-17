@@ -17,6 +17,7 @@ interface FormValues {
     introduction: string;
     recruitmentMethod: string;
     maxParticipants: string;
+    maxParticipantsLimitType?: string;
     schedule: string;
     curriculum: { value: string }[];
     requirements: { value: string }[];
@@ -74,7 +75,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         );
     }
 
-    const initialValues = {
+    const initialValues: FormValues = {
         title: study.title,
         category: study.category,
         difficulty: study.level,
@@ -82,6 +83,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         recruitmentMethod:
             study.recruitmentMethod === "FCFS" ? "선착순" : "지원서",
         maxParticipants: study.maxParticipants.toString(),
+        maxParticipantsLimitType: study.maxParticipants === 0 ? "unlimited" : "limited",
         schedule: study.schedule,
         curriculum: study.curricula.split("\n").map((v) => ({ value: v })),
         requirements: study.qualifications
