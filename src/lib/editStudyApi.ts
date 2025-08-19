@@ -4,6 +4,7 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import type { HTTPError } from "ky";
+import type { StudyRecruitmentMethod } from "@/types/study";
 import { apiClient } from "./apiClient";
 import { API_ENDPOINTS } from "./apiEndpoints";
 import { STUDY_DETAIL_QUERY_KEY } from "./studyDetailApi";
@@ -13,7 +14,7 @@ interface UpdateStudyRequest {
     category: string;
     level: string;
     description: string;
-    recruitmentMethod: string;
+    recruitmentMethod: StudyRecruitmentMethod;
     maxParticipants: number;
     schedule: string;
     curricula: string;
@@ -33,7 +34,7 @@ export interface StudyFormData {
     category: string;
     difficulty: string;
     introduction: string;
-    recruitmentMethod: string;
+    recruitmentMethod: StudyRecruitmentMethod;
     maxParticipants: string;
     schedule: string;
     curriculum: CurriculumItem[];
@@ -50,8 +51,7 @@ export async function updateStudy(
         category: data.category,
         level: data.difficulty,
         description: data.introduction,
-        recruitmentMethod:
-            data.recruitmentMethod === "선착순" ? "FCFS" : "APPLICATION",
+        recruitmentMethod: data.recruitmentMethod, // enum 값을 그대로 사용
         maxParticipants: parseInt(data.maxParticipants),
         schedule: data.schedule,
         curricula: data.curriculum

@@ -26,7 +26,7 @@ export interface FormValues extends FieldValues {
     category: string;
     difficulty: string;
     introduction: string;
-    recruitmentMethod: string;
+    recruitmentMethod: StudyRecruitmentMethod;
     maxParticipants: string;
     maxParticipantsLimitType?: string;
     schedule: string;
@@ -68,7 +68,7 @@ export const useStudyForm = (
             category: "",
             difficulty: "",
             introduction: "",
-            recruitmentMethod: "선착순",
+            recruitmentMethod: StudyRecruitmentMethod.FCFS,
             maxParticipants: "",
             schedule: "",
             curriculum: [{ value: "" }],

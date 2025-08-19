@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/useToast";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
 import { type StudyFormData, useUpdateStudyMutation } from "@/lib/editStudyApi";
 import { useStudyDetailQuery } from "@/lib/studyDetailApi";
+import type { StudyRecruitmentMethod } from "@/types/study";
 
 interface EditStudyProps {
     studyId: number;
@@ -15,7 +16,7 @@ interface FormValues {
     category: string;
     difficulty: string;
     introduction: string;
-    recruitmentMethod: string;
+    recruitmentMethod: StudyRecruitmentMethod;
     maxParticipants: string;
     maxParticipantsLimitType?: string;
     schedule: string;
@@ -97,8 +98,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         category: study.category,
         difficulty: study.level,
         introduction: study.description,
-        recruitmentMethod:
-            study.recruitmentMethod === "FCFS" ? "선착순" : "지원서",
+        recruitmentMethod: study.recruitmentMethod,
         maxParticipants: study.maxParticipants.toString(),
         maxParticipantsLimitType:
             study.maxParticipants === 0 ? "unlimited" : "limited",
