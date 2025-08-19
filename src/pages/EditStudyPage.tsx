@@ -103,9 +103,13 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         maxParticipantsLimitType:
             study.maxParticipants === 0 ? "unlimited" : "limited",
         schedule: study.schedule,
-        curriculum: study.curricula.split("\n").map((v) => ({ value: v })),
+        curriculum: study.curricula
+            .split("\n")
+            .filter((v) => v.trim() !== "")
+            .map((v) => ({ value: v })),
         requirements: study.qualifications
             .split("\n")
+            .filter((v) => v.trim() !== "")
             .map((v) => ({ value: v })),
     };
 

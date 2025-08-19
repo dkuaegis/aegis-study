@@ -30,15 +30,18 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
-                        {study.curricula.split("\n").map((item: string) => (
-                            <div
-                                key={item.substring(0, 20)}
-                                className="flex items-start"
-                            >
-                                <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
-                                <span className="text-gray-700">{item}</span>
-                            </div>
-                        ))}
+                        {study.curricula
+                            .split("\n")
+                            .filter((item) => item.trim() !== "")
+                            .map((item: string) => (
+                                <div
+                                    key={item.substring(0, 20)}
+                                    className="flex items-start"
+                                >
+                                    <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
+                                    <span className="text-gray-700">{item}</span>
+                                </div>
+                            ))}
                     </div>
                 </CardContent>
             </Card>
@@ -53,6 +56,7 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                     <div className="space-y-2">
                         {study.qualifications
                             .split("\n")
+                            .filter((qualification) => qualification.trim() !== "")
                             .map((qualification: string) => (
                                 <div
                                     key={qualification.substring(0, 20)}
