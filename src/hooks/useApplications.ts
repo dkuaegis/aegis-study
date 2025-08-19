@@ -1,117 +1,99 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import {
     type ApplicationApiResponse,
-    getStudyApplications,
-    updateApplicationStatus,
+    useStudyApplicationsQuery,
+    useUpdateApplicationStatusMutation,
 } from "@/lib/applicationApi";
 import type { Application, StudyData } from "@/types/study";
 import { StudyRecruitmentMethod } from "@/types/study";
 
-// API 응답을 내부 타입으로 변환하는 함수
-const transformApiApplication = (
-    apiApp: ApplicationApiResponse
-): Application => ({
-    id: apiApp.studyApplicationId,
-    name: apiApp.name,
-    phone: apiApp.phoneNumber,
-    studentNumber: apiApp.studentId,
-    status: apiApp.status, // 이제 대문자로 그대로 사용
-    // applicationText는 별도 API로 로드하므로 여기서는 포함하지 않음
-    createdAt: apiApp.createdAt,
-    updatedAt: apiApp.updatedAt,
-});
+function transformApiApplication(apiApp: ApplicationApiResponse): Application {
+    return {
+        id: apiApp.studyApplicationId,
+        name: apiApp.name,
+        phone: apiApp.phoneNumber,
+        studentNumber: apiApp.studentId,
+        status: apiApp.status,
+        createdAt: apiApp.createdAt,
+        updatedAt: apiApp.updatedAt,
+    };
+}
 
 export function useApplications(studyId: number) {
-    const [selectedFilter, setSelectedFilter] = useState("all");
-    const [applications, setApplications] = useState<Application[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [studyInfo, setStudyInfo] = useState<StudyData | null>(null);
+    const [selectedFilter, setSelectedFilter] = useState<
+        "ALL" | "PENDING" | "APPROVED" | "REJECTED"
+    >("ALL");
 
-    // API에서 지원자 데이터 가져오기
-    useEffect(() => {
-        const fetchApplications = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const apiApplications = await getStudyApplications(studyId);
-                const transformedApplications = apiApplications.map(
-                    transformApiApplication
-                );
+    // API 쿼리 사용
+    const {
+        data: apiApplications,
+        isLoading: loading,
+        error: queryError,
+    } = useStudyApplicationsQuery(studyId);
 
-                setApplications(transformedApplications);
-                setStudyInfo({
-                    studyTitle: "스터디", // API에서 스터디 정보도 가져와야 함
-                    recruitmentMethod: StudyRecruitmentMethod.APPLICATION, // 임시값, 실제로는 API에서 가져와야 함
-                    applications: transformedApplications,
-                });
-            } catch (err) {
-                console.error("Failed to fetch applications:", err);
-                setError("지원자 데이터를 불러오는데 실패했습니다.");
-            } finally {
-                setLoading(false);
-            }
-        };
+    // 상태 업데이트 뮤테이션
+    const statusMutation = useUpdateApplicationStatusMutation(studyId);
 
-        fetchApplications();
-    }, [studyId]);
+    // 에러 처리
+    const error = queryError?.message || statusMutation.error?.message || null;
 
-    const handleStatusChange = async (
+    // 데이터 변환
+    const applications = useMemo(
+        () => apiApplications?.map(transformApiApplication) || [],
+        [apiApplications]
+    );
+
+    // 필터링된 지원서
+    const filteredApplications = useMemo(
+        () =>
+            applications.filter(
+                (app) =>
+                    selectedFilter === "ALL" || app.status === selectedFilter
+            ),
+        [applications, selectedFilter]
+    );
+
+    // 통계
+    const stats = useMemo(
+        () => ({
+            total: applications.length,
+            pending: applications.filter((app) => app.status === "PENDING")
+                .length,
+            approved: applications.filter((app) => app.status === "APPROVED")
+                .length,
+            rejected: applications.filter((app) => app.status === "REJECTED")
+                .length,
+        }),
+        [applications]
+    );
+
+    // 상태 변경 핸들러
+    const handleStatusChange = (
         applicationId: number,
         newStatus: "APPROVED" | "REJECTED"
     ) => {
-        try {
-            await updateApplicationStatus(studyId, applicationId, newStatus);
-
-            // 로컬 상태 업데이트
-            setApplications((prev) =>
-                prev.map((app) =>
-                    app.id === applicationId
-                        ? { ...app, status: newStatus }
-                        : app
-                )
-            );
-        } catch (err) {
-            console.error("Failed to update application status:", err);
-            setError("지원자 상태 변경에 실패했습니다.");
-        }
+        statusMutation.mutate({ applicationId, status: newStatus });
     };
 
-    const getFilteredApplications = (filter: string) => {
-        switch (filter) {
-            case "pending":
-                return applications.filter((app) => app.status === "PENDING");
-            case "approved":
-                return applications.filter((app) => app.status === "APPROVED");
-            case "rejected":
-                return applications.filter((app) => app.status === "REJECTED");
-            default:
-                return applications;
-        }
-    };
-
-    const stats = {
-        total: applications.length,
-        pending: applications.filter((app) => app.status === "PENDING").length,
-        approved: applications.filter((app) => app.status === "APPROVED")
-            .length,
-        rejected: applications.filter((app) => app.status === "REJECTED")
-            .length,
-    };
-
-    const filteredApplications = getFilteredApplications(selectedFilter);
+    // 스터디 정보 (임시 - 실제로는 별도 API에서 가져와야 함)
+    const studyInfo: StudyData | null =
+        applications.length > 0
+            ? {
+                  studyTitle: "스터디 제목", // 실제 API 데이터로 대체 필요
+                  recruitmentMethod: StudyRecruitmentMethod.APPLICATION,
+                  applications,
+              }
+            : null;
 
     return {
+        applications,
+        filteredApplications,
         selectedFilter,
         setSelectedFilter,
-        applications,
-        setApplications,
-        studyInfo,
-        handleStatusChange,
-        getFilteredApplications,
         stats,
-        filteredApplications,
-        loading,
+        handleStatusChange,
+        studyInfo,
+        loading: loading || statusMutation.isPending,
         error,
     };
 }

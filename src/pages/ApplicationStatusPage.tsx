@@ -147,7 +147,13 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                                         type="button"
                                         key={option.key}
                                         onClick={() =>
-                                            setSelectedFilter(option.key)
+                                            setSelectedFilter(
+                                                option.key.toUpperCase() as
+                                                    | "APPROVED"
+                                                    | "REJECTED"
+                                                    | "PENDING"
+                                                    | "ALL"
+                                            )
                                         }
                                         className={`flex flex-shrink-0 items-center justify-between rounded-lg border p-4 transition-all duration-200 lg:w-full ${
                                             isActive

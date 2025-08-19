@@ -12,7 +12,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { getApplicationText } from "@/lib/applicationApi";
+import { fetchApplicationText } from "@/lib/applicationApi";
 import type { Application } from "@/types/study";
 import { StudyRecruitmentMethod } from "@/types/study";
 
@@ -39,7 +39,10 @@ const ApplicationCard = ({
         try {
             setIsLoadingText(true);
             setTextError(null);
-            const response = await getApplicationText(studyId, application.id);
+            const response = await fetchApplicationText(
+                studyId,
+                application.id
+            );
             setApplicationReason(response.applicationReason);
         } catch (error) {
             console.error("Failed to load application text:", error);
