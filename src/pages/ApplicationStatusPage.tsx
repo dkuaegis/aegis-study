@@ -87,7 +87,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
 
     const filterOptions = [
         {
-            key: "all",
+            key: "ALL",
             label: "전체",
             count: stats.total,
             icon: User,
@@ -97,7 +97,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
             activeColor: "bg-blue-100 text-blue-700 border-blue-200",
         },
         {
-            key: "pending",
+            key: "PENDING",
             label: "검토 중",
             count: stats.pending,
             icon: Clock,
@@ -107,7 +107,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
             activeColor: "bg-yellow-100 text-yellow-700 border-yellow-200",
         },
         {
-            key: "approved",
+            key: "APPROVED",
             label: "승인",
             count: stats.approved,
             icon: CheckCircle,
@@ -117,7 +117,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
             activeColor: "bg-green-100 text-green-700 border-green-200",
         },
         {
-            key: "rejected",
+            key: "REJECTED",
             label: "거절",
             count: stats.rejected,
             icon: XCircle,
@@ -148,7 +148,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                                         key={option.key}
                                         onClick={() =>
                                             setSelectedFilter(
-                                                option.key.toUpperCase() as
+                                                option.key as
                                                     | "APPROVED"
                                                     | "REJECTED"
                                                     | "PENDING"
