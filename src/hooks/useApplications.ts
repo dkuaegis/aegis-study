@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import {
     type ApplicationApiResponse,
+    useApproveApplicationMutation,
+    useRejectApplicationMutation,
     useStudyApplicationsQuery,
     useUpdateApplicationStatusMutation,
 } from "@/lib/applicationApi";
@@ -31,11 +33,18 @@ export function useApplications(studyId: number) {
         error: queryError,
     } = useStudyApplicationsQuery(studyId);
 
-    // 상태 업데이트 뮤테이션
+    // 상태 업데이트 뮤테이션들
     const statusMutation = useUpdateApplicationStatusMutation(studyId);
+    const approveMutation = useApproveApplicationMutation(studyId);
+    const rejectMutation = useRejectApplicationMutation(studyId);
 
     // 에러 처리
-    const error = queryError?.message || statusMutation.error?.message || null;
+    const error =
+        queryError?.message ||
+        statusMutation.error?.message ||
+        approveMutation.error?.message ||
+        rejectMutation.error?.message ||
+        null;
 
     // 데이터 변환
     const applications = useMemo(
@@ -72,7 +81,11 @@ export function useApplications(studyId: number) {
         applicationId: number,
         newStatus: "APPROVED" | "REJECTED"
     ) => {
-        statusMutation.mutate({ applicationId, status: newStatus });
+        if (newStatus === "APPROVED") {
+            approveMutation.mutate(applicationId);
+        } else if (newStatus === "REJECTED") {
+            rejectMutation.mutate(applicationId);
+        }
     };
 
     // 스터디 정보 (임시 - 실제로는 별도 API에서 가져와야 함)
@@ -93,7 +106,11 @@ export function useApplications(studyId: number) {
         stats,
         handleStatusChange,
         studyInfo,
-        loading: loading || statusMutation.isPending,
+        loading:
+            loading ||
+            statusMutation.isPending ||
+            approveMutation.isPending ||
+            rejectMutation.isPending,
         error,
     };
 }
