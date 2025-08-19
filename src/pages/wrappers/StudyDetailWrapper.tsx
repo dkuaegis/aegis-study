@@ -10,7 +10,7 @@ interface Study {
     difficulty: string;
     participants: string;
     manager: string;
-    recruitmentMethod: string;
+    recruitmentMethod: StudyRecruitmentMethod;
     maxParticipants: number;
     currentParticipants: number;
     schedule: string;
@@ -66,7 +66,7 @@ const studyDetailData: Record<number, Study> = {
         difficulty: "입문",
         participants: "10/20명",
         manager: "관리자",
-        recruitmentMethod: "선착순",
+        recruitmentMethod: StudyRecruitmentMethod.FCFS,
         maxParticipants: 20,
         currentParticipants: 10,
         schedule: "매주 토 14:00-17:00",
@@ -128,7 +128,7 @@ const studyDetailData: Record<number, Study> = {
         difficulty: "고급",
         participants: "8/15명",
         manager: "관리자",
-        recruitmentMethod: "선착순",
+        recruitmentMethod: StudyRecruitmentMethod.FCFS,
         maxParticipants: 15,
         currentParticipants: 8,
         schedule: "주 3회",

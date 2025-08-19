@@ -47,7 +47,7 @@ const RecruitmentFields = () => {
                             >
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem
-                                        value="선착순"
+                                        value={StudyRecruitmentMethod.FCFS}
                                         id="first-come"
                                     />
                                     <Label
