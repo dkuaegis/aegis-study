@@ -76,7 +76,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                                 <User className="h-8 w-8 text-gray-400" />
                             </div>
                             <p className="text-gray-500 text-lg">
-                                스터디를 찾을 수 없습니다.
+                                해당 스터디의 지원자가 아직 없습니다.
                             </p>
                         </div>
                     </div>
