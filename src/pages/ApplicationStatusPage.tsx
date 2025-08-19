@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, User, XCircle, AlertCircle } from "lucide-react";
+import { AlertCircle, CheckCircle, Clock, User, XCircle } from "lucide-react";
 import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,7 +30,9 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                     <div className="flex items-center justify-center py-12">
                         <div className="text-center">
                             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-blue-600 border-b-2"></div>
-                            <p className="text-gray-500">지원자 데이터를 불러오는 중...</p>
+                            <p className="text-gray-500">
+                                지원자 데이터를 불러오는 중...
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -73,7 +75,9 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
                                 <User className="h-8 w-8 text-gray-400" />
                             </div>
-                            <p className="text-gray-500 text-lg">스터디를 찾을 수 없습니다.</p>
+                            <p className="text-gray-500 text-lg">
+                                스터디를 찾을 수 없습니다.
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -89,6 +89,6 @@ export interface Application {
 
 export interface StudyData {
     studyTitle: string;
-    recruitmentMethod: string;
+    recruitmentMethod: StudyRecruitmentMethod;
     applications: Application[];
 }

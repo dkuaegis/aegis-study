@@ -15,9 +15,13 @@ export interface ApplicationTextResponse {
     applicationReason: string;
 }
 
-export const getStudyApplications = async (studyId: number): Promise<ApplicationApiResponse[]> => {
+export const getStudyApplications = async (
+    studyId: number
+): Promise<ApplicationApiResponse[]> => {
     try {
-        const response = await apiClient.get(API_ENDPOINTS.STUDY_APPLICATIONS(studyId));
+        const response = await apiClient.get(
+            API_ENDPOINTS.STUDY_APPLICATIONS(studyId)
+        );
         return await response.json();
     } catch (error) {
         console.error("Failed to fetch study applications:", error);

@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { StudyRecruitmentMethod } from "@/types/study";
 import StudyDetailPage from "../StudyDetailPage";
 
 interface Study {
@@ -28,7 +29,7 @@ const studyDetailData: Record<number, Study> = {
         difficulty: "중급",
         participants: "10/20명",
         manager: "관리자",
-        recruitmentMethod: "지원서", // "선착순" or "지원서"
+        recruitmentMethod: StudyRecruitmentMethod.APPLICATION, // "선착순" or "지원서"
         maxParticipants: 20,
         currentParticipants: 10,
         schedule: "매주 화, 목 19:00-21:00",
@@ -98,7 +99,7 @@ const studyDetailData: Record<number, Study> = {
         difficulty: "중급",
         participants: "15/20명",
         manager: "관리자",
-        recruitmentMethod: "지원서",
+        recruitmentMethod: StudyRecruitmentMethod.APPLICATION,
         maxParticipants: 20,
         currentParticipants: 15,
         schedule: "주 2회",

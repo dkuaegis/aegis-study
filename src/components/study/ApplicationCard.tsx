@@ -14,11 +14,12 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { getApplicationText } from "@/lib/applicationApi";
 import type { Application } from "@/types/study";
+import { StudyRecruitmentMethod } from "@/types/study";
 
 type ApplicationCardProps = {
     application: Application;
     onStatusChange: (id: number, status: "APPROVED" | "REJECTED") => void;
-    recruitmentMethod: string;
+    recruitmentMethod: StudyRecruitmentMethod;
     studyId: number;
 };
 
@@ -34,7 +35,7 @@ const ApplicationCard = ({
 
     const handleLoadApplicationText = async () => {
         if (applicationReason) return; // 이미 로드된 경우 재요청하지 않음
-        
+
         try {
             setIsLoadingText(true);
             setTextError(null);
@@ -107,7 +108,8 @@ const ApplicationCard = ({
 
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        {recruitmentMethod === "지원서" && (
+                        {recruitmentMethod ===
+                            StudyRecruitmentMethod.APPLICATION && (
                             <Dialog>
                                 <DialogTrigger asChild>
                                     <Button
@@ -143,17 +145,23 @@ const ApplicationCard = ({
                                             <div className="flex min-h-[250px] items-center justify-center">
                                                 <div className="text-center">
                                                     <div className="mx-auto mb-2 h-6 w-6 animate-spin rounded-full border-blue-600 border-b-2"></div>
-                                                    <p className="text-gray-500 text-sm">지원서를 불러오는 중...</p>
+                                                    <p className="text-gray-500 text-sm">
+                                                        지원서를 불러오는 중...
+                                                    </p>
                                                 </div>
                                             </div>
                                         ) : textError ? (
                                             <div className="flex min-h-[250px] items-center justify-center">
                                                 <div className="text-center">
-                                                    <p className="text-red-600 text-sm">{textError}</p>
+                                                    <p className="text-red-600 text-sm">
+                                                        {textError}
+                                                    </p>
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
-                                                        onClick={handleLoadApplicationText}
+                                                        onClick={
+                                                            handleLoadApplicationText
+                                                        }
                                                         className="mt-2"
                                                     >
                                                         다시 시도

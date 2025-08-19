@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
+import { StudyRecruitmentMethod } from "@/types/study";
 
 const MAX_PARTICIPANTS = 50;
 const MIN_PARTICIPANTS = 1;
@@ -58,7 +59,9 @@ const RecruitmentFields = () => {
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem
-                                        value="지원서"
+                                        value={
+                                            StudyRecruitmentMethod.APPLICATION
+                                        }
                                         id="application"
                                     />
                                     <Label

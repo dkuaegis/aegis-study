@@ -1,9 +1,16 @@
-import { useState, useEffect } from "react";
-import { getStudyApplications, updateApplicationStatus, type ApplicationApiResponse } from "@/lib/applicationApi";
+import { useEffect, useState } from "react";
+import {
+    type ApplicationApiResponse,
+    getStudyApplications,
+    updateApplicationStatus,
+} from "@/lib/applicationApi";
 import type { Application, StudyData } from "@/types/study";
+import { StudyRecruitmentMethod } from "@/types/study";
 
 // API 응답을 내부 타입으로 변환하는 함수
-const transformApiApplication = (apiApp: ApplicationApiResponse): Application => ({
+const transformApiApplication = (
+    apiApp: ApplicationApiResponse
+): Application => ({
     id: apiApp.studyApplicationId,
     name: apiApp.name,
     phone: apiApp.phoneNumber,
@@ -28,12 +35,14 @@ export function useApplications(studyId: number) {
                 setLoading(true);
                 setError(null);
                 const apiApplications = await getStudyApplications(studyId);
-                const transformedApplications = apiApplications.map(transformApiApplication);
-                
+                const transformedApplications = apiApplications.map(
+                    transformApiApplication
+                );
+
                 setApplications(transformedApplications);
                 setStudyInfo({
                     studyTitle: "스터디", // API에서 스터디 정보도 가져와야 함
-                    recruitmentMethod: "지원서", // 임시값, 실제로는 API에서 가져와야 함
+                    recruitmentMethod: StudyRecruitmentMethod.APPLICATION, // 임시값, 실제로는 API에서 가져와야 함
                     applications: transformedApplications,
                 });
             } catch (err) {
@@ -53,11 +62,13 @@ export function useApplications(studyId: number) {
     ) => {
         try {
             await updateApplicationStatus(studyId, applicationId, newStatus);
-            
+
             // 로컬 상태 업데이트
             setApplications((prev) =>
                 prev.map((app) =>
-                    app.id === applicationId ? { ...app, status: newStatus } : app
+                    app.id === applicationId
+                        ? { ...app, status: newStatus }
+                        : app
                 )
             );
         } catch (err) {
