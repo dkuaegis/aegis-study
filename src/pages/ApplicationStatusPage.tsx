@@ -1,45 +1,14 @@
-import { CheckCircle, Clock, User, XCircle } from "lucide-react";
+import { CheckCircle, Clock, User, XCircle, AlertCircle } from "lucide-react";
 import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import { useApplications } from "@/hooks/useApplications";
 
-interface Application {
-    id: number;
-    name: string;
-    phone: string;
-    studentNumber: string;
-    status: "pending" | "approved" | "rejected";
-    applicationText: string;
-}
-
 interface ApplicationStatusProps {
     studyId: number;
     onBack: () => void;
 }
-interface StudyData {
-    studyTitle: string;
-    recruitmentMethod: string;
-    applications: Application[];
-}
-
-const applicationsData: Record<number, StudyData> = {
-    1: {
-        studyTitle: "Spring과 함께 백엔드 개발자 되기",
-        recruitmentMethod: "지원서",
-        applications: [
-            {
-                id: 1,
-                name: "김개발",
-                phone: "010-1234-5678",
-                studentNumber: "20181234",
-                status: "pending",
-                applicationText: `안녕하세요...`,
-            },
-        ],
-    },
-};
 
 const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     const {
@@ -49,10 +18,67 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
         handleStatusChange,
         stats,
         filteredApplications,
-    } = useApplications(applicationsData, studyId);
+        loading,
+        error,
+    } = useApplications(studyId);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="스터디 지원현황" onBack={onBack} />
+                <div className="mx-auto max-w-7xl p-6">
+                    <div className="flex items-center justify-center py-12">
+                        <div className="text-center">
+                            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-blue-600 border-b-2"></div>
+                            <p className="text-gray-500">지원자 데이터를 불러오는 중...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="스터디 지원현황" onBack={onBack} />
+                <div className="mx-auto max-w-7xl p-6">
+                    <div className="flex items-center justify-center py-12">
+                        <div className="text-center">
+                            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+                                <AlertCircle className="h-8 w-8 text-red-600" />
+                            </div>
+                            <p className="text-lg text-red-600">{error}</p>
+                            <button
+                                type="button"
+                                onClick={() => window.location.reload()}
+                                className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                            >
+                                다시 시도
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (!studyInfo) {
-        return <div>스터디를 찾을 수 없습니다.</div>;
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="스터디 지원현황" onBack={onBack} />
+                <div className="mx-auto max-w-7xl p-6">
+                    <div className="flex items-center justify-center py-12">
+                        <div className="text-center">
+                            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+                                <User className="h-8 w-8 text-gray-400" />
+                            </div>
+                            <p className="text-gray-500 text-lg">스터디를 찾을 수 없습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     const filterOptions = [
@@ -204,6 +230,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                                                     recruitmentMethod={
                                                         studyInfo.recruitmentMethod
                                                     }
+                                                    studyId={studyId}
                                                 />
                                             )
                                         )}

@@ -74,3 +74,21 @@ export interface StudyDetail {
     qualifications: string;
     instructor: string;
 }
+
+// Application related types
+export interface Application {
+    id: number;
+    name: string;
+    phone: string;
+    studentNumber: string;
+    status: "PENDING" | "APPROVED" | "REJECTED";
+    applicationReason?: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface StudyData {
+    studyTitle: string;
+    recruitmentMethod: string;
+    applications: Application[];
+}
