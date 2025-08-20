@@ -39,7 +39,9 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                                     className="flex items-start"
                                 >
                                     <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
-                                    <span className="text-gray-700">{item}</span>
+                                    <span className="text-gray-700">
+                                        {item}
+                                    </span>
                                 </div>
                             ))}
                     </div>
@@ -56,7 +58,9 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                     <div className="space-y-2">
                         {study.qualifications
                             .split(/\r?\n/)
-                            .filter((qualification) => qualification.trim() !== "")
+                            .filter(
+                                (qualification) => qualification.trim() !== ""
+                            )
                             .map((qualification: string, idx) => (
                                 <div
                                     key={`${idx}-${qualification.substring(0, 20)}`}

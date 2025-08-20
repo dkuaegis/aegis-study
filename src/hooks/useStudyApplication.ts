@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useToast } from "@/components/ui/useToast";
-import { StudyRecruitmentMethod } from "@/types/study";
 import {
     useCancelEnrollmentMutation,
     useEnrollInStudyMutation,
 } from "@/lib/enrollmentApi";
+import { StudyRecruitmentMethod } from "@/types/study";
 
 interface UseStudyApplicationProps {
     studyId: number;
@@ -49,9 +49,10 @@ export const useStudyApplication = ({
         (error) => {
             // 에러 콜백
             console.error("Enrollment failed:", error);
-            const errorMessage = error instanceof Error 
-                ? error.message 
-                : "지원 중 오류가 발생했습니다. 다시 시도해주세요.";
+            const errorMessage =
+                error instanceof Error
+                    ? error.message
+                    : "지원 중 오류가 발생했습니다. 다시 시도해주세요.";
             toast({
                 description: errorMessage,
             });
@@ -75,9 +76,10 @@ export const useStudyApplication = ({
         (error) => {
             // 에러 콜백
             console.error("Cancel enrollment failed:", error);
-            const errorMessage = error instanceof Error 
-                ? error.message 
-                : "취소 중 오류가 발생했습니다. 다시 시도해주세요.";
+            const errorMessage =
+                error instanceof Error
+                    ? error.message
+                    : "취소 중 오류가 발생했습니다. 다시 시도해주세요.";
             toast({
                 description: errorMessage,
             });

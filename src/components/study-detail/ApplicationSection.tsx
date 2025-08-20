@@ -189,7 +189,8 @@ export const ApplicationSection = ({
                                 onChange={(e) =>
                                     setApplicationText(e.target.value)
                                 }
-                                className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"                            />
+                                className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
+                            />
                             <AlertDialogFooter>
                                 <AlertDialogCancel
                                     onClick={() =>

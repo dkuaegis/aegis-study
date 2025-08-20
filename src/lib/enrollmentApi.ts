@@ -31,16 +31,14 @@ export async function enrollInStudy(
                 signal,
             }
         );
-        
-        // 201: 스터디 참여 신청 성공
+
         if (response.status === 201) {
-            return response.json<EnrollmentResponse>();
+            return await response.json<EnrollmentResponse>();
         }
-        
+
         throw new Error(`Unexpected response status: ${response.status}`);
     } catch (error: unknown) {
-        // HTTP 에러 처리
-        if (error && typeof error === 'object' && 'response' in error) {
+        if (error instanceof Error && "response" in error) {
             const httpError = error as HTTPError;
             const status = httpError.response?.status;
             switch (status) {
@@ -66,7 +64,7 @@ export async function cancelEnrollment(
         });
     } catch (error: unknown) {
         // HTTP 에러 처리
-        if (error && typeof error === 'object' && 'response' in error) {
+        if (error && typeof error === "object" && "response" in error) {
             const httpError = error as HTTPError;
             const status = httpError.response?.status;
             switch (status) {
@@ -86,24 +84,22 @@ export async function cancelEnrollment(
 export const useEnrollInStudyMutation = (
     studyId: number,
     onSuccess?: (data: EnrollmentResponse) => void,
-    onError?: (error: HTTPError) => void
-): UseMutationResult<EnrollmentResponse, HTTPError, EnrollmentPayload> => {
+    onError?: (error: Error) => void
+): UseMutationResult<EnrollmentResponse, Error, EnrollmentPayload> => {
     const queryClient = useQueryClient();
 
-    return useMutation<EnrollmentResponse, HTTPError, EnrollmentPayload>({
+    return useMutation<EnrollmentResponse, Error, EnrollmentPayload>({
         mutationFn: (payload) => enrollInStudy(studyId, payload),
         onSuccess: (data) => {
-            // 스터디 상세 정보 캐시 무효화
             queryClient.invalidateQueries({
                 queryKey: ["studyDetail", studyId],
             });
-            // 스터디 목록 캐시 무효화
             queryClient.invalidateQueries({
                 queryKey: ["studies"],
             });
             if (onSuccess) onSuccess(data);
         },
-        onError: (error: HTTPError) => {
+        onError: (error: Error) => {
             if (onError) onError(error);
         },
     });
@@ -112,11 +108,11 @@ export const useEnrollInStudyMutation = (
 export const useCancelEnrollmentMutation = (
     studyId: number,
     onSuccess?: () => void,
-    onError?: (error: HTTPError) => void
-): UseMutationResult<void, HTTPError, void> => {
+    onError?: (error: Error) => void
+): UseMutationResult<void, Error, void> => {
     const queryClient = useQueryClient();
 
-    return useMutation<void, HTTPError, void>({
+    return useMutation<void, Error, void>({
         mutationFn: () => cancelEnrollment(studyId),
         onSuccess: () => {
             // 스터디 상세 정보 캐시 무효화
@@ -129,7 +125,7 @@ export const useCancelEnrollmentMutation = (
             });
             if (onSuccess) onSuccess();
         },
-        onError: (error: HTTPError) => {
+        onError: (error: Error) => {
             if (onError) onError(error);
         },
     });
