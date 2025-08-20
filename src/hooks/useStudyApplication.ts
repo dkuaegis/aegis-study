@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/ui/useToast";
 import {
     useCancelEnrollmentMutation,
@@ -25,7 +25,9 @@ export const useStudyApplication = ({
     >(null);
 
     // 취소 시 안전한 상태 참조를 위한 ref
-    const lastKnownStatusRef = useRef<"APPROVED" | "PENDING" | "REJECTED" | null>(null);
+    const lastKnownStatusRef = useRef<
+        "APPROVED" | "PENDING" | "REJECTED" | null
+    >(null);
 
     const toast = useToast();
 
@@ -42,7 +44,9 @@ export const useStudyApplication = ({
                 normalized === "APPROVED" ||
                 normalized === "PENDING" ||
                 normalized === "REJECTED";
-            const safeStatus = allowed ? (normalized as "APPROVED" | "PENDING" | "REJECTED") : null;
+            const safeStatus = allowed
+                ? (normalized as "APPROVED" | "PENDING" | "REJECTED")
+                : null;
             setUserApplicationStatus(safeStatus);
             lastKnownStatusRef.current = safeStatus;
         } else {

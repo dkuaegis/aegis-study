@@ -71,7 +71,7 @@ export async function getStudyStatus(
             .json<StudyStatusResponse>();
     } catch (error: unknown) {
         // 404는 신청하지 않은 상태로 처리
-        if (error && typeof error === 'object' && 'response' in error) {
+        if (error && typeof error === "object" && "response" in error) {
             const httpError = error as HTTPError;
             if (httpError.response?.status === 404) {
                 return null;

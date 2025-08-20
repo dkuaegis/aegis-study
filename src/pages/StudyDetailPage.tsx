@@ -8,7 +8,7 @@ import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 import { StudyRecruitmentMethod } from "@/types/study";
 
 interface StudyDetailProps {
-    studyId?: string;
+    studyId: string;
     onBack?: () => void;
     onEdit?: (studyId: number) => void;
     onViewApplications?: (studyId: number) => void;
