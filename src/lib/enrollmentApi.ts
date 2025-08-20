@@ -1,6 +1,8 @@
 import {
     type UseMutationResult,
+    type UseQueryResult,
     useMutation,
+    useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
 import type { HTTPError } from "ky";
@@ -15,6 +17,11 @@ export interface EnrollmentPayload {
 export interface EnrollmentResponse {
     message: string;
     status: "approved" | "pending";
+}
+
+export interface StudyStatusResponse {
+    studyApplicationId: number;
+    status: "PENDING" | "APPROVED" | "REJECTED";
 }
 
 // API Functions
@@ -54,6 +61,26 @@ export async function enrollInStudy(
     }
 }
 
+export async function getStudyStatus(
+    studyId: number,
+    signal?: AbortSignal
+): Promise<StudyStatusResponse | null> {
+    try {
+        return await apiClient
+            .get(API_ENDPOINTS.STUDY_STATUS(studyId), { signal })
+            .json<StudyStatusResponse>();
+    } catch (error: unknown) {
+        // 404는 신청하지 않은 상태로 처리
+        if (error && typeof error === 'object' && 'response' in error) {
+            const httpError = error as HTTPError;
+            if (httpError.response?.status === 404) {
+                return null;
+            }
+        }
+        throw error;
+    }
+}
+
 export async function cancelEnrollment(
     studyId: number,
     signal?: AbortSignal
@@ -80,6 +107,24 @@ export async function cancelEnrollment(
     }
 }
 
+// Query Keys
+export const ENROLLMENT_QUERY_KEYS = {
+    studyStatus: (studyId: number) => ["studyStatus", studyId] as const,
+} as const;
+
+// Query Hooks
+export const useStudyStatusQuery = (
+    studyId: number
+): UseQueryResult<StudyStatusResponse | null, Error> => {
+    return useQuery<StudyStatusResponse | null, Error>({
+        queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
+        queryFn: ({ signal }) => getStudyStatus(studyId, signal),
+        enabled: Number.isFinite(studyId) && studyId > 0,
+        staleTime: 5 * 60 * 1000, // 5분
+        gcTime: 10 * 60 * 1000, // 10분
+    });
+};
+
 // Mutation Hooks
 export const useEnrollInStudyMutation = (
     studyId: number,
@@ -96,6 +141,10 @@ export const useEnrollInStudyMutation = (
             });
             queryClient.invalidateQueries({
                 queryKey: ["studies"],
+            });
+            // 상태 쿼리도 무효화
+            queryClient.invalidateQueries({
+                queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
             });
             if (onSuccess) onSuccess(data);
         },
@@ -122,6 +171,10 @@ export const useCancelEnrollmentMutation = (
             // 스터디 목록 캐시 무효화
             queryClient.invalidateQueries({
                 queryKey: ["studies"],
+            });
+            // 상태 쿼리도 무효화
+            queryClient.invalidateQueries({
+                queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
             });
             if (onSuccess) onSuccess();
         },

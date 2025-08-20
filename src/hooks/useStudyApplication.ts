@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/useToast";
 import {
     useCancelEnrollmentMutation,
     useEnrollInStudyMutation,
+    useStudyStatusQuery,
 } from "@/lib/enrollmentApi";
 import { StudyRecruitmentMethod } from "@/types/study";
 
@@ -25,19 +26,32 @@ export const useStudyApplication = ({
 
     const toast = useToast();
 
+    // 상태 조회 쿼리
+    const { data: statusData } = useStudyStatusQuery(studyId);
+
+    // 상태 데이터가 변경되면 로컬 상태 업데이트
+    useEffect(() => {
+        if (statusData) {
+            // API 상태를 로컬 상태 형식으로 변환
+            const status = statusData.status.toLowerCase() as "approved" | "pending" | "rejected";
+            setUserApplicationStatus(status);
+        } else {
+            // statusData가 null이면 신청하지 않은 상태
+            setUserApplicationStatus(null);
+        }
+    }, [statusData]);
+
     // API Mutations
     const enrollMutation = useEnrollInStudyMutation(
         studyId,
         (data) => {
-            // 성공 콜백
+            // 성공 콜백 - 상태는 쿼리에서 자동으로 업데이트됨
             if (data.status === "approved") {
-                setUserApplicationStatus("approved");
                 toast({
                     description:
                         "지원이 완료되었습니다! 스터디에 참여하게 되었습니다.",
                 });
             } else {
-                setUserApplicationStatus("pending");
                 toast({
                     description:
                         "지원서가 제출되었습니다! 검토 후 결과를 알려드리겠습니다.",
@@ -63,9 +77,8 @@ export const useStudyApplication = ({
     const cancelMutation = useCancelEnrollmentMutation(
         studyId,
         () => {
-            // 성공 콜백
+            // 성공 콜백 - 상태는 쿼리에서 자동으로 업데이트됨
             const wasApproved = userApplicationStatus === "approved";
-            setUserApplicationStatus(null);
             toast({
                 description: wasApproved
                     ? "스터디에서 탈퇴되었습니다."
