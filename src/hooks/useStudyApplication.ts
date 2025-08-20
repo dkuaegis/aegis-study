@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/components/ui/useToast";
 import {
     useCancelEnrollmentMutation,
@@ -21,8 +21,11 @@ export const useStudyApplication = ({
     const [isCancelling, setIsCancelling] = useState(false);
     const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
     const [userApplicationStatus, setUserApplicationStatus] = useState<
-        "approved" | "pending" | "rejected" | null
+        "APPROVED" | "PENDING" | "REJECTED" | null
     >(null);
+
+    // 취소 시 안전한 상태 참조를 위한 ref
+    const lastKnownStatusRef = useRef<"APPROVED" | "PENDING" | "REJECTED" | null>(null);
 
     const toast = useToast();
 
@@ -31,13 +34,21 @@ export const useStudyApplication = ({
 
     // 상태 데이터가 변경되면 로컬 상태 업데이트
     useEffect(() => {
-        if (statusData) {
-            // API 상태를 로컬 상태 형식으로 변환
-            const status = statusData.status.toLowerCase() as "approved" | "pending" | "rejected";
-            setUserApplicationStatus(status);
+        const raw = statusData?.status;
+        if (typeof raw === "string") {
+            // API 상태를 로컬 상태 형식으로 안전하게 변환 (대문자 처리)
+            const normalized = raw.toUpperCase();
+            const allowed =
+                normalized === "APPROVED" ||
+                normalized === "PENDING" ||
+                normalized === "REJECTED";
+            const safeStatus = allowed ? (normalized as "APPROVED" | "PENDING" | "REJECTED") : null;
+            setUserApplicationStatus(safeStatus);
+            lastKnownStatusRef.current = safeStatus;
         } else {
-            // statusData가 null이면 신청하지 않은 상태
+            // statusData가 null/undefined이거나 형태가 예상과 다름
             setUserApplicationStatus(null);
+            lastKnownStatusRef.current = null;
         }
     }, [statusData]);
 
@@ -46,7 +57,7 @@ export const useStudyApplication = ({
         studyId,
         (data) => {
             // 성공 콜백 - 상태는 쿼리에서 자동으로 업데이트됨
-            if (data.status === "approved") {
+            if (data.status === "APPROVED") {
                 toast({
                     description:
                         "지원이 완료되었습니다! 스터디에 참여하게 되었습니다.",
@@ -78,7 +89,7 @@ export const useStudyApplication = ({
         studyId,
         () => {
             // 성공 콜백 - 상태는 쿼리에서 자동으로 업데이트됨
-            const wasApproved = userApplicationStatus === "approved";
+            const wasApproved = lastKnownStatusRef.current === "APPROVED";
             toast({
                 description: wasApproved
                     ? "스터디에서 탈퇴되었습니다."
@@ -128,7 +139,6 @@ export const useStudyApplication = ({
         // Actions
         setApplicationText,
         setIsApplicationModalOpen,
-        setUserApplicationStatus,
         handleApply,
         handleCancelApplication,
     };

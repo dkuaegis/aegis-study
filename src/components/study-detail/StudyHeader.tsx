@@ -9,7 +9,7 @@ import { StudyCategoryLabels, type StudyDetail } from "@/types/study";
 interface StudyHeaderProps {
     study: StudyDetail;
     isOwner?: boolean;
-    userApplicationStatus?: "approved" | "pending" | "rejected" | null;
+    userApplicationStatus?: "APPROVED" | "PENDING" | "REJECTED" | null;
     onEdit?: (studyId: number) => void;
     onViewApplications?: (studyId: number) => void;
     onViewMembers?: (studyId: number) => void;
@@ -45,19 +45,19 @@ export const StudyHeader = ({
 
     const getApplicationStatusBadge = () => {
         switch (userApplicationStatus) {
-            case "pending":
+            case "PENDING":
                 return (
                     <Badge className="bg-yellow-100 text-yellow-800">
                         신청 대기 중
                     </Badge>
                 );
-            case "approved":
+            case "APPROVED":
                 return (
                     <Badge className="bg-green-100 text-green-800">
                         참여 중
                     </Badge>
                 );
-            case "rejected":
+            case "REJECTED":
                 return (
                     <Badge className="bg-red-100 text-red-800">
                         신청 거절됨
@@ -134,7 +134,7 @@ export const StudyHeader = ({
                     </div>
 
                     {/* 출석코드 입력 */}
-                    {userApplicationStatus === "approved" && !isOwner && (
+                    {userApplicationStatus === "APPROVED" && !isOwner && (
                         <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
                             <div className="flex items-end gap-2">
                                 <div className="grid w-full max-w-sm items-center gap-1.5">

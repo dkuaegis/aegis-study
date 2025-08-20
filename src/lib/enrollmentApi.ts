@@ -16,7 +16,7 @@ export interface EnrollmentPayload {
 
 export interface EnrollmentResponse {
     message: string;
-    status: "approved" | "pending";
+    status: "APPROVED" | "PENDING";
 }
 
 export interface StudyStatusResponse {
