@@ -8,15 +8,14 @@ import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 import { StudyRecruitmentMethod } from "@/types/study";
 
 interface StudyDetailProps {
-    studyId: number;
-    onBack: () => void;
+    studyId: string;
+    onBack?: () => void;
     onEdit?: (studyId: number) => void;
     onViewApplications?: (studyId: number) => void;
     onViewMembers?: (studyId: number) => void;
     onManageAttendance?: (studyId: number) => void;
     isOwner?: boolean;
-    initialUserApplicationStatus?: "approved" | "pending" | "rejected" | null;
-    currentUserId: string;
+    initialUserApplicationStatus?: "APPROVED" | "PENDING" | "REJECTED" | null;
 }
 
 const StudyDetailPage = ({
@@ -33,7 +32,7 @@ const StudyDetailPage = ({
         isLoading,
         isError,
         error,
-    } = useStudyDetailQuery(studyId);
+    } = useStudyDetailQuery(Number(studyId));
 
     const {
         applicationText,
@@ -43,11 +42,10 @@ const StudyDetailPage = ({
         userApplicationStatus,
         setApplicationText,
         setIsApplicationModalOpen,
-        setUserApplicationStatus,
         handleApply,
         handleCancelApplication,
     } = useStudyApplication({
-        studyId,
+        studyId: Number(studyId),
         recruitmentMethod:
             study?.recruitmentMethod ?? StudyRecruitmentMethod.APPLICATION,
     });
@@ -112,7 +110,6 @@ const StudyDetailPage = ({
                                 userApplicationStatus,
                                 setApplicationText,
                                 setIsApplicationModalOpen,
-                                setUserApplicationStatus,
                                 handleApply,
                                 handleCancelApplication,
                             }}

@@ -9,15 +9,15 @@ export const getRecruitmentMethodText = (
 };
 
 export const getApplicationSectionTitle = (
-    status: "approved" | "pending" | "rejected" | null,
+    status: "APPROVED" | "PENDING" | "REJECTED" | null,
     recruitmentMethod: StudyRecruitmentMethod
 ): string => {
     switch (status) {
-        case "pending":
+        case "PENDING":
             return "신청 현황";
-        case "approved":
+        case "APPROVED":
             return "참여 현황";
-        case "rejected":
+        case "REJECTED":
             return "신청 결과";
         default:
             return recruitmentMethod === StudyRecruitmentMethod.FCFS

@@ -28,12 +28,9 @@ interface ApplicationSectionProps {
         isApplying: boolean;
         isCancelling: boolean;
         isApplicationModalOpen: boolean;
-        userApplicationStatus: "approved" | "pending" | "rejected" | null;
+        userApplicationStatus: "APPROVED" | "PENDING" | "REJECTED" | null;
         setApplicationText: (text: string) => void;
         setIsApplicationModalOpen: (open: boolean) => void;
-        setUserApplicationStatus: (
-            status: "approved" | "pending" | "rejected" | null
-        ) => void;
         handleApply: () => Promise<void>;
         handleCancelApplication: () => Promise<void>;
     };
@@ -52,7 +49,6 @@ export const ApplicationSection = ({
         userApplicationStatus,
         setApplicationText,
         setIsApplicationModalOpen,
-        setUserApplicationStatus,
         handleApply,
         handleCancelApplication,
     } = applicationState;
@@ -145,13 +141,14 @@ export const ApplicationSection = ({
         <div className="space-y-4 text-center">
             <p className="text-red-600">신청이 거절되었습니다.</p>
             <p className="text-gray-500 text-sm">다른 스터디를 찾아보세요.</p>
-            <Button
+            {/* TODO: 다시 지원하기 기능 구현 필요 */}
+            {/* <Button
                 onClick={() => setUserApplicationStatus(null)}
                 variant="outline"
                 className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
             >
                 다시 지원하기
-            </Button>
+            </Button> */}
         </div>
     );
 
@@ -240,11 +237,11 @@ export const ApplicationSection = ({
 
     const renderContent = () => {
         switch (userApplicationStatus) {
-            case "pending":
+            case "PENDING":
                 return renderPendingStatus();
-            case "approved":
+            case "APPROVED":
                 return renderApprovedStatus();
-            case "rejected":
+            case "REJECTED":
                 return renderRejectedStatus();
             default:
                 return renderApplicationForm();
