@@ -8,4 +8,5 @@ export const API_ENDPOINTS = {
         `studies/${studyId}/applications/${applicationId}/approve`,
     REJECT_APPLICATION: (studyId: number, applicationId: number) =>
         `studies/${studyId}/applications/${applicationId}/reject`,
+    STUDY_ENROLLMENT: (studyId: number) => `studies/${studyId}/enrollment`,
 } as const;
