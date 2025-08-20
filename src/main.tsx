@@ -9,7 +9,7 @@ import { ToastProvider } from "./components/ui/useToast.tsx";
 
 const queryClient = new QueryClient();
 
-// biome-ignore lint/style/noNonNullAssertion: <explanation>
+// biome-ignore lint/style/noNonNullAssertion: DOM element is guaranteed to exist in index.html
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <BrowserRouter>

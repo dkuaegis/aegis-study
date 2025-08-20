@@ -8,7 +8,7 @@ import { useStudyDetailQuery } from "@/lib/studyDetailApi";
 import { StudyRecruitmentMethod } from "@/types/study";
 
 interface StudyDetailProps {
-    studyId: string;
+    studyId: number;
     onBack?: () => void;
     onEdit?: (studyId: number) => void;
     onViewApplications?: (studyId: number) => void;
@@ -26,13 +26,14 @@ const StudyDetailPage = ({
     onViewMembers,
     onManageAttendance,
     isOwner = false,
+    initialUserApplicationStatus: _initialUserApplicationStatus,
 }: StudyDetailProps) => {
     const {
         data: study,
         isLoading,
         isError,
         error,
-    } = useStudyDetailQuery(Number(studyId));
+    } = useStudyDetailQuery(studyId);
 
     const {
         applicationText,
@@ -45,7 +46,7 @@ const StudyDetailPage = ({
         handleApply,
         handleCancelApplication,
     } = useStudyApplication({
-        studyId: Number(studyId),
+        studyId: studyId,
         recruitmentMethod:
             study?.recruitmentMethod ?? StudyRecruitmentMethod.APPLICATION,
     });
