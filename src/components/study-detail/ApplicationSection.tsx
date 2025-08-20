@@ -175,7 +175,7 @@ export const ApplicationSection = ({
                         open={isApplicationModalOpen}
                         onOpenChange={setIsApplicationModalOpen}
                     >
-                        <AlertDialogContent>
+                        <AlertDialogContent className="max-h-[80vh] max-w-4xl">
                             <AlertDialogHeader>
                                 <AlertDialogTitle>지원서 작성</AlertDialogTitle>
                                 <AlertDialogDescription>
@@ -189,7 +189,7 @@ export const ApplicationSection = ({
                                 onChange={(e) =>
                                     setApplicationText(e.target.value)
                                 }
-                                className="mt-2 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                className="mt-2 max-h-[300px] min-h-[200px] resize-none overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             />
                             <AlertDialogFooter>
                                 <AlertDialogCancel
