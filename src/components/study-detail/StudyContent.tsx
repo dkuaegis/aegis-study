@@ -30,15 +30,18 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
-                        {study.curricula.split("\n").map((item: string) => (
-                            <div
-                                key={item.substring(0, 20)}
-                                className="flex items-start"
-                            >
-                                <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
-                                <span className="text-gray-700">{item}</span>
-                            </div>
-                        ))}
+                        {study.curricula
+                            .split(/\r?\n/)
+                            .filter((item) => item.trim() !== "")
+                            .map((item: string, idx) => (
+                                <div
+                                    key={`${idx}-${item.substring(0, 20)}`}
+                                    className="flex items-start"
+                                >
+                                    <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
+                                    <span className="text-gray-700">{item}</span>
+                                </div>
+                            ))}
                     </div>
                 </CardContent>
             </Card>
@@ -52,10 +55,11 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                 <CardContent>
                     <div className="space-y-2">
                         {study.qualifications
-                            .split("\n")
-                            .map((qualification: string) => (
+                            .split(/\r?\n/)
+                            .filter((qualification) => qualification.trim() !== "")
+                            .map((qualification: string, idx) => (
                                 <div
-                                    key={qualification.substring(0, 20)}
+                                    key={`${idx}-${qualification.substring(0, 20)}`}
                                     className="flex items-start"
                                 >
                                     <span className="mt-2 mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-gray-400" />
