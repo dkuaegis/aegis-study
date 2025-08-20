@@ -160,7 +160,7 @@ export default function StudyDetailWrapper() {
 
     // 스터디 id가 3이면 스터디원 권한으로 "참여 중" 상태로 전달
     const initialUserApplicationStatus =
-        numericStudyId === 3 ? "approved" : undefined;
+        numericStudyId === 3 ? "APPROVED" : undefined;
 
     if (!study) {
         return <div>스터디를 찾을 수 없습니다.</div>;
@@ -177,7 +177,6 @@ export default function StudyDetailWrapper() {
             studyId={numericStudyId}
             onBack={handleBack}
             isOwner={isOwner}
-            currentUserId={currentUserId}
             onEdit={(id) => navigate(`/edit/${id}`)}
             onViewApplications={(id) => navigate(`/applications/${id}`)}
             onViewMembers={(id) => navigate(`/members/${id}`)}
