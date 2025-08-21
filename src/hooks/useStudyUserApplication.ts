@@ -116,9 +116,23 @@ export const useStudyApplication = ({
     );
 
     const handleApply = async () => {
+        // 중복 요청 방지를 위한 조기 리턴
+        if (isApplying) return;
+
+        // APPLICATION 방식일 때 공백 입력 차단
+        if (recruitmentMethod === StudyRecruitmentMethod.APPLICATION) {
+            const trimmedText = applicationText.trim();
+            if (!trimmedText) {
+                toast({
+                    description: "지원 사유를 입력해주세요.",
+                });
+                return;
+            }
+        }
+
         setIsApplying(true);
 
-        // 모집 방식에 따라 applicationReason 설정
+        // 모집 방식에 따라 applicationReason 설정 (API 타입에 맞춤)
         const applicationReason =
             recruitmentMethod === StudyRecruitmentMethod.APPLICATION
                 ? applicationText.trim()

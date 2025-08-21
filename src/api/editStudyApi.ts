@@ -78,7 +78,10 @@ export const useUpdateStudyMutation = (
     const queryClient = useQueryClient();
 
     return useMutation<void, HTTPError, StudyFormData>({
-        mutationFn: (data: StudyFormData) => updateStudy(studyId, data),
+        mutationFn: async (data: StudyFormData) => {
+            const controller = new AbortController();
+            return updateStudy(studyId, data, controller.signal);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: STUDY_DETAIL_QUERY_KEY(studyId),

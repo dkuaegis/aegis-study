@@ -4,6 +4,10 @@ export const API_ENDPOINTS = {
     OAUTH_GOOGLE: "oauth2/authorization/google",
     STUDY_APPLICATIONS: (studyId: number) =>
         `studies/${studyId}/applications-instructor`,
+    APPLICATION_DETAIL: (studyId: number, applicationId: number) =>
+        `studies/${studyId}/applications/${applicationId}`,
+    UPDATE_APPLICATION_STATUS: (studyId: number, applicationId: number) =>
+        `studies/${studyId}/applications/${applicationId}/status`,
     APPROVE_APPLICATION: (studyId: number, applicationId: number) =>
         `studies/${studyId}/applications/${applicationId}/approve`,
     REJECT_APPLICATION: (studyId: number, applicationId: number) =>
