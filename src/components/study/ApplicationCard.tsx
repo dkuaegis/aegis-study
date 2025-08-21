@@ -12,7 +12,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { fetchApplicationText } from "@/lib/applicationApi";
+import { fetchApplicationText } from "@/api/applicationOwnerApi";
 import type { Application } from "@/types/study";
 import { StudyRecruitmentMethod } from "@/types/study";
 
