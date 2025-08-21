@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useToast } from "@/components/ui/useToast";
 import {
     useCancelEnrollmentMutation,
     useEnrollInStudyMutation,
     useStudyStatusQuery,
 } from "@/api/enrollmentApi";
+import { useToast } from "@/components/ui/useToast";
 import { StudyRecruitmentMethod } from "@/types/study";
 
 interface UseStudyApplicationProps {

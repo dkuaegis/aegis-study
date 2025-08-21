@@ -52,7 +52,9 @@ export async function fetchApplicationText(
     signal?: AbortSignal
 ): Promise<ApplicationTextResponse> {
     return apiClient
-        .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), { signal })
+        .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), {
+            signal,
+        })
         .json<ApplicationTextResponse>();
 }
 

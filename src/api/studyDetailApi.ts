@@ -1,8 +1,8 @@
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import type { HTTPError, TimeoutError } from "ky";
-import type { StudyDetail } from "@/types/study";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
+import type { StudyDetail } from "@/types/study";
 
 // Ky에서 발생할 수 있는 모든 오류 타입을 포괄하는 유니온 타입
 type StudyDetailError = HTTPError | TimeoutError | DOMException | TypeError;

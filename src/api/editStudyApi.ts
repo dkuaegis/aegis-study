@@ -4,10 +4,10 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import type { HTTPError } from "ky";
-import type { StudyRecruitmentMethod } from "@/types/study";
+import { STUDY_DETAIL_QUERY_KEY } from "@/api/studyDetailApi";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
-import { STUDY_DETAIL_QUERY_KEY } from "@/api/studyDetailApi";
+import type { StudyRecruitmentMethod } from "@/types/study";
 
 interface UpdateStudyRequest {
     title: string;

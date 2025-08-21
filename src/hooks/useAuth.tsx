@@ -44,9 +44,9 @@ const useAuth = () => {
         checkAuth();
     }, []);
 
-    return { 
+    return {
         isAuthenticated,
-        isLoading: isAuthenticated === AuthStatus.LOADING 
+        isLoading: isAuthenticated === AuthStatus.LOADING,
     };
 };
 
