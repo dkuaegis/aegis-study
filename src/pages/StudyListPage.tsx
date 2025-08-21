@@ -3,8 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
-import { useStudyListQuery } from "@/lib/studyListApi";
-import { StudyCategoryLabels, StudyLevelLabels } from "@/types/study";
+import { useStudyListQuery } from "@/api/studyListApi";
+import { StudyCategoryLabels, StudyLevelLabels, type StudyListItem } from "@/types/study";
 
 interface StudyListMainProps {
     onCreateStudy: () => void;
@@ -45,7 +45,7 @@ const StudyList = ({
                             </div>
                         </div>
                     ) : (
-                        studies.map((study) => (
+                        studies.map((study: StudyListItem) => (
                             <Card
                                 key={study.id}
                                 className="cursor-pointer border-gray-200 transition-shadow hover:shadow-md"
