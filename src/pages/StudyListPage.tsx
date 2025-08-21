@@ -1,10 +1,14 @@
 import { BarChart3, Clock, User, Users } from "lucide-react";
+import { useStudyListQuery } from "@/api/studyListApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
-import { useStudyListQuery } from "@/api/studyListApi";
-import { StudyCategoryLabels, StudyLevelLabels, type StudyListItem } from "@/types/study";
+import {
+    StudyCategoryLabels,
+    StudyLevelLabels,
+    type StudyListItem,
+} from "@/types/study";
 
 interface StudyListMainProps {
     onCreateStudy: () => void;

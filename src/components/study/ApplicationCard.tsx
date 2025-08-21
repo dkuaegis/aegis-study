@@ -1,5 +1,6 @@
 import { CheckCircle, Eye, FileText, XCircle } from "lucide-react";
 import { useState } from "react";
+import { fetchApplicationText } from "@/api/applicationOwnerApi";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { fetchApplicationText } from "@/api/applicationOwnerApi";
 import type { Application } from "@/types/study";
 import { StudyRecruitmentMethod } from "@/types/study";
 
