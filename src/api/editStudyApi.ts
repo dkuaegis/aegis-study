@@ -4,10 +4,10 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import type { HTTPError } from "ky";
+import { STUDY_DETAIL_QUERY_KEY } from "@/api/studyDetailApi";
+import { apiClient } from "@/lib/apiClient";
+import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import type { StudyRecruitmentMethod } from "@/types/study";
-import { apiClient } from "./apiClient";
-import { API_ENDPOINTS } from "./apiEndpoints";
-import { STUDY_DETAIL_QUERY_KEY } from "./studyDetailApi";
 
 interface UpdateStudyRequest {
     title: string;
@@ -78,7 +78,10 @@ export const useUpdateStudyMutation = (
     const queryClient = useQueryClient();
 
     return useMutation<void, HTTPError, StudyFormData>({
-        mutationFn: (data: StudyFormData) => updateStudy(studyId, data),
+        mutationFn: async (data: StudyFormData) => {
+            const controller = new AbortController();
+            return updateStudy(studyId, data, controller.signal);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: STUDY_DETAIL_QUERY_KEY(studyId),

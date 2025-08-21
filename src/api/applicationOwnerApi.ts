@@ -6,8 +6,8 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import type { HTTPError } from "ky";
-import { apiClient } from "./apiClient";
-import { API_ENDPOINTS } from "./apiEndpoints";
+import { apiClient } from "@/lib/apiClient";
+import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 
 // Types
 export interface ApplicationApiResponse {
@@ -52,7 +52,9 @@ export async function fetchApplicationText(
     signal?: AbortSignal
 ): Promise<ApplicationTextResponse> {
     return apiClient
-        .get(`studies/${studyId}/applications/${applicationId}`, { signal })
+        .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), {
+            signal,
+        })
         .json<ApplicationTextResponse>();
 }
 
@@ -63,7 +65,7 @@ export async function updateApplicationStatus(
     signal?: AbortSignal
 ): Promise<void> {
     await apiClient.patch(
-        `studies/${studyId}/applications/${applicationId}/status`,
+        API_ENDPOINTS.UPDATE_APPLICATION_STATUS(studyId, applicationId),
         {
             json: payload,
             signal,
@@ -99,14 +101,12 @@ export async function rejectApplication(
 
 // Query Hooks
 export const useStudyApplicationsQuery = (
-    studyId: number,
-    onError?: (error: HTTPError) => void
+    studyId: number
 ): UseQueryResult<ApplicationApiResponse[], HTTPError> => {
     return useQuery<ApplicationApiResponse[], HTTPError>({
         queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
         queryFn: ({ signal }) => fetchStudyApplications(studyId, signal),
         enabled: Number.isFinite(studyId) && studyId > 0,
-        ...(onError && { onError }),
         staleTime: 30_000, // 30초
         gcTime: 5 * 60_000, // 5분
         refetchOnWindowFocus: false,
@@ -116,8 +116,7 @@ export const useStudyApplicationsQuery = (
 export const useApplicationTextQuery = (
     studyId: number,
     applicationId: number,
-    enabled: boolean = true,
-    onError?: (error: HTTPError) => void
+    enabled: boolean = true
 ): UseQueryResult<ApplicationTextResponse, HTTPError> => {
     return useQuery<ApplicationTextResponse, HTTPError>({
         queryKey: APPLICATION_QUERY_KEYS.applicationText(
@@ -132,7 +131,6 @@ export const useApplicationTextQuery = (
             studyId > 0 &&
             Number.isFinite(applicationId) &&
             applicationId > 0,
-        ...(onError && { onError }),
         staleTime: 5 * 60_000, // 5분 (텍스트는 자주 변경되지 않음)
         gcTime: 10 * 60_000, // 10분
         refetchOnWindowFocus: false,

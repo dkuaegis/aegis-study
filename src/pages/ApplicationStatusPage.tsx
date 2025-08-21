@@ -3,7 +3,7 @@ import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
-import { useApplications } from "@/hooks/useApplications";
+import { useApplications } from "@/hooks/useOwnerApplications";
 
 interface ApplicationStatusProps {
     studyId: number;

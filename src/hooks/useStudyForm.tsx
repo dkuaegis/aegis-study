@@ -6,6 +6,7 @@ import type {
     UseFormReturn,
 } from "react-hook-form";
 import { useFieldArray, useForm } from "react-hook-form";
+import { useCreateStudyMutation } from "@/api/createStudyApi";
 import {
     StudyCategory,
     StudyCategoryLabels,
@@ -13,7 +14,6 @@ import {
     StudyLevelLabels,
     StudyRecruitmentMethod,
 } from "@/types/study";
-import { useCreateStudyMutation } from "../lib/createStudyApi";
 
 export interface CurriculumItem {
     value: string;
