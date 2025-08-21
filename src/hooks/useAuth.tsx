@@ -36,7 +36,7 @@ const useAuth = () => {
                     setAuthenticated(AuthStatus.NOT_COMPLETED);
                 }
             } catch (error) {
-                console.log("로그인 인증 에러:", error);
+                console.error("로그인 인증 에러:", error);
                 setAuthenticated(AuthStatus.UNAUTHORIZED);
             }
         };
