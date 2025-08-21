@@ -3,14 +3,16 @@ import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 
 export enum AuthStatus {
+    LOADING = "LOADING", // 로딩 상태 추가
     UNAUTHORIZED = "UNAUTHORIZED",
     NOT_COMPLETED = "NOT_COMPLETED", // 가입 완료 안됨
     COMPLETED = "COMPLETED", // 가입 완료
 }
 
 const useAuth = () => {
+    // 초기 상태를 LOADING으로 설정하여 인증 확인 완료까지 대기
     const [isAuthenticated, setAuthenticated] = useState<AuthStatus>(
-        AuthStatus.UNAUTHORIZED
+        AuthStatus.LOADING
     );
 
     useEffect(() => {
@@ -42,7 +44,10 @@ const useAuth = () => {
         checkAuth();
     }, []);
 
-    return { isAuthenticated };
+    return { 
+        isAuthenticated,
+        isLoading: isAuthenticated === AuthStatus.LOADING 
+    };
 };
 
 export default useAuth;

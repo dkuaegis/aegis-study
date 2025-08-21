@@ -10,9 +10,19 @@ import StudyDetailWrapper from "./pages/wrappers/StudyDetailWrapper";
 import StudyMembersWrapper from "./pages/wrappers/StudyMemberWrapper";
 
 const App = () => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth();
     const navigate = useNavigate();
 
+    // 로딩 중에는 로딩 화면 표시
+    if (isLoading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-gray-50">
+                <div className="text-gray-500">로딩 중...</div>
+            </div>
+        );
+    }
+
+    // 인증되지 않은 경우 로그인 페이지 표시
     if (isAuthenticated !== AuthStatus.COMPLETED) {
         return <LoginPage />;
     }
