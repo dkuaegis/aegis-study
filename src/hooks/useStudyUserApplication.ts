@@ -4,7 +4,7 @@ import {
     useCancelEnrollmentMutation,
     useEnrollInStudyMutation,
     useStudyStatusQuery,
-} from "@/lib/enrollmentApi";
+} from "@/api/enrollmentApi";
 import { StudyRecruitmentMethod } from "@/types/study";
 
 interface UseStudyApplicationProps {

@@ -5,7 +5,7 @@ import {
     useRejectApplicationMutation,
     useStudyApplicationsQuery,
     useUpdateApplicationStatusMutation,
-} from "@/lib/applicationApi";
+} from "@/api/applicationOwnerApi";
 import type { Application, StudyData } from "@/types/study";
 import { StudyRecruitmentMethod } from "@/types/study";
 

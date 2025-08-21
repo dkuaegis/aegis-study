@@ -13,7 +13,7 @@ import {
     StudyLevelLabels,
     StudyRecruitmentMethod,
 } from "@/types/study";
-import { useCreateStudyMutation } from "../lib/createStudyApi";
+import { useCreateStudyMutation } from "@/api/createStudyApi";
 
 export interface CurriculumItem {
     value: string;

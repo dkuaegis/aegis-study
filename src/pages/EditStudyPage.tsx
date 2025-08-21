@@ -2,8 +2,8 @@ import StudyFormContent from "@/components/study/StudyFormContent";
 import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
-import { type StudyFormData, useUpdateStudyMutation } from "@/lib/editStudyApi";
-import { useStudyDetailQuery } from "@/lib/studyDetailApi";
+import { type StudyFormData, useUpdateStudyMutation } from "@/api/editStudyApi";
+import { useStudyDetailQuery } from "@/api/studyDetailApi";
 import type { StudyRecruitmentMethod } from "@/types/study";
 
 interface EditStudyProps {

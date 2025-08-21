@@ -6,8 +6,8 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import type { HTTPError } from "ky";
-import { apiClient } from "./apiClient";
-import { API_ENDPOINTS } from "./apiEndpoints";
+import { apiClient } from "@/lib/apiClient";
+import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 
 // Types
 export interface ApplicationApiResponse {

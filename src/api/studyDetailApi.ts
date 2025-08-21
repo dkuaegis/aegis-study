@@ -1,8 +1,8 @@
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import type { HTTPError } from "ky";
 import type { StudyDetail } from "@/types/study";
-import { apiClient } from "./apiClient";
-import { API_ENDPOINTS } from "./apiEndpoints";
+import { apiClient } from "@/lib/apiClient";
+import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 
 export const STUDY_DETAIL_QUERY_KEY = (studyId: number) =>
     ["studyDetail", studyId] as const;
