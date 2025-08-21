@@ -24,15 +24,15 @@ const StudyList = ({
     return (
         <div className="flex min-h-screen flex-col bg-gray-50 ">
             <Header title="스터디 목록" />
-            <main className="mx-auto max-w-6xl items-center p-6">
-                <div className="mb-6 flex justify-end">
-                    <Button
-                        onClick={onCreateStudy}
-                        className="bg-blue-600 text-white hover:bg-blue-700"
-                    >
-                        스터디 개설하기
-                    </Button>
-                </div>
+            <div className="mb-6 flex w-full justify-end px-6 pt-6">
+                <Button
+                    onClick={onCreateStudy}
+                    className="bg-blue-600 text-white hover:bg-blue-700"
+                >
+                    스터디 개설하기
+                </Button>
+            </div>
+            <main className="mx-auto max-w-6xl items-center px-6 pb-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {loading ? (
                         <div className="col-span-full flex items-center justify-center py-8">
