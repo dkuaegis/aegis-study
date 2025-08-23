@@ -48,6 +48,8 @@ const StudyDetailPage = ({
         handleEditApplication,
         handleUpdateApplication,
         isLoadingApplicationDetail,
+        editingApplicationText,
+        setEditingApplicationText,
     } = useStudyApplication({
         studyId: studyId,
         recruitmentMethod:
@@ -119,6 +121,8 @@ const StudyDetailPage = ({
                                 handleEditApplication,
                                 handleUpdateApplication,
                                 isLoadingApplicationDetail,
+                                editingApplicationText,
+                                setEditingApplicationText,
                             }}
                         />
                     </div>
