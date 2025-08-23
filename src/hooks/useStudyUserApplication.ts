@@ -3,6 +3,8 @@ import {
     useCancelEnrollmentMutation,
     useEnrollInStudyMutation,
     useStudyStatusQuery,
+    useUpdateUserApplicationMutation,
+    useUserApplicationDetailQuery,
 } from "@/api/enrollmentApi";
 import { useToast } from "@/components/ui/useToast";
 import { StudyRecruitmentMethod } from "@/types/study";
@@ -23,8 +25,11 @@ export const useStudyApplication = ({
     const [userApplicationStatus, setUserApplicationStatus] = useState<
         "APPROVED" | "PENDING" | "REJECTED" | null
     >(null);
+    const [shouldLoadApplicationDetail, setShouldLoadApplicationDetail] =
+        useState(false);
 
-    // 취소 시 안전한 상태 참조를 위한 ref
+    const [editingApplicationText, setEditingApplicationText] = useState("");
+
     const lastKnownStatusRef = useRef<
         "APPROVED" | "PENDING" | "REJECTED" | null
     >(null);
@@ -33,6 +38,19 @@ export const useStudyApplication = ({
 
     // 상태 조회 쿼리
     const { data: statusData } = useStudyStatusQuery(studyId);
+
+    // 지원서 상세 조회 쿼리 (PENDING 상태이고 APPLICATION 방식일 때 자동 활성화)
+    const shouldAutoLoadApplication =
+        userApplicationStatus === "PENDING" &&
+        recruitmentMethod === StudyRecruitmentMethod.APPLICATION;
+
+    const {
+        isLoading: isLoadingApplicationDetail,
+        refetch: refetchApplicationDetail,
+    } = useUserApplicationDetailQuery(
+        studyId,
+        shouldLoadApplicationDetail || shouldAutoLoadApplication
+    );
 
     // 상태 데이터가 변경되면 로컬 상태 업데이트
     useEffect(() => {
@@ -115,11 +133,32 @@ export const useStudyApplication = ({
         }
     );
 
-    const handleApply = async () => {
-        // 중복 요청 방지를 위한 조기 리턴
-        if (isApplying) return;
+    // 지원서 수정 뮤테이션
+    const updateMutation = useUpdateUserApplicationMutation(
+        studyId,
+        () => {
+            toast({
+                description: "지원서가 성공적으로 수정되었습니다.",
+            });
+            setIsApplying(false);
+            setShouldLoadApplicationDetail(false);
+            setIsApplicationModalOpen(false); // 모달 닫기
+        },
+        (error) => {
+            console.error("Update application failed:", error);
+            const errorMessage =
+                error instanceof Error
+                    ? error.message
+                    : "지원서 수정 중 오류가 발생했습니다. 다시 시도해주세요.";
+            toast({
+                description: errorMessage,
+            });
+            setIsApplying(false);
+        }
+    );
 
-        // APPLICATION 방식일 때 공백 입력 차단
+    const handleApply = async () => {
+        if (isApplying) return;
         if (recruitmentMethod === StudyRecruitmentMethod.APPLICATION) {
             const trimmedText = applicationText.trim();
             if (!trimmedText) {
@@ -132,7 +171,6 @@ export const useStudyApplication = ({
 
         setIsApplying(true);
 
-        // 모집 방식에 따라 applicationReason 설정 (API 타입에 맞춤)
         const applicationReason =
             recruitmentMethod === StudyRecruitmentMethod.APPLICATION
                 ? applicationText.trim()
@@ -146,6 +184,40 @@ export const useStudyApplication = ({
         cancelMutation.mutate();
     };
 
+    // 지원서 수정하기 버튼 클릭 시 호출
+    const handleEditApplication = async () => {
+        setShouldLoadApplicationDetail(true);
+        try {
+            const result = await refetchApplicationDetail();
+            // 편집 시작 시에만 설정
+            setEditingApplicationText(result.data?.applicationReason || "");
+            setIsApplicationModalOpen(true);
+        } catch (error) {
+            console.error("Failed to fetch application detail:", error);
+            toast({
+                description: "지원서 정보를 불러오는데 실패했습니다.",
+            });
+        }
+    };
+
+    // 지원서 수정 완료 시 호출
+    const handleUpdateApplication = async () => {
+        // 중복 요청 방지
+        if (isApplying) return;
+
+        // 공백 입력 차단
+        const trimmedText = editingApplicationText.trim();
+        if (!trimmedText) {
+            toast({
+                description: "지원 사유를 입력해주세요.",
+            });
+            return;
+        }
+
+        setIsApplying(true);
+        updateMutation.mutate({ applicationReason: trimmedText });
+    };
+
     return {
         // State
         applicationText,
@@ -153,11 +225,16 @@ export const useStudyApplication = ({
         isCancelling,
         isApplicationModalOpen,
         userApplicationStatus,
+        isLoadingApplicationDetail,
+        editingApplicationText,
 
         // Actions
         setApplicationText,
         setIsApplicationModalOpen,
+        setEditingApplicationText,
         handleApply,
         handleCancelApplication,
+        handleEditApplication,
+        handleUpdateApplication,
     };
 };

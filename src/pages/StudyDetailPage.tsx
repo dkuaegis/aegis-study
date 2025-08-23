@@ -45,6 +45,11 @@ const StudyDetailPage = ({
         setIsApplicationModalOpen,
         handleApply,
         handleCancelApplication,
+        handleEditApplication,
+        handleUpdateApplication,
+        isLoadingApplicationDetail,
+        editingApplicationText,
+        setEditingApplicationText,
     } = useStudyApplication({
         studyId: studyId,
         recruitmentMethod:
@@ -113,6 +118,11 @@ const StudyDetailPage = ({
                                 setIsApplicationModalOpen,
                                 handleApply,
                                 handleCancelApplication,
+                                handleEditApplication,
+                                handleUpdateApplication,
+                                isLoadingApplicationDetail,
+                                editingApplicationText,
+                                setEditingApplicationText,
                             }}
                         />
                     </div>

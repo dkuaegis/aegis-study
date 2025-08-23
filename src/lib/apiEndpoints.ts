@@ -14,4 +14,6 @@ export const API_ENDPOINTS = {
         `studies/${studyId}/applications/${applicationId}/reject`,
     STUDY_ENROLLMENT: (studyId: number) => `studies/${studyId}/enrollment`,
     STUDY_STATUS: (studyId: number) => `studies/${studyId}/status`,
+    // 사용자 지원서 관련 엔드포인트
+    USER_APPLICATION: (studyId: number) => `studies/${studyId}/applications`,
 } as const;
