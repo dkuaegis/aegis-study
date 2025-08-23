@@ -28,7 +28,8 @@ export const useStudyApplication = ({
     const [shouldLoadApplicationDetail, setShouldLoadApplicationDetail] =
         useState(false);
 
-    // 취소 시 안전한 상태 참조를 위한 ref
+    const [editingApplicationText, setEditingApplicationText] = useState("");
+
     const lastKnownStatusRef = useRef<
         "APPROVED" | "PENDING" | "REJECTED" | null
     >(null);
@@ -44,7 +45,6 @@ export const useStudyApplication = ({
         recruitmentMethod === StudyRecruitmentMethod.APPLICATION;
 
     const {
-        data: applicationDetailData,
         isLoading: isLoadingApplicationDetail,
         refetch: refetchApplicationDetail,
     } = useUserApplicationDetailQuery(
@@ -157,18 +157,8 @@ export const useStudyApplication = ({
         }
     );
 
-    // 지원서 상세 데이터가 로드되면 텍스트 필드에 채우기
-    useEffect(() => {
-        if (applicationDetailData?.applicationReason) {
-            setApplicationText(applicationDetailData.applicationReason);
-        }
-    }, [applicationDetailData]);
-
     const handleApply = async () => {
-        // 중복 요청 방지를 위한 조기 리턴
         if (isApplying) return;
-
-        // APPLICATION 방식일 때 공백 입력 차단
         if (recruitmentMethod === StudyRecruitmentMethod.APPLICATION) {
             const trimmedText = applicationText.trim();
             if (!trimmedText) {
@@ -181,7 +171,6 @@ export const useStudyApplication = ({
 
         setIsApplying(true);
 
-        // 모집 방식에 따라 applicationReason 설정 (API 타입에 맞춤)
         const applicationReason =
             recruitmentMethod === StudyRecruitmentMethod.APPLICATION
                 ? applicationText.trim()
@@ -199,7 +188,10 @@ export const useStudyApplication = ({
     const handleEditApplication = async () => {
         setShouldLoadApplicationDetail(true);
         try {
-            await refetchApplicationDetail();
+            const result = await refetchApplicationDetail();
+            // 편집 시작 시에만 설정
+            setEditingApplicationText(result.data?.applicationReason || "");
+            setIsApplicationModalOpen(true);
         } catch (error) {
             console.error("Failed to fetch application detail:", error);
             toast({
@@ -214,7 +206,7 @@ export const useStudyApplication = ({
         if (isApplying) return;
 
         // 공백 입력 차단
-        const trimmedText = applicationText.trim();
+        const trimmedText = editingApplicationText.trim();
         if (!trimmedText) {
             toast({
                 description: "지원 사유를 입력해주세요.",
@@ -234,10 +226,12 @@ export const useStudyApplication = ({
         isApplicationModalOpen,
         userApplicationStatus,
         isLoadingApplicationDetail,
+        editingApplicationText,
 
         // Actions
         setApplicationText,
         setIsApplicationModalOpen,
+        setEditingApplicationText,
         handleApply,
         handleCancelApplication,
         handleEditApplication,
