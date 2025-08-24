@@ -1,7 +1,6 @@
 import type { FieldError } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
     Select,
@@ -43,11 +42,11 @@ const BasicInfoFields = () => {
                         control={control}
                         rules={{ required: "스터디명을 입력하세요." }}
                         render={({ field }) => (
-                            <Input
+                            <Textarea
                                 {...field}
                                 id="title"
                                 placeholder="스터디 제목을 입력하세요"
-                                className={`mt-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.title && dirtyFields.title ? "border-red-500" : ""}`}
+                                className={`mt-1 min-h-[40px] resize-y border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.title && dirtyFields.title ? "border-red-500" : ""}`}
                                 aria-invalid={!!errors.title}
                             />
                         )}
@@ -58,7 +57,7 @@ const BasicInfoFields = () => {
                         </span>
                     )}
                 </div>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="grid grid-cols-2 gap-4">
                     <div>
                         <Label className="font-medium text-gray-900 text-sm">
                             카테고리 *
