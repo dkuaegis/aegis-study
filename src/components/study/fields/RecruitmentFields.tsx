@@ -147,7 +147,7 @@ const RecruitmentFields = () => {
                                             id="maxParticipants"
                                             type="number"
                                             placeholder="최대 인원수"
-                                            className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${fieldState.invalid && isDirty ? "border-red-500" : ""}`}
+                                            className={`w-20 border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${fieldState.invalid && isDirty ? "border-red-500" : ""}`}
                                             min={MIN_PARTICIPANTS}
                                             max={MAX_PARTICIPANTS}
                                             aria-invalid={fieldState.invalid}

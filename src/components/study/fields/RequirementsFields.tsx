@@ -3,7 +3,7 @@ import type { FieldError } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
 
 const RequirementsFields = () => {
@@ -54,7 +54,7 @@ const RequirementsFields = () => {
                                         "지원 자격 조건을 입력하세요.",
                                 }}
                                 render={({ field }) => (
-                                    <Input
+                                    <Textarea
                                         value={field.value ?? ""}
                                         onChange={(e) =>
                                             field.onChange(e.target.value)
@@ -63,7 +63,7 @@ const RequirementsFields = () => {
                                         onBlur={field.onBlur}
                                         ref={field.ref}
                                         placeholder="지원 자격 조건을 입력하세요"
-                                        className={`flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.requirements?.[index] && isDirty ? "border-red-500" : ""}`}
+                                        className={`min-h-[40px] flex-1 resize-y border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${errors.requirements?.[index] && isDirty ? "border-red-500" : ""}`}
                                         aria-invalid={
                                             !!errors.requirements?.[index]
                                         }
