@@ -169,8 +169,8 @@ export const useStudyForm = (
                       ? Number(data.maxParticipants)
                       : null,
             schedule: data.schedule,
-            curricula: filteredCurriculum.join("\n"),
-            qualifications: filteredRequirements.join("\n"),
+            curricula: filteredCurriculum.join("|||"),
+            qualifications: filteredRequirements.join("|||"),
         };
 
         mutation.mutate(payload);

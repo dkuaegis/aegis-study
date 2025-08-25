@@ -57,11 +57,11 @@ export async function updateStudy(
         curricula: data.curriculum
             .map((item: CurriculumItem) => item.value.trim())
             .filter((v) => v !== "")
-            .join("\n"),
+            .join("|||"),
         qualifications: data.requirements
             .map((item: RequirementItem) => item.value.trim())
             .filter((v) => v !== "")
-            .join("\n"),
+            .join("|||"),
     };
 
     await apiClient.put(`${API_ENDPOINTS.STUDIES}/${studyId}`, {
