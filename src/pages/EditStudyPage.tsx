@@ -103,8 +103,8 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         maxParticipantsLimitType:
             study.maxParticipants === 0 ? "unlimited" : "limited",
         schedule: study.schedule,
-        curriculum: study.curricula.map((v) => ({ value: v })),
-        requirements: study.qualifications.map((v) => ({ value: v })),
+        curriculum: (Array.isArray(study.curricula) ? study.curricula : []).map((v) => ({ value: v })),
+        requirements: (Array.isArray(study.qualifications) ? study.qualifications : []).map((v) => ({ value: v })),
     };
 
     return (

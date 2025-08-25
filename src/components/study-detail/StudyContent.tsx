@@ -30,7 +30,7 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
-                        {study.curricula.map((item: string, idx: number) => (
+                        {(Array.isArray(study.curricula) ? study.curricula : []).map((item: string, idx: number) => (
                             <div
                                 key={`${idx}-${item.substring(0, 20)}`}
                                 className="flex items-start"
@@ -53,7 +53,7 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-2">
-                        {study.qualifications.map((qualification: string, idx: number) => (
+                        {(Array.isArray(study.qualifications) ? study.qualifications : []).map((qualification: string, idx: number) => (
                             <div
                                 key={`${idx}-${qualification.substring(0, 20)}`}
                                 className="flex items-start"
