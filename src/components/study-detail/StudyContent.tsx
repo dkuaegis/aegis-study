@@ -30,20 +30,17 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
-                        {study.curricula
-                            .split(/\r?\n/)
-                            .filter((item) => item.trim() !== "")
-                            .map((item: string, idx) => (
-                                <div
-                                    key={`${idx}-${item.substring(0, 20)}`}
-                                    className="flex items-start"
-                                >
-                                    <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
-                                    <span className="text-gray-700">
-                                        {item}
-                                    </span>
-                                </div>
-                            ))}
+                        {(Array.isArray(study.curricula) ? study.curricula : []).map((item: string, idx: number) => (
+                            <div
+                                key={`${idx}-${item.substring(0, 20)}`}
+                                className="flex items-start"
+                            >
+                                <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
+                                <span className="whitespace-pre-line text-gray-700">
+                                    {item}
+                                </span>
+                            </div>
+                        ))}
                     </div>
                 </CardContent>
             </Card>
@@ -56,22 +53,17 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-2">
-                        {study.qualifications
-                            .split(/\r?\n/)
-                            .filter(
-                                (qualification) => qualification.trim() !== ""
-                            )
-                            .map((qualification: string, idx) => (
-                                <div
-                                    key={`${idx}-${qualification.substring(0, 20)}`}
-                                    className="flex items-start"
-                                >
-                                    <span className="mt-2 mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-gray-400" />
-                                    <span className="text-gray-700">
-                                        {qualification}
-                                    </span>
-                                </div>
-                            ))}
+                        {(Array.isArray(study.qualifications) ? study.qualifications : []).map((qualification: string, idx: number) => (
+                            <div
+                                key={`${idx}-${qualification.substring(0, 20)}`}
+                                className="flex items-start"
+                            >
+                                <span className="mt-2 mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-gray-400" />
+                                <span className="whitespace-pre-line text-gray-700">
+                                    {qualification}
+                                </span>
+                            </div>
+                        ))}
                     </div>
                 </CardContent>
             </Card>

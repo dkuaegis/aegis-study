@@ -15,8 +15,8 @@ export interface CreateStudyPayload {
     recruitmentMethod: StudyRecruitmentMethod;
     maxParticipants: number | null;
     schedule: string;
-    curricula: string;
-    qualifications: string;
+    curricula: string[];
+    qualifications: string[];
 }
 
 export async function createStudy(

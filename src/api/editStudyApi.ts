@@ -17,8 +17,8 @@ interface UpdateStudyRequest {
     recruitmentMethod: StudyRecruitmentMethod;
     maxParticipants: number;
     schedule: string;
-    curricula: string;
-    qualifications: string;
+    curricula: string[];
+    qualifications: string[];
 }
 
 interface CurriculumItem {
@@ -56,12 +56,10 @@ export async function updateStudy(
         schedule: data.schedule,
         curricula: data.curriculum
             .map((item: CurriculumItem) => item.value.trim())
-            .filter((v) => v !== "")
-            .join("\n"),
+            .filter((v) => v !== ""),
         qualifications: data.requirements
             .map((item: RequirementItem) => item.value.trim())
-            .filter((v) => v !== "")
-            .join("\n"),
+            .filter((v) => v !== ""),
     };
 
     await apiClient.put(`${API_ENDPOINTS.STUDIES}/${studyId}`, {
