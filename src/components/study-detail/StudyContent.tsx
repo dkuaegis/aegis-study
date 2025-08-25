@@ -30,15 +30,9 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
-                        {(
-                            Array.isArray(study.curricula)
-                                ? study.curricula
-                                : study.curricula
-                                    .split("|||")
-                                    .filter((item: string) => item.trim() !== "")
-                        ).map((item: string, idx: number) => (
+                        {study.curricula.map((item: string, idx: number) => (
                             <div
-                                key={`${idx}-${typeof item === 'string' ? item.substring(0, 20) : ''}`}
+                                key={`${idx}-${item.substring(0, 20)}`}
                                 className="flex items-start"
                             >
                                 <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
@@ -59,15 +53,9 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-2">
-                        {(
-                            Array.isArray(study.qualifications)
-                                ? study.qualifications
-                                : study.qualifications
-                                    .split("|||")
-                                    .filter((qualification: string) => qualification.trim() !== "")
-                        ).map((qualification: string, idx: number) => (
+                        {study.qualifications.map((qualification: string, idx: number) => (
                             <div
-                                key={`${idx}-${typeof qualification === 'string' ? qualification.substring(0, 20) : ''}`}
+                                key={`${idx}-${qualification.substring(0, 20)}`}
                                 className="flex items-start"
                             >
                                 <span className="mt-2 mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-gray-400" />

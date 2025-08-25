@@ -70,8 +70,8 @@ export interface StudyDetail {
     participantCount: number;
     maxParticipants: number;
     schedule: string;
-    curricula: string;
-    qualifications: string;
+    curricula: string[];
+    qualifications: string[];
     instructor: string;
 }
 
