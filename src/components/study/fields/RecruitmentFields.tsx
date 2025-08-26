@@ -16,6 +16,7 @@ const RecruitmentFields = () => {
             control,
             formState: { isDirty },
         },
+        isEditMode,
     } = useStudyFormContext();
 
     const maxParticipantsLimitType = useWatch({
@@ -31,50 +32,52 @@ const RecruitmentFields = () => {
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div>
-                    <Label className="mb-3 block font-medium text-gray-900 text-sm">
-                        모집 방법
-                    </Label>
-                    <Controller
-                        name="recruitmentMethod"
-                        control={control}
-                        render={({ field }) => (
-                            <RadioGroup
-                                {...field}
-                                value={field.value}
-                                onValueChange={field.onChange}
-                                className="flex gap-6"
-                            >
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem
-                                        value={StudyRecruitmentMethod.FCFS}
-                                        id="first-come"
-                                    />
-                                    <Label
-                                        htmlFor="first-come"
-                                        className="cursor-pointer text-gray-700 text-sm"
-                                    >
-                                        선착순 모집
-                                    </Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem
-                                        value={
-                                            StudyRecruitmentMethod.APPLICATION
-                                        }
-                                        id="application"
-                                    />
-                                    <Label
-                                        htmlFor="application"
-                                        className="cursor-pointer text-gray-700 text-sm"
-                                    >
-                                        지원서 심사
-                                    </Label>
-                                </div>
-                            </RadioGroup>
-                        )}
-                    />
-                </div>
+                {!isEditMode && (
+                    <div>
+                        <Label className="mb-3 block font-medium text-gray-900 text-sm">
+                            모집 방법
+                        </Label>
+                        <Controller
+                            name="recruitmentMethod"
+                            control={control}
+                            render={({ field }) => (
+                                <RadioGroup
+                                    {...field}
+                                    value={field.value}
+                                    onValueChange={field.onChange}
+                                    className="flex gap-6"
+                                >
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem
+                                            value={StudyRecruitmentMethod.FCFS}
+                                            id="first-come"
+                                        />
+                                        <Label
+                                            htmlFor="first-come"
+                                            className="cursor-pointer text-gray-700 text-sm"
+                                        >
+                                            선착순 모집
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem
+                                            value={
+                                                StudyRecruitmentMethod.APPLICATION
+                                            }
+                                            id="application"
+                                        />
+                                        <Label
+                                            htmlFor="application"
+                                            className="cursor-pointer text-gray-700 text-sm"
+                                        >
+                                            지원서 심사
+                                        </Label>
+                                    </div>
+                                </RadioGroup>
+                            )}
+                        />
+                    </div>
+                )}
                 <div>
                     <Label className="font-medium text-gray-900 text-sm">
                         모집 인원

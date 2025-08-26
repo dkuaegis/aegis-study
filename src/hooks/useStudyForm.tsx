@@ -42,6 +42,7 @@ interface StudyFormContextProps {
     difficulties: { value: string; label: string }[];
     onSubmit: (data: FormValues) => void;
     setError: UseFormReturn<FormValues>["setError"];
+    isEditMode: boolean;
 }
 
 const StudyFormContext = createContext<StudyFormContextProps | undefined>(
@@ -184,6 +185,7 @@ export const useStudyForm = (
         difficulties,
         onSubmit,
         setError: form.setError,
+        isEditMode: isEditMode ?? false,
     };
 };
 
@@ -195,7 +197,7 @@ export const StudyFormProvider: React.FC<{
 }> = ({ children, initialValues, onSuccess, isEditMode = false }) => {
     const value = useStudyForm(initialValues, onSuccess, isEditMode);
     return (
-        <StudyFormContext.Provider value={value}>
+        <StudyFormContext.Provider value={{ ...value, isEditMode }}>
             {children}
         </StudyFormContext.Provider>
     );
