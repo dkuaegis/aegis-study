@@ -158,9 +158,12 @@ export const useStudyForm = (
                     ...data,
                     // 편집 모드에서는 모집 방법을 초기값으로 고정
                     recruitmentMethod:
-                        initialValues?.recruitmentMethod ?? data.recruitmentMethod,
+                        initialValues?.recruitmentMethod ??
+                        data.recruitmentMethod,
                     curriculum: filteredCurriculum.map((v) => ({ value: v })),
-                    requirements: filteredRequirements.map((v) => ({ value: v })),
+                    requirements: filteredRequirements.map((v) => ({
+                        value: v,
+                    })),
                 },
             });
             return;
@@ -221,9 +224,9 @@ export const StudyFormProvider: React.FC<{
     isEditMode?: boolean;
 }> = ({ children, initialValues, onComplete, isEditMode = false }) => {
     const value = useStudyForm(initialValues, onComplete, isEditMode);
-        return (
-            <StudyFormContext.Provider value={value}>
-                {children}
-            </StudyFormContext.Provider>
-        );
+    return (
+        <StudyFormContext.Provider value={value}>
+            {children}
+        </StudyFormContext.Provider>
+    );
 };

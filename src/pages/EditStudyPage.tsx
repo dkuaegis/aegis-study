@@ -103,8 +103,13 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         maxParticipantsLimitType:
             study.maxParticipants === 0 ? "unlimited" : "limited",
         schedule: study.schedule,
-        curriculum: (Array.isArray(study.curricula) ? study.curricula : []).map((v) => ({ value: v })),
-        requirements: (Array.isArray(study.qualifications) ? study.qualifications : []).map((v) => ({ value: v })),
+        curriculum: (Array.isArray(study.curricula) ? study.curricula : []).map(
+            (v) => ({ value: v })
+        ),
+        requirements: (Array.isArray(study.qualifications)
+            ? study.qualifications
+            : []
+        ).map((v) => ({ value: v })),
     };
 
     return (
@@ -112,7 +117,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
             <Header title="스터디 수정하기" onBack={onBack} />
 
             <div className="mx-auto max-w-4xl p-6">
-                                <StudyFormProvider
+                <StudyFormProvider
                     initialValues={initialValues}
                     onComplete={({ formData }) => handleUpdate(formData)}
                     isEditMode={true}

@@ -145,7 +145,9 @@ export const ApplicationSection = ({
                             id="application-edit"
                             placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
                             value={editingApplicationText}
-                            onChange={(e) => setEditingApplicationText(e.target.value)}
+                            onChange={(e) =>
+                                setEditingApplicationText(e.target.value)
+                            }
                             className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
                         />
                         <AlertDialogFooter>
@@ -160,7 +162,9 @@ export const ApplicationSection = ({
                                         await handleUpdateApplication();
                                     }
                                 }}
-                                disabled={!editingApplicationText.trim() || isApplying}
+                                disabled={
+                                    !editingApplicationText.trim() || isApplying
+                                }
                                 className="bg-blue-600 hover:bg-blue-700"
                             >
                                 {isApplying ? "수정 중..." : "수정 완료"}

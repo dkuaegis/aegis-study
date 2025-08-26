@@ -22,11 +22,13 @@ const CreateStudyPage = () => {
             <Header title="스터디 개설하기" onBack={handleBack} />
 
             <div className="mx-auto max-w-4xl p-6">
-                <StudyFormProvider onComplete={({ mode }) => {
-                    if (mode === "create") {
-                        handleSuccess();
-                    }
-                }}>
+                <StudyFormProvider
+                    onComplete={({ mode }) => {
+                        if (mode === "create") {
+                            handleSuccess();
+                        }
+                    }}
+                >
                     <StudyFormContent
                         onCancel={handleBack}
                         submitText="스터디 개설하기"
