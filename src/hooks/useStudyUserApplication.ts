@@ -7,7 +7,7 @@ import {
     useUserApplicationDetailQuery,
 } from "@/api/enrollmentApi";
 import { useToast } from "@/components/ui/useToast";
-import { StudyRecruitmentMethod } from "@/types/study";
+import { StudyRecruitmentMethod, type UserApplicationStatus, ApplicationStatus } from "@/types/study";
 
 interface UseStudyApplicationProps {
     studyId: number;
@@ -23,7 +23,7 @@ export const useStudyApplication = ({
     const [isCancelling, setIsCancelling] = useState(false);
     const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
     const [userApplicationStatus, setUserApplicationStatus] = useState<
-        "APPROVED" | "PENDING" | "REJECTED" | null
+        UserApplicationStatus
     >(null);
     const [shouldLoadApplicationDetail, setShouldLoadApplicationDetail] =
         useState(false);
@@ -41,7 +41,7 @@ export const useStudyApplication = ({
 
     // 지원서 상세 조회 쿼리 (PENDING 상태이고 APPLICATION 방식일 때 자동 활성화)
     const shouldAutoLoadApplication =
-        userApplicationStatus === "PENDING" &&
+        userApplicationStatus === ApplicationStatus.PENDING &&
         recruitmentMethod === StudyRecruitmentMethod.APPLICATION;
 
     const {
@@ -59,11 +59,11 @@ export const useStudyApplication = ({
             // API 상태를 로컬 상태 형식으로 안전하게 변환 (대문자 처리)
             const normalized = raw.toUpperCase();
             const allowed =
-                normalized === "APPROVED" ||
-                normalized === "PENDING" ||
-                normalized === "REJECTED";
+                normalized === ApplicationStatus.APPROVED ||
+                normalized === ApplicationStatus.PENDING ||
+                normalized === ApplicationStatus.REJECTED;
             const safeStatus = allowed
-                ? (normalized as "APPROVED" | "PENDING" | "REJECTED")
+                ? (normalized as ApplicationStatus)
                 : null;
             setUserApplicationStatus(safeStatus);
             lastKnownStatusRef.current = safeStatus;

@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { type StudyDetail, StudyRecruitmentMethod } from "@/types/study";
+import { type StudyDetail, StudyRecruitmentMethod, type UserApplicationStatus } from "@/types/study";
 import {
     getApplicationSectionTitle,
     isStudyRecruiting,
@@ -28,7 +28,7 @@ interface ApplicationSectionProps {
         isApplying: boolean;
         isCancelling: boolean;
         isApplicationModalOpen: boolean;
-        userApplicationStatus: "APPROVED" | "PENDING" | "REJECTED" | null;
+        userApplicationStatus: UserApplicationStatus;
         setApplicationText: (text: string) => void;
         setIsApplicationModalOpen: (open: boolean) => void;
         handleApply: () => Promise<void>;

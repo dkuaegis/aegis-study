@@ -118,9 +118,9 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
 
             <div className="mx-auto max-w-4xl p-6">
                 <StudyFormProvider
+                    isEditMode={true}
                     initialValues={initialValues}
                     onComplete={({ formData }) => handleUpdate(formData)}
-                    isEditMode={true}
                 >
                     <StudyFormContent
                         onCancel={onBack}

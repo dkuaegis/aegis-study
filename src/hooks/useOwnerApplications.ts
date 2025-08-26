@@ -8,6 +8,7 @@ import {
 } from "@/api/applicationOwnerApi";
 import { useStudyDetailQuery } from "@/api/studyDetailApi";
 import type { Application, StudyData } from "@/types/study";
+import { ApplicationStatus } from "@/types/study";
 
 function transformApiApplication(apiApp: ApplicationApiResponse): Application {
     return {
@@ -15,7 +16,7 @@ function transformApiApplication(apiApp: ApplicationApiResponse): Application {
         name: apiApp.name,
         phone: apiApp.phoneNumber,
         studentNumber: apiApp.studentId,
-        status: apiApp.status,
+        status: apiApp.status as ApplicationStatus,
         createdAt: apiApp.createdAt,
         updatedAt: apiApp.updatedAt,
     };
@@ -23,7 +24,7 @@ function transformApiApplication(apiApp: ApplicationApiResponse): Application {
 
 export function useApplications(studyId: number) {
     const [selectedFilter, setSelectedFilter] = useState<
-        "ALL" | "PENDING" | "APPROVED" | "REJECTED"
+        "ALL" | ApplicationStatus
     >("ALL");
 
     // API 쿼리 사용
@@ -73,11 +74,11 @@ export function useApplications(studyId: number) {
     const stats = useMemo(
         () => ({
             total: applications.length,
-            pending: applications.filter((app) => app.status === "PENDING")
+            pending: applications.filter((app) => app.status === ApplicationStatus.PENDING)
                 .length,
-            approved: applications.filter((app) => app.status === "APPROVED")
+            approved: applications.filter((app) => app.status === ApplicationStatus.APPROVED)
                 .length,
-            rejected: applications.filter((app) => app.status === "REJECTED")
+            rejected: applications.filter((app) => app.status === ApplicationStatus.REJECTED)
                 .length,
         }),
         [applications]
@@ -86,11 +87,11 @@ export function useApplications(studyId: number) {
     // 상태 변경 핸들러
     const handleStatusChange = (
         applicationId: number,
-        newStatus: "APPROVED" | "REJECTED"
+        newStatus: ApplicationStatus.APPROVED | ApplicationStatus.REJECTED
     ) => {
-        if (newStatus === "APPROVED") {
+        if (newStatus === ApplicationStatus.APPROVED) {
             approveMutation.mutate(applicationId);
-        } else if (newStatus === "REJECTED") {
+        } else if (newStatus === ApplicationStatus.REJECTED) {
             rejectMutation.mutate(applicationId);
         }
     };
