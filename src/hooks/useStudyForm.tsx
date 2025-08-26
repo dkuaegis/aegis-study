@@ -139,6 +139,7 @@ export const useStudyForm = (
         if (isEditMode && onSuccess) {
             onSuccess({
                 ...data,
+                recruitmentMethod: initialValues?.recruitmentMethod ?? data.recruitmentMethod,
                 curriculum: filteredCurriculum.map((v) => ({ value: v })),
                 requirements: filteredRequirements.map((v) => ({ value: v })),
             });
@@ -162,7 +163,7 @@ export const useStudyForm = (
                 data.recruitmentMethod as StudyRecruitmentMethod
             )
                 ? (data.recruitmentMethod as StudyRecruitmentMethod)
-                : ("FCFS" as StudyRecruitmentMethod),
+                : StudyRecruitmentMethod.FCFS,
             maxParticipants:
                 data.maxParticipantsLimitType === "unlimited"
                     ? 0
@@ -196,9 +197,9 @@ export const StudyFormProvider: React.FC<{
     isEditMode?: boolean;
 }> = ({ children, initialValues, onSuccess, isEditMode = false }) => {
     const value = useStudyForm(initialValues, onSuccess, isEditMode);
-    return (
-        <StudyFormContext.Provider value={{ ...value, isEditMode }}>
-            {children}
-        </StudyFormContext.Provider>
-    );
+        return (
+            <StudyFormContext.Provider value={value}>
+                {children}
+            </StudyFormContext.Provider>
+        );
 };
