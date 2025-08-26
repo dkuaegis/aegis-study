@@ -1,4 +1,5 @@
 import { Users } from "lucide-react";
+import { useEffect } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ const RecruitmentFields = () => {
         form: {
             control,
             formState: { isDirty },
+            setValue,
         },
         isEditMode,
     } = useStudyFormContext();
@@ -23,6 +25,17 @@ const RecruitmentFields = () => {
         control,
         name: "maxParticipantsLimitType",
     });
+
+    // "제한 없음"을 선택했을 때 maxParticipants를 "0"으로 설정
+    useEffect(() => {
+        if (maxParticipantsLimitType === "unlimited") {
+            setValue("maxParticipants", "0", {
+                shouldDirty: false,
+                shouldValidate: false,
+                shouldTouch: false,
+            });
+        }
+    }, [maxParticipantsLimitType, setValue]);
 
     return (
         <Card className="border-gray-200">
