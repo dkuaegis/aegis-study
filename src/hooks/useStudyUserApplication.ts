@@ -7,7 +7,11 @@ import {
     useUserApplicationDetailQuery,
 } from "@/api/enrollmentApi";
 import { useToast } from "@/components/ui/useToast";
-import { StudyRecruitmentMethod, type UserApplicationStatus, ApplicationStatus } from "@/types/study";
+import {
+    ApplicationStatus,
+    StudyRecruitmentMethod,
+    type UserApplicationStatus,
+} from "@/types/study";
 
 interface UseStudyApplicationProps {
     studyId: number;
@@ -22,9 +26,8 @@ export const useStudyApplication = ({
     const [isApplying, setIsApplying] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
     const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
-    const [userApplicationStatus, setUserApplicationStatus] = useState<
-        UserApplicationStatus
-    >(null);
+    const [userApplicationStatus, setUserApplicationStatus] =
+        useState<UserApplicationStatus>(null);
     const [shouldLoadApplicationDetail, setShouldLoadApplicationDetail] =
         useState(false);
 

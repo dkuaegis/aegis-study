@@ -74,12 +74,15 @@ export function useApplications(studyId: number) {
     const stats = useMemo(
         () => ({
             total: applications.length,
-            pending: applications.filter((app) => app.status === ApplicationStatus.PENDING)
-                .length,
-            approved: applications.filter((app) => app.status === ApplicationStatus.APPROVED)
-                .length,
-            rejected: applications.filter((app) => app.status === ApplicationStatus.REJECTED)
-                .length,
+            pending: applications.filter(
+                (app) => app.status === ApplicationStatus.PENDING
+            ).length,
+            approved: applications.filter(
+                (app) => app.status === ApplicationStatus.APPROVED
+            ).length,
+            rejected: applications.filter(
+                (app) => app.status === ApplicationStatus.REJECTED
+            ).length,
         }),
         [applications]
     );

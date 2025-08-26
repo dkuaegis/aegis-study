@@ -14,7 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { type StudyDetail, StudyRecruitmentMethod, type UserApplicationStatus } from "@/types/study";
+import {
+    type StudyDetail,
+    StudyRecruitmentMethod,
+    type UserApplicationStatus,
+} from "@/types/study";
 import {
     getApplicationSectionTitle,
     isStudyRecruiting,

@@ -5,7 +5,10 @@ import StudyHeader from "@/components/study-detail/StudyHeader";
 import StudyInfo from "@/components/study-detail/StudyInfo";
 import Header from "@/components/ui/Header";
 import { useStudyApplication } from "@/hooks/useStudyUserApplication";
-import { StudyRecruitmentMethod, type UserApplicationStatus } from "@/types/study";
+import {
+    StudyRecruitmentMethod,
+    type UserApplicationStatus,
+} from "@/types/study";
 
 interface StudyDetailProps {
     studyId: number;

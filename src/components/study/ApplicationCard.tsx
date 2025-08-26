@@ -14,11 +14,14 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import type { Application } from "@/types/study";
-import { StudyRecruitmentMethod, ApplicationStatus } from "@/types/study";
+import { ApplicationStatus, StudyRecruitmentMethod } from "@/types/study";
 
 type ApplicationCardProps = {
     application: Application;
-    onStatusChange: (id: number, status: ApplicationStatus.APPROVED | ApplicationStatus.REJECTED) => void;
+    onStatusChange: (
+        id: number,
+        status: ApplicationStatus.APPROVED | ApplicationStatus.REJECTED
+    ) => void;
     recruitmentMethod: StudyRecruitmentMethod;
     studyId: number;
 };
@@ -190,7 +193,10 @@ const ApplicationCard = ({
                             <Button
                                 size="sm"
                                 onClick={() =>
-                                    onStatusChange(application.id, ApplicationStatus.APPROVED)
+                                    onStatusChange(
+                                        application.id,
+                                        ApplicationStatus.APPROVED
+                                    )
                                 }
                                 className="bg-green-600 text-white shadow-sm hover:bg-green-700"
                             >
@@ -201,7 +207,10 @@ const ApplicationCard = ({
                                 size="sm"
                                 variant="outline"
                                 onClick={() =>
-                                    onStatusChange(application.id, ApplicationStatus.REJECTED)
+                                    onStatusChange(
+                                        application.id,
+                                        ApplicationStatus.REJECTED
+                                    )
                                 }
                                 className="border-red-200 bg-white text-red-600 hover:bg-red-50"
                             >

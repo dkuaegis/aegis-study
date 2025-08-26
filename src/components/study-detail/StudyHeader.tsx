@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { StudyCategoryLabels, type StudyDetail, type UserApplicationStatus, ApplicationStatus } from "@/types/study";
+import {
+    ApplicationStatus,
+    StudyCategoryLabels,
+    type StudyDetail,
+    type UserApplicationStatus,
+} from "@/types/study";
 
 interface StudyHeaderProps {
     study: StudyDetail;
@@ -134,29 +139,34 @@ export const StudyHeader = ({
                     </div>
 
                     {/* 출석코드 입력 */}
-                    {userApplicationStatus === ApplicationStatus.APPROVED && !isOwner && (
-                        <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
-                            <div className="flex items-end gap-2">
-                                <div className="grid w-full max-w-sm items-center gap-1.5">
-                                    <Label
-                                        htmlFor={`attendance-code-${study.id}`}
-                                        className="font-medium text-sm"
-                                    >
-                                        출석코드
-                                    </Label>
-                                    <Input
-                                        type="text"
-                                        id={`attendance-code-${study.id}`}
-                                        placeholder="코드를 입력하세요"
+                    {userApplicationStatus === ApplicationStatus.APPROVED &&
+                        !isOwner && (
+                            <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
+                                <div className="flex items-end gap-2">
+                                    <div className="grid w-full max-w-sm items-center gap-1.5">
+                                        <Label
+                                            htmlFor={`attendance-code-${study.id}`}
+                                            className="font-medium text-sm"
+                                        >
+                                            출석코드
+                                        </Label>
+                                        <Input
+                                            type="text"
+                                            id={`attendance-code-${study.id}`}
+                                            placeholder="코드를 입력하세요"
+                                            className="h-9"
+                                        />
+                                    </div>
+                                    <Button
+                                        type="submit"
+                                        size="sm"
                                         className="h-9"
-                                    />
+                                    >
+                                        입력
+                                    </Button>
                                 </div>
-                                <Button type="submit" size="sm" className="h-9">
-                                    입력
-                                </Button>
                             </div>
-                        </div>
-                    )}
+                        )}
                 </div>
             </CardHeader>
         </Card>
