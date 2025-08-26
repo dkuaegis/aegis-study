@@ -42,10 +42,9 @@ export const StudyInfo = ({ study }: StudyInfoProps) => {
                         제한 인원
                     </Label>
                     <p className="mt-1 text-gray-700">
-                        {study.maxParticipants === 0 
+                        {study.maxParticipants === 0
                             ? "제한 없음"
-                            : `${study.participantCount}/${study.maxParticipants}명`
-                        }
+                            : `${study.participantCount}/${study.maxParticipants}명`}
                     </p>
                 </div>
 
