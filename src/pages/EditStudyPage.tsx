@@ -112,9 +112,9 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
             <Header title="스터디 수정하기" onBack={onBack} />
 
             <div className="mx-auto max-w-4xl p-6">
-                <StudyFormProvider
+                                <StudyFormProvider
                     initialValues={initialValues}
-                    onSuccess={handleUpdate}
+                    onComplete={({ formData }) => handleUpdate(formData)}
                     isEditMode={true}
                 >
                     <StudyFormContent

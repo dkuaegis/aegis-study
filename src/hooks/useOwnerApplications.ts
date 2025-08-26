@@ -96,13 +96,17 @@ export function useApplications(studyId: number) {
     };
 
     // 실제 API에서 가져온 스터디 정보 사용
-    const studyInfo: StudyData | null = studyDetail
-        ? {
-              studyTitle: studyDetail.title,
-              recruitmentMethod: studyDetail.recruitmentMethod,
-              applications,
-          }
-        : null;
+    const studyInfo: StudyData | null = useMemo(
+        () =>
+            studyDetail
+                ? {
+                      studyTitle: studyDetail.title,
+                      recruitmentMethod: studyDetail.recruitmentMethod,
+                      applications,
+                  }
+                : null,
+        [studyDetail, applications]
+    );
 
     return {
         applications,

@@ -60,7 +60,11 @@ export const useStudyFormContext = () => {
 
 export const useStudyForm = (
     initialValues?: Partial<FormValues>,
-    onSuccess?: (data: FormValues) => void,
+    onComplete?: (args: {
+        mode: "create" | "edit";
+        formData: FormValues;
+        response?: unknown;
+    }) => void,
     isEditMode?: boolean
 ) => {
     const form = useForm<FormValues>({
@@ -101,7 +105,11 @@ export const useStudyForm = (
 
     const mutation = useCreateStudyMutation(
         (res: unknown) => {
-            if (onSuccess) onSuccess(res as FormValues);
+            onComplete?.({
+                mode: "create",
+                formData: form.getValues(), // 항상 동일한 형태(FormValues) 제공
+                response: res,
+            });
         },
         (_err: unknown) => {
             form.setError("title", {
@@ -137,19 +145,23 @@ export const useStudyForm = (
         if (hasError) return;
 
         if (isEditMode) {
-            if (!onSuccess) {
+            if (!onComplete) {
                 form.setError("root", {
                     type: "manual",
-                    message: "수정 모드에서는 onSuccess 콜백이 필요합니다.",
+                    message: "수정 모드에서는 onComplete 콜백이 필요합니다.",
                 });
                 return;
             }
-            onSuccess({
-                ...data,
-                // 편집 모드에서는 모집 방법을 초기값으로 고정
-                recruitmentMethod: initialValues?.recruitmentMethod ?? data.recruitmentMethod,
-                curriculum: filteredCurriculum.map((v) => ({ value: v })),
-                requirements: filteredRequirements.map((v) => ({ value: v })),
+            onComplete({
+                mode: "edit",
+                formData: {
+                    ...data,
+                    // 편집 모드에서는 모집 방법을 초기값으로 고정
+                    recruitmentMethod:
+                        initialValues?.recruitmentMethod ?? data.recruitmentMethod,
+                    curriculum: filteredCurriculum.map((v) => ({ value: v })),
+                    requirements: filteredRequirements.map((v) => ({ value: v })),
+                },
             });
             return;
         }
@@ -201,10 +213,14 @@ export const useStudyForm = (
 export const StudyFormProvider: React.FC<{
     children: React.ReactNode;
     initialValues?: Partial<FormValues>;
-    onSuccess?: (data: FormValues) => void;
+    onComplete?: (args: {
+        mode: "create" | "edit";
+        formData: FormValues;
+        response?: unknown;
+    }) => void;
     isEditMode?: boolean;
-}> = ({ children, initialValues, onSuccess, isEditMode = false }) => {
-    const value = useStudyForm(initialValues, onSuccess, isEditMode);
+}> = ({ children, initialValues, onComplete, isEditMode = false }) => {
+    const value = useStudyForm(initialValues, onComplete, isEditMode);
         return (
             <StudyFormContext.Provider value={value}>
                 {children}
