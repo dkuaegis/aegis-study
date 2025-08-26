@@ -6,8 +6,8 @@ import {
     useStudyApplicationsQuery,
     useUpdateApplicationStatusMutation,
 } from "@/api/applicationOwnerApi";
+import { useStudyDetailQuery } from "@/api/studyDetailApi";
 import type { Application, StudyData } from "@/types/study";
-import { StudyRecruitmentMethod } from "@/types/study";
 
 function transformApiApplication(apiApp: ApplicationApiResponse): Application {
     return {
@@ -29,9 +29,15 @@ export function useApplications(studyId: number) {
     // API 쿼리 사용
     const {
         data: apiApplications,
-        isLoading: loading,
-        error: queryError,
+        isLoading: applicationsLoading,
+        error: applicationsError,
     } = useStudyApplicationsQuery(studyId);
+
+    const {
+        data: studyDetail,
+        isLoading: studyLoading,
+        error: studyError,
+    } = useStudyDetailQuery(studyId);
 
     // 상태 업데이트 뮤테이션들
     const statusMutation = useUpdateApplicationStatusMutation(studyId);
@@ -40,7 +46,8 @@ export function useApplications(studyId: number) {
 
     // 에러 처리
     const error =
-        queryError?.message ||
+        applicationsError?.message ||
+        studyError?.message ||
         statusMutation.error?.message ||
         approveMutation.error?.message ||
         rejectMutation.error?.message ||
@@ -88,15 +95,14 @@ export function useApplications(studyId: number) {
         }
     };
 
-    // 스터디 정보 (임시 - 실제로는 별도 API에서 가져와야 함)
-    const studyInfo: StudyData | null =
-        applications.length > 0
-            ? {
-                  studyTitle: "스터디 제목", // 실제 API 데이터로 대체 필요
-                  recruitmentMethod: StudyRecruitmentMethod.APPLICATION,
-                  applications,
-              }
-            : null;
+    // 실제 API에서 가져온 스터디 정보 사용
+    const studyInfo: StudyData | null = studyDetail
+        ? {
+              studyTitle: studyDetail.title,
+              recruitmentMethod: studyDetail.recruitmentMethod,
+              applications,
+          }
+        : null;
 
     return {
         applications,
@@ -107,7 +113,8 @@ export function useApplications(studyId: number) {
         handleStatusChange,
         studyInfo,
         loading:
-            loading ||
+            applicationsLoading ||
+            studyLoading ||
             statusMutation.isPending ||
             approveMutation.isPending ||
             rejectMutation.isPending,

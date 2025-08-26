@@ -136,9 +136,18 @@ export const useStudyForm = (
         }
         if (hasError) return;
 
-        if (isEditMode && onSuccess) {
+        if (isEditMode) {
+            if (!onSuccess) {
+                console.error("[useStudyForm] onSuccess callback is required in edit mode.");
+                form.setError("title", {
+                    type: "manual",
+                    message: "수정 모드에서는 onSuccess 콜백이 필요합니다.",
+                });
+                return;
+            }
             onSuccess({
                 ...data,
+                // 편집 모드에서는 모집 방법을 초기값으로 고정
                 recruitmentMethod: initialValues?.recruitmentMethod ?? data.recruitmentMethod,
                 curriculum: filteredCurriculum.map((v) => ({ value: v })),
                 requirements: filteredRequirements.map((v) => ({ value: v })),
