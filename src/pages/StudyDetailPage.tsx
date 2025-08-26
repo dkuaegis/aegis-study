@@ -5,7 +5,10 @@ import StudyHeader from "@/components/study-detail/StudyHeader";
 import StudyInfo from "@/components/study-detail/StudyInfo";
 import Header from "@/components/ui/Header";
 import { useStudyApplication } from "@/hooks/useStudyUserApplication";
-import { StudyRecruitmentMethod } from "@/types/study";
+import {
+    StudyRecruitmentMethod,
+    type UserApplicationStatus,
+} from "@/types/study";
 
 interface StudyDetailProps {
     studyId: number;
@@ -15,7 +18,7 @@ interface StudyDetailProps {
     onViewMembers?: (studyId: number) => void;
     onManageAttendance?: (studyId: number) => void;
     isOwner?: boolean;
-    initialUserApplicationStatus?: "APPROVED" | "PENDING" | "REJECTED" | null;
+    initialUserApplicationStatus?: UserApplicationStatus;
 }
 
 const StudyDetailPage = ({

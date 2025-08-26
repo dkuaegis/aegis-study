@@ -49,6 +49,22 @@ export const StudyRecruitmentMethodLabels: Record<
     [StudyRecruitmentMethod.APPLICATION]: "지원서",
 };
 
+export enum ApplicationStatus {
+    PENDING = "PENDING",
+    APPROVED = "APPROVED",
+    REJECTED = "REJECTED",
+}
+
+export const ApplicationStatusLabels: Record<ApplicationStatus, string> = {
+    [ApplicationStatus.PENDING]: "심사중",
+    [ApplicationStatus.APPROVED]: "승인됨",
+    [ApplicationStatus.REJECTED]: "거절됨",
+};
+
+// 편의를 위한 타입 유니온들
+export type ApplicationStatusType = ApplicationStatus;
+export type UserApplicationStatus = ApplicationStatus | null;
+
 export interface StudyListItem {
     id: number;
     title: string;
@@ -81,7 +97,7 @@ export interface Application {
     name: string;
     phone: string;
     studentNumber: string;
-    status: "PENDING" | "APPROVED" | "REJECTED";
+    status: ApplicationStatus;
     applicationReason?: string;
     createdAt?: string;
     updatedAt?: string;

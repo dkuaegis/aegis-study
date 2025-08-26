@@ -14,11 +14,14 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import type { Application } from "@/types/study";
-import { StudyRecruitmentMethod } from "@/types/study";
+import { ApplicationStatus, StudyRecruitmentMethod } from "@/types/study";
 
 type ApplicationCardProps = {
     application: Application;
-    onStatusChange: (id: number, status: "APPROVED" | "REJECTED") => void;
+    onStatusChange: (
+        id: number,
+        status: ApplicationStatus.APPROVED | ApplicationStatus.REJECTED
+    ) => void;
     recruitmentMethod: StudyRecruitmentMethod;
     studyId: number;
 };
@@ -53,19 +56,19 @@ const ApplicationCard = ({
     };
     const getStatusBadge = (status: string) => {
         switch (status) {
-            case "PENDING":
+            case ApplicationStatus.PENDING:
                 return (
                     <Badge className="border-yellow-200 bg-yellow-100 text-yellow-800">
                         검토 중
                     </Badge>
                 );
-            case "APPROVED":
+            case ApplicationStatus.APPROVED:
                 return (
                     <Badge className="border-green-200 bg-green-100 text-green-800">
                         승인
                     </Badge>
                 );
-            case "REJECTED":
+            case ApplicationStatus.REJECTED:
                 return (
                     <Badge className="border-red-200 bg-red-100 text-red-800">
                         거절
@@ -185,12 +188,15 @@ const ApplicationCard = ({
                         )}
                     </div>
 
-                    {application.status === "PENDING" && (
+                    {application.status === ApplicationStatus.PENDING && (
                         <div className="flex space-x-2">
                             <Button
                                 size="sm"
                                 onClick={() =>
-                                    onStatusChange(application.id, "APPROVED")
+                                    onStatusChange(
+                                        application.id,
+                                        ApplicationStatus.APPROVED
+                                    )
                                 }
                                 className="bg-green-600 text-white shadow-sm hover:bg-green-700"
                             >
@@ -201,7 +207,10 @@ const ApplicationCard = ({
                                 size="sm"
                                 variant="outline"
                                 onClick={() =>
-                                    onStatusChange(application.id, "REJECTED")
+                                    onStatusChange(
+                                        application.id,
+                                        ApplicationStatus.REJECTED
+                                    )
                                 }
                                 className="border-red-200 bg-white text-red-600 hover:bg-red-50"
                             >

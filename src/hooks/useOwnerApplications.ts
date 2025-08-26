@@ -6,8 +6,9 @@ import {
     useStudyApplicationsQuery,
     useUpdateApplicationStatusMutation,
 } from "@/api/applicationOwnerApi";
+import { useStudyDetailQuery } from "@/api/studyDetailApi";
 import type { Application, StudyData } from "@/types/study";
-import { StudyRecruitmentMethod } from "@/types/study";
+import { ApplicationStatus } from "@/types/study";
 
 function transformApiApplication(apiApp: ApplicationApiResponse): Application {
     return {
@@ -15,7 +16,7 @@ function transformApiApplication(apiApp: ApplicationApiResponse): Application {
         name: apiApp.name,
         phone: apiApp.phoneNumber,
         studentNumber: apiApp.studentId,
-        status: apiApp.status,
+        status: apiApp.status as ApplicationStatus,
         createdAt: apiApp.createdAt,
         updatedAt: apiApp.updatedAt,
     };
@@ -23,15 +24,21 @@ function transformApiApplication(apiApp: ApplicationApiResponse): Application {
 
 export function useApplications(studyId: number) {
     const [selectedFilter, setSelectedFilter] = useState<
-        "ALL" | "PENDING" | "APPROVED" | "REJECTED"
+        "ALL" | ApplicationStatus
     >("ALL");
 
     // API 쿼리 사용
     const {
         data: apiApplications,
-        isLoading: loading,
-        error: queryError,
+        isLoading: applicationsLoading,
+        error: applicationsError,
     } = useStudyApplicationsQuery(studyId);
+
+    const {
+        data: studyDetail,
+        isLoading: studyLoading,
+        error: studyError,
+    } = useStudyDetailQuery(studyId);
 
     // 상태 업데이트 뮤테이션들
     const statusMutation = useUpdateApplicationStatusMutation(studyId);
@@ -40,7 +47,8 @@ export function useApplications(studyId: number) {
 
     // 에러 처리
     const error =
-        queryError?.message ||
+        applicationsError?.message ||
+        studyError?.message ||
         statusMutation.error?.message ||
         approveMutation.error?.message ||
         rejectMutation.error?.message ||
@@ -66,12 +74,15 @@ export function useApplications(studyId: number) {
     const stats = useMemo(
         () => ({
             total: applications.length,
-            pending: applications.filter((app) => app.status === "PENDING")
-                .length,
-            approved: applications.filter((app) => app.status === "APPROVED")
-                .length,
-            rejected: applications.filter((app) => app.status === "REJECTED")
-                .length,
+            pending: applications.filter(
+                (app) => app.status === ApplicationStatus.PENDING
+            ).length,
+            approved: applications.filter(
+                (app) => app.status === ApplicationStatus.APPROVED
+            ).length,
+            rejected: applications.filter(
+                (app) => app.status === ApplicationStatus.REJECTED
+            ).length,
         }),
         [applications]
     );
@@ -79,24 +90,27 @@ export function useApplications(studyId: number) {
     // 상태 변경 핸들러
     const handleStatusChange = (
         applicationId: number,
-        newStatus: "APPROVED" | "REJECTED"
+        newStatus: ApplicationStatus.APPROVED | ApplicationStatus.REJECTED
     ) => {
-        if (newStatus === "APPROVED") {
+        if (newStatus === ApplicationStatus.APPROVED) {
             approveMutation.mutate(applicationId);
-        } else if (newStatus === "REJECTED") {
+        } else if (newStatus === ApplicationStatus.REJECTED) {
             rejectMutation.mutate(applicationId);
         }
     };
 
-    // 스터디 정보 (임시 - 실제로는 별도 API에서 가져와야 함)
-    const studyInfo: StudyData | null =
-        applications.length > 0
-            ? {
-                  studyTitle: "스터디 제목", // 실제 API 데이터로 대체 필요
-                  recruitmentMethod: StudyRecruitmentMethod.APPLICATION,
-                  applications,
-              }
-            : null;
+    // 실제 API에서 가져온 스터디 정보 사용
+    const studyInfo: StudyData | null = useMemo(
+        () =>
+            studyDetail
+                ? {
+                      studyTitle: studyDetail.title,
+                      recruitmentMethod: studyDetail.recruitmentMethod,
+                      applications,
+                  }
+                : null,
+        [studyDetail, applications]
+    );
 
     return {
         applications,
@@ -107,7 +121,8 @@ export function useApplications(studyId: number) {
         handleStatusChange,
         studyInfo,
         loading:
-            loading ||
+            applicationsLoading ||
+            studyLoading ||
             statusMutation.isPending ||
             approveMutation.isPending ||
             rejectMutation.isPending,

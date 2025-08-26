@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import { useApplications } from "@/hooks/useOwnerApplications";
+import { ApplicationStatus } from "@/types/study";
 
 interface ApplicationStatusProps {
     studyId: number;
@@ -87,7 +88,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
 
     const filterOptions = [
         {
-            key: "ALL",
+            key: "ALL" as const,
             label: "전체",
             count: stats.total,
             icon: User,
@@ -97,7 +98,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
             activeColor: "bg-blue-100 text-blue-700 border-blue-200",
         },
         {
-            key: "PENDING",
+            key: ApplicationStatus.PENDING as const,
             label: "검토 중",
             count: stats.pending,
             icon: Clock,
@@ -107,7 +108,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
             activeColor: "bg-yellow-100 text-yellow-700 border-yellow-200",
         },
         {
-            key: "APPROVED",
+            key: ApplicationStatus.APPROVED as const,
             label: "승인",
             count: stats.approved,
             icon: CheckCircle,
@@ -117,7 +118,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
             activeColor: "bg-green-100 text-green-700 border-green-200",
         },
         {
-            key: "REJECTED",
+            key: ApplicationStatus.REJECTED as const,
             label: "거절",
             count: stats.rejected,
             icon: XCircle,
@@ -126,7 +127,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
             hoverColor: "hover:bg-red-100",
             activeColor: "bg-red-100 text-red-700 border-red-200",
         },
-    ];
+    ] as const;
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -147,13 +148,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                                         type="button"
                                         key={option.key}
                                         onClick={() =>
-                                            setSelectedFilter(
-                                                option.key as
-                                                    | "APPROVED"
-                                                    | "REJECTED"
-                                                    | "PENDING"
-                                                    | "ALL"
-                                            )
+                                            setSelectedFilter(option.key)
                                         }
                                         className={`flex flex-shrink-0 items-center justify-between rounded-lg border p-4 transition-all duration-200 lg:w-full ${
                                             isActive
