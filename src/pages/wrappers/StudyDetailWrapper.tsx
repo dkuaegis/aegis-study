@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { StudyRecruitmentMethod } from "@/types/study";
+import { ApplicationStatus, StudyRecruitmentMethod } from "@/types/study";
 import StudyDetailPage from "../StudyDetailPage";
 
 interface Study {
@@ -160,7 +160,7 @@ export default function StudyDetailWrapper() {
 
     // 스터디 id가 3이면 스터디원 권한으로 "참여 중" 상태로 전달
     const initialUserApplicationStatus =
-        numericStudyId === 3 ? "APPROVED" : undefined;
+        numericStudyId === 3 ? ApplicationStatus.APPROVED : undefined;
 
     if (!study) {
         return <div>스터디를 찾을 수 없습니다.</div>;
