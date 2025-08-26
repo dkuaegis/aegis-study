@@ -138,8 +138,7 @@ export const useStudyForm = (
 
         if (isEditMode) {
             if (!onSuccess) {
-                console.error("[useStudyForm] onSuccess callback is required in edit mode.");
-                form.setError("title", {
+                form.setError("root", {
                     type: "manual",
                     message: "수정 모드에서는 onSuccess 콜백이 필요합니다.",
                 });
