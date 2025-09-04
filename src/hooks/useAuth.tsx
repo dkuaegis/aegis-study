@@ -19,7 +19,7 @@ const useAuth = () => {
         const checkAuth = async () => {
             try {
                 const response = await apiClient.get(
-                    API_ENDPOINTS.PAYMENTS_STATUS
+                    API_ENDPOINTS.CHECK_AUTH
                 );
 
                 if (response.status === 401) {
