@@ -39,6 +39,7 @@ export const useCreateStudyMutation = (
         mutationFn: createStudy,
         onSuccess: (res: unknown) => {
             queryClient.invalidateQueries({ queryKey: ["studies"] });
+            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess(res);
         },
         onError: (err: unknown) => {

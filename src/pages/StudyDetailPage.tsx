@@ -5,9 +5,9 @@ import StudyHeader from "@/components/study-detail/StudyHeader";
 import StudyInfo from "@/components/study-detail/StudyInfo";
 import Header from "@/components/ui/Header";
 import { useStudyApplication } from "@/hooks/useStudyUserApplication";
+import { useUserRole } from "@/hooks/useUserRole";
 import {
     StudyRecruitmentMethod,
-    type UserApplicationStatus,
 } from "@/types/study";
 
 interface StudyDetailProps {
@@ -17,8 +17,6 @@ interface StudyDetailProps {
     onViewApplications?: (studyId: number) => void;
     onViewMembers?: (studyId: number) => void;
     onManageAttendance?: (studyId: number) => void;
-    isOwner?: boolean;
-    initialUserApplicationStatus?: UserApplicationStatus;
 }
 
 const StudyDetailPage = ({
@@ -28,12 +26,13 @@ const StudyDetailPage = ({
     onViewApplications,
     onViewMembers,
     onManageAttendance,
-    isOwner = false,
-    initialUserApplicationStatus: _initialUserApplicationStatus,
 }: StudyDetailProps) => {
+    // 사용자 역할 확인
+    const { isInstructor, isLoading: isRoleLoading, error: roleError } = useUserRole();
+    
     const {
         data: study,
-        isLoading,
+        isLoading: isStudyLoading,
         isError,
         error,
     } = useStudyDetailQuery(studyId);
@@ -59,14 +58,22 @@ const StudyDetailPage = ({
             study?.recruitmentMethod ?? StudyRecruitmentMethod.APPLICATION,
     });
 
+    // 로딩 상태 처리
+    const isLoading = isStudyLoading || isRoleLoading;
+    
     if (isLoading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-gray-50">
                 <div className="text-gray-500">
-                    스터디 정보를 불러오는 중...
+                    {isRoleLoading ? "권한 정보를 불러오는 중..." : "스터디 정보를 불러오는 중..."}
                 </div>
             </div>
         );
+    }
+
+    if (roleError) {
+        console.error("사용자 권한 조회 오류:", roleError);
+        // 권한 오류 시에도 기본 권한으로 계속 진행
     }
 
     if (isError) {
@@ -86,6 +93,9 @@ const StudyDetailPage = ({
             </div>
         );
     }
+
+    // 사용자가 이 스터디의 강사인지 확인
+    const isOwner = isInstructor(studyId);
 
     return (
         <div className="min-h-screen bg-gray-50">

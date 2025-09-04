@@ -157,6 +157,7 @@ export const useEnrollInStudyMutation = (
             queryClient.invalidateQueries({
                 queryKey: ["studies"],
             });
+            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             // 상태 쿼리도 무효화
             queryClient.invalidateQueries({
                 queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
@@ -187,6 +188,7 @@ export const useCancelEnrollmentMutation = (
             queryClient.invalidateQueries({
                 queryKey: ["studies"],
             });
+            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             // 상태 쿼리도 무효화
             queryClient.invalidateQueries({
                 queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
@@ -286,6 +288,7 @@ export const useUpdateUserApplicationMutation = (
             queryClient.invalidateQueries({
                 queryKey: ["studyDetail", studyId],
             });
+            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
         onError: (error: Error) => {
