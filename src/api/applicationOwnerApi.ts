@@ -160,6 +160,7 @@ export const useUpdateApplicationStatusMutation = (
             queryClient.invalidateQueries({
                 queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
             });
+            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
         onError: (error: HTTPError) => {
@@ -182,6 +183,7 @@ export const useApproveApplicationMutation = (
             queryClient.invalidateQueries({
                 queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
             });
+            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
         onError: (error: HTTPError) => {
@@ -204,6 +206,7 @@ export const useRejectApplicationMutation = (
             queryClient.invalidateQueries({
                 queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
             });
+            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
         onError: (error: HTTPError) => {
