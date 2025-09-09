@@ -10,7 +10,6 @@ export enum AuthStatus {
 }
 
 const useAuth = () => {
-    // 초기 상태를 LOADING으로 설정하여 인증 확인 완료까지 대기
     const [isAuthenticated, setAuthenticated] = useState<AuthStatus>(
         AuthStatus.LOADING
     );
@@ -18,9 +17,7 @@ const useAuth = () => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await apiClient.get(
-                    API_ENDPOINTS.CHECK_AUTH
-                );
+                const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH);
 
                 if (response.status === 401) {
                     setAuthenticated(AuthStatus.UNAUTHORIZED);

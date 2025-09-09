@@ -6,9 +6,7 @@ import StudyInfo from "@/components/study-detail/StudyInfo";
 import Header from "@/components/ui/Header";
 import { useStudyApplication } from "@/hooks/useStudyUserApplication";
 import { useUserRole } from "@/hooks/useUserRole";
-import {
-    StudyRecruitmentMethod,
-} from "@/types/study";
+import { StudyRecruitmentMethod } from "@/types/study";
 
 interface StudyDetailProps {
     studyId: number;
@@ -28,8 +26,12 @@ const StudyDetailPage = ({
     onManageAttendance,
 }: StudyDetailProps) => {
     // 사용자 역할 확인
-    const { isInstructor, isLoading: isRoleLoading, error: roleError } = useUserRole();
-    
+    const {
+        isInstructor,
+        isLoading: isRoleLoading,
+        error: roleError,
+    } = useUserRole();
+
     const {
         data: study,
         isLoading: isStudyLoading,
@@ -60,12 +62,14 @@ const StudyDetailPage = ({
 
     // 로딩 상태 처리
     const isLoading = isStudyLoading || isRoleLoading;
-    
+
     if (isLoading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-gray-50">
                 <div className="text-gray-500">
-                    {isRoleLoading ? "권한 정보를 불러오는 중..." : "스터디 정보를 불러오는 중..."}
+                    {isRoleLoading
+                        ? "권한 정보를 불러오는 중..."
+                        : "스터디 정보를 불러오는 중..."}
                 </div>
             </div>
         );

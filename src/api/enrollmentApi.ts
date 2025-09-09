@@ -5,7 +5,7 @@ import {
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
-import type { HTTPError } from "ky";
+import { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 
@@ -53,29 +53,33 @@ export async function enrollInStudy(
             }
         );
 
-        if (response.status === 201) {
-            // body가 비어있을 수 있으므로 예외 처리
-            const text = await response.text();
-            if (!text) {
-                // 서버가 빈 body를 반환한 경우 기본값 반환
-                return {
-                    message: "지원이 완료되었습니다.",
-                    status: "PENDING",
-                };
+        if (response.ok) {
+            const fallback: EnrollmentResponse = {
+                message: "지원이 완료되었습니다.",
+                status: "PENDING",
+            };
+            if (response.status === 204) return fallback;
+            const contentType =
+                response.headers.get("content-type")?.toLowerCase() ?? "";
+            if (!contentType.includes("application/json")) return fallback;
+            try {
+                return (await response.json()) as EnrollmentResponse;
+            } catch {
+                return fallback;
             }
-            return JSON.parse(text) as EnrollmentResponse;
         }
 
         throw new Error(`Unexpected response status: ${response.status}`);
     } catch (error: unknown) {
-        if (error instanceof Error && "response" in error) {
-            const httpError = error as HTTPError;
-            const status = httpError.response?.status;
+        if (error instanceof HTTPError) {
+            const status = error.response?.status;
             switch (status) {
                 case 400:
                     throw new Error("잘못된 요청 데이터입니다.");
                 case 404:
                     throw new Error("스터디를 찾을 수 없습니다.");
+                case 409:
+                    throw new Error("이미 신청된 상태입니다.");
                 default:
                     throw new Error("스터디 신청 중 오류가 발생했습니다.");
             }
@@ -94,9 +98,8 @@ export async function getStudyStatus(
             .json<StudyStatusResponse>();
     } catch (error: unknown) {
         // 404는 신청하지 않은 상태로 처리
-        if (error && typeof error === "object" && "response" in error) {
-            const httpError = error as HTTPError;
-            if (httpError.response?.status === 404) {
+        if (error instanceof HTTPError) {
+            if (error.response?.status === 404) {
                 return null;
             }
         }
@@ -114,9 +117,8 @@ export async function cancelEnrollment(
         });
     } catch (error: unknown) {
         // HTTP 에러 처리
-        if (error && typeof error === "object" && "response" in error) {
-            const httpError = error as HTTPError;
-            const status = httpError.response?.status;
+        if (error instanceof HTTPError) {
+            const status = error.response?.status;
             switch (status) {
                 case 400:
                     throw new Error("잘못된 요청입니다.");
@@ -220,9 +222,8 @@ export async function getUserApplicationDetail(
             .get(API_ENDPOINTS.USER_APPLICATION(studyId), { signal })
             .json<UserApplicationDetail>();
     } catch (error: unknown) {
-        if (error && typeof error === "object" && "response" in error) {
-            const httpError = error as HTTPError;
-            const status = httpError.response?.status;
+        if (error instanceof HTTPError) {
+            const status = error.response?.status;
             switch (status) {
                 case 404:
                     throw new Error("지원서를 찾을 수 없습니다.");
@@ -246,9 +247,8 @@ export async function updateUserApplication(
             signal,
         });
     } catch (error: unknown) {
-        if (error && typeof error === "object" && "response" in error) {
-            const httpError = error as HTTPError;
-            const status = httpError.response?.status;
+        if (error instanceof HTTPError) {
+            const status = error.response?.status;
             switch (status) {
                 case 400:
                     throw new Error("잘못된 요청 데이터입니다.");
