@@ -54,7 +54,16 @@ export async function enrollInStudy(
         );
 
         if (response.status === 201) {
-            return await response.json<EnrollmentResponse>();
+            // body가 비어있을 수 있으므로 예외 처리
+            const text = await response.text();
+            if (!text) {
+                // 서버가 빈 body를 반환한 경우 기본값 반환
+                return {
+                    message: "지원이 완료되었습니다.",
+                    status: "PENDING",
+                };
+            }
+            return JSON.parse(text) as EnrollmentResponse;
         }
 
         throw new Error(`Unexpected response status: ${response.status}`);
