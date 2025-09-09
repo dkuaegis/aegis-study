@@ -56,27 +56,30 @@ export async function enrollInStudy(
         if (
             response.status === 200 ||
             response.status === 201 ||
+            response.status === 202 ||
             response.status === 204
         ) {
+            const fallback: EnrollmentResponse = {
+                message: "지원이 완료되었습니다.",
+                status: "PENDING",
+            };
             if (response.status === 204) {
-                return { message: "지원이 완료되었습니다.", status: "PENDING" };
+                return fallback;
             }
-            const contentType = response.headers.get("content-type") ?? "";
+            const contentType =
+                response.headers.get("content-type")?.toLowerCase() ?? "";
             const text = await response.text();
             if (!text.trim()) {
-                return { message: "지원이 완료되었습니다.", status: "PENDING" };
+                return fallback;
             }
             if (contentType.includes("application/json")) {
                 try {
                     return JSON.parse(text) as EnrollmentResponse;
                 } catch {
-                    return {
-                        message: "지원이 완료되었습니다.",
-                        status: "PENDING",
-                    };
+                    return fallback;
                 }
             }
-            return { message: "지원이 완료되었습니다.", status: "PENDING" };
+            return fallback;
         }
 
         throw new Error(`Unexpected response status: ${response.status}`);
@@ -89,6 +92,8 @@ export async function enrollInStudy(
                     throw new Error("잘못된 요청 데이터입니다.");
                 case 404:
                     throw new Error("스터디를 찾을 수 없습니다.");
+                case 409:
+                    throw new Error("이미 신청된 상태입니다.");
                 default:
                     throw new Error("스터디 신청 중 오류가 발생했습니다.");
             }
@@ -107,9 +112,8 @@ export async function getStudyStatus(
             .json<StudyStatusResponse>();
     } catch (error: unknown) {
         // 404는 신청하지 않은 상태로 처리
-        if (error && typeof error === "object" && "response" in error) {
-            const httpError = error as HTTPError;
-            if (httpError.response?.status === 404) {
+        if (error instanceof HTTPError) {
+            if (error.response?.status === 404) {
                 return null;
             }
         }
@@ -127,9 +131,8 @@ export async function cancelEnrollment(
         });
     } catch (error: unknown) {
         // HTTP 에러 처리
-        if (error && typeof error === "object" && "response" in error) {
-            const httpError = error as HTTPError;
-            const status = httpError.response?.status;
+        if (error instanceof HTTPError) {
+            const status = error.response?.status;
             switch (status) {
                 case 400:
                     throw new Error("잘못된 요청입니다.");
@@ -233,9 +236,8 @@ export async function getUserApplicationDetail(
             .get(API_ENDPOINTS.USER_APPLICATION(studyId), { signal })
             .json<UserApplicationDetail>();
     } catch (error: unknown) {
-        if (error && typeof error === "object" && "response" in error) {
-            const httpError = error as HTTPError;
-            const status = httpError.response?.status;
+        if (error instanceof HTTPError) {
+            const status = error.response?.status;
             switch (status) {
                 case 404:
                     throw new Error("지원서를 찾을 수 없습니다.");
@@ -259,9 +261,8 @@ export async function updateUserApplication(
             signal,
         });
     } catch (error: unknown) {
-        if (error && typeof error === "object" && "response" in error) {
-            const httpError = error as HTTPError;
-            const status = httpError.response?.status;
+        if (error instanceof HTTPError) {
+            const status = error.response?.status;
             switch (status) {
                 case 400:
                     throw new Error("잘못된 요청 데이터입니다.");
