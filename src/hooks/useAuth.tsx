@@ -10,7 +10,6 @@ export enum AuthStatus {
 }
 
 const useAuth = () => {
-    // 초기 상태를 LOADING으로 설정하여 인증 확인 완료까지 대기
     const [isAuthenticated, setAuthenticated] = useState<AuthStatus>(
         AuthStatus.LOADING
     );

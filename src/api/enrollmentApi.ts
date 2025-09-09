@@ -85,8 +85,7 @@ export async function enrollInStudy(
         throw new Error(`Unexpected response status: ${response.status}`);
     } catch (error: unknown) {
         if (error instanceof HTTPError) {
-            const httpError = error;
-            const status = httpError.response?.status;
+            const status = error.response?.status;
             switch (status) {
                 case 400:
                     throw new Error("잘못된 요청 데이터입니다.");
