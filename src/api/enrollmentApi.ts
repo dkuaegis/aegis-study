@@ -5,7 +5,7 @@ import {
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
-import type { HTTPError } from "ky";
+import { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 
@@ -53,23 +53,33 @@ export async function enrollInStudy(
             }
         );
 
-        if (response.status === 201) {
-            // body가 비어있을 수 있으므로 예외 처리
-            const text = await response.text();
-            if (!text) {
-                // 서버가 빈 body를 반환한 경우 기본값 반환
-                return {
-                    message: "지원이 완료되었습니다.",
-                    status: "PENDING",
-                };
+        // 200/201/204 모두 허용: 일부 서버는 204(No Content) 또는 200을 반환할 수 있음
+        if (response.status === 200 || response.status === 201 || response.status === 204) {
+            // 204: 명시적으로 기본 응답 반환
+            if (response.status === 204) {
+                return { message: "지원이 완료되었습니다.", status: "PENDING" };
             }
-            return JSON.parse(text) as EnrollmentResponse;
+            const contentType = response.headers.get("content-type") ?? "";
+            const text = await response.text();
+            if (!text.trim()) {
+                return { message: "지원이 완료되었습니다.", status: "PENDING" };
+            }
+            if (contentType.includes("application/json")) {
+                try {
+                    return JSON.parse(text) as EnrollmentResponse;
+                } catch {
+                    // JSON 파싱 실패 시 기본 응답으로 폴백
+                    return { message: "지원이 완료되었습니다.", status: "PENDING" };
+                }
+            }
+            // 비-JSON 응답 본문일 경우에도 안전하게 폴백
+            return { message: "지원이 완료되었습니다.", status: "PENDING" };
         }
 
         throw new Error(`Unexpected response status: ${response.status}`);
     } catch (error: unknown) {
-        if (error instanceof Error && "response" in error) {
-            const httpError = error as HTTPError;
+        if (error instanceof HTTPError) {
+            const httpError = error;
             const status = httpError.response?.status;
             switch (status) {
                 case 400:
