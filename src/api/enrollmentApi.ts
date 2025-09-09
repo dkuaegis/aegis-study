@@ -53,9 +53,11 @@ export async function enrollInStudy(
             }
         );
 
-        // 200/201/204 모두 허용: 일부 서버는 204(No Content) 또는 200을 반환할 수 있음
-        if (response.status === 200 || response.status === 201 || response.status === 204) {
-            // 204: 명시적으로 기본 응답 반환
+        if (
+            response.status === 200 ||
+            response.status === 201 ||
+            response.status === 204
+        ) {
             if (response.status === 204) {
                 return { message: "지원이 완료되었습니다.", status: "PENDING" };
             }
@@ -68,11 +70,12 @@ export async function enrollInStudy(
                 try {
                     return JSON.parse(text) as EnrollmentResponse;
                 } catch {
-                    // JSON 파싱 실패 시 기본 응답으로 폴백
-                    return { message: "지원이 완료되었습니다.", status: "PENDING" };
+                    return {
+                        message: "지원이 완료되었습니다.",
+                        status: "PENDING",
+                    };
                 }
             }
-            // 비-JSON 응답 본문일 경우에도 안전하게 폴백
             return { message: "지원이 완료되었습니다.", status: "PENDING" };
         }
 
