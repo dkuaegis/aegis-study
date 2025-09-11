@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import {
     type StudyDetail,
@@ -79,10 +78,13 @@ export const ApplicationSection = ({
             {study.recruitmentMethod === StudyRecruitmentMethod.APPLICATION && (
                 <Button
                     onClick={async () => {
-                        if (handleEditApplication) {
+                        if (!handleEditApplication) return;
+                        try {
                             await handleEditApplication(); // API 요청 완료까지 대기
+                            setIsApplicationModalOpen(true); // 성공 시 모달 열기
+                        } catch (e) {
+                            // TODO: 에러 토스트/알림
                         }
-                        setIsApplicationModalOpen(true); // 그 다음에 모달 열기
                     }}
                     variant="outline"
                     className="w-full border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
@@ -126,8 +128,12 @@ export const ApplicationSection = ({
                             </AlertDialogCancel>
                             <AlertDialogAction
                                 onClick={async () => {
-                                    if (handleUpdateApplication) {
+                                    if (!handleUpdateApplication) return;
+                                    try {
                                         await handleUpdateApplication();
+                                        setIsApplicationModalOpen(false);
+                                    } catch (e) {
+                                        // TODO: 에러 처리(토스트 등)
                                     }
                                 }}
                                 disabled={
@@ -151,8 +157,6 @@ export const ApplicationSection = ({
                     스터디에 참여 중입니다!
                 </p>
             </div>
-            <Separator className="bg-gray-200" />
-            {/* 스터디 탈퇴 버튼 제거됨 */}
         </div>
     );
 
@@ -160,14 +164,6 @@ export const ApplicationSection = ({
         <div className="space-y-4 text-center">
             <p className="text-red-600">신청이 거절되었습니다.</p>
             <p className="text-gray-500 text-sm">다른 스터디를 찾아보세요.</p>
-            {/* TODO: 다시 지원하기 기능 구현 필요 */}
-            {/* <Button
-                onClick={() => setUserApplicationStatus(null)}
-                variant="outline"
-                className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
-            >
-                다시 지원하기
-            </Button> */}
         </div>
     );
 
