@@ -82,8 +82,8 @@ export const ApplicationSection = ({
                             try {
                                 await handleEditApplication(); // API 요청 완료까지 대기
                                 setIsApplicationModalOpen(true); // 성공 시 모달 열기
-                            } catch (e) {
-                                // TODO: 에러 토스트/알림
+                            } catch (_e) {
+                                console.error(_e);
                             }
                         }}
                         variant="outline"
@@ -135,7 +135,7 @@ export const ApplicationSection = ({
                                             await handleUpdateApplication();
                                             setIsApplicationModalOpen(false);
                                         } catch (e) {
-                                            // TODO: 에러 처리(토스트 등)
+                                            console.error(e);
                                         }
                                     }}
                                     disabled={
