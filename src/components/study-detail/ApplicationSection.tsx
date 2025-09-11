@@ -1,4 +1,4 @@
-import { Edit, X } from "lucide-react";
+import { Edit } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -8,7 +8,6 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,13 +29,11 @@ interface ApplicationSectionProps {
     applicationState: {
         applicationText: string;
         isApplying: boolean;
-        isCancelling: boolean;
         isApplicationModalOpen: boolean;
         userApplicationStatus: UserApplicationStatus;
         setApplicationText: (text: string) => void;
         setIsApplicationModalOpen: (open: boolean) => void;
         handleApply: () => Promise<void>;
-        handleCancelApplication: () => Promise<void>;
         handleEditApplication?: () => Promise<void>;
         handleUpdateApplication?: () => Promise<void>;
         isLoadingApplicationDetail?: boolean;
@@ -53,13 +50,11 @@ export const ApplicationSection = ({
     const {
         applicationText,
         isApplying,
-        isCancelling,
         isApplicationModalOpen,
         userApplicationStatus,
         setApplicationText,
         setIsApplicationModalOpen,
         handleApply,
-        handleCancelApplication,
         handleEditApplication,
         handleUpdateApplication,
         isLoadingApplicationDetail,
@@ -99,37 +94,6 @@ export const ApplicationSection = ({
                         : "지원서 수정하기"}
                 </Button>
             )}
-
-            {/* 신청 취소 버튼 */}
-            <AlertDialog>
-                <AlertDialogTrigger asChild>
-                    <Button
-                        variant="outline"
-                        className="w-full border-red-600 bg-transparent text-red-600 hover:bg-red-50"
-                    >
-                        <X className="mr-1 h-4 w-4" />
-                        신청 취소
-                    </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>신청 취소</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            스터디 신청을 취소하시겠습니까? 이후 다시 신청할 수
-                            있습니다.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>돌아가기</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleCancelApplication}
-                            className="bg-red-600 hover:bg-red-700"
-                        >
-                            {isCancelling ? "취소 중..." : "신청 취소"}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
 
             {/* 지원서 수정 모달 */}
             {study.recruitmentMethod === StudyRecruitmentMethod.APPLICATION && (
@@ -188,35 +152,7 @@ export const ApplicationSection = ({
                 </p>
             </div>
             <Separator className="bg-gray-200" />
-            <AlertDialog>
-                <AlertDialogTrigger asChild>
-                    <Button
-                        variant="outline"
-                        className="w-full border-red-600 bg-transparent text-red-600 hover:bg-red-50"
-                    >
-                        <X className="mr-1 h-4 w-4" />
-                        스터디 탈퇴
-                    </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>스터디 탈퇴</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            스터디에서 탈퇴하시겠습니까? 탈퇴 후 다시 참여하려면
-                            재신청이 필요합니다.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>돌아가기</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleCancelApplication}
-                            className="bg-red-600 hover:bg-red-700"
-                        >
-                            {isCancelling ? "탈퇴 중..." : "탈퇴하기"}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            {/* 스터디 탈퇴 버튼 제거됨 */}
         </div>
     );
 
