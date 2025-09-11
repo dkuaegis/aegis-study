@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-    useCancelEnrollmentMutation,
     useEnrollInStudyMutation,
     useStudyStatusQuery,
     useUpdateUserApplicationMutation,
@@ -24,7 +23,6 @@ export const useStudyApplication = ({
 }: UseStudyApplicationProps) => {
     const [applicationText, setApplicationText] = useState("");
     const [isApplying, setIsApplying] = useState(false);
-    const [isCancelling, setIsCancelling] = useState(false);
     const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
     const [userApplicationStatus, setUserApplicationStatus] =
         useState<UserApplicationStatus>(null);
@@ -110,32 +108,6 @@ export const useStudyApplication = ({
         }
     );
 
-    const cancelMutation = useCancelEnrollmentMutation(
-        studyId,
-        () => {
-            // 성공 콜백 - 상태는 쿼리에서 자동으로 업데이트됨
-            const wasApproved = lastKnownStatusRef.current === "APPROVED";
-            toast({
-                description: wasApproved
-                    ? "스터디에서 탈퇴되었습니다."
-                    : "스터디 신청이 취소되었습니다.",
-            });
-            setIsCancelling(false);
-        },
-        (error) => {
-            // 에러 콜백
-            console.error("Cancel enrollment failed:", error);
-            const errorMessage =
-                error instanceof Error
-                    ? error.message
-                    : "취소 중 오류가 발생했습니다. 다시 시도해주세요.";
-            toast({
-                description: errorMessage,
-            });
-            setIsCancelling(false);
-        }
-    );
-
     // 지원서 수정 뮤테이션
     const updateMutation = useUpdateUserApplicationMutation(
         studyId,
@@ -182,11 +154,6 @@ export const useStudyApplication = ({
         enrollMutation.mutate({ applicationReason });
     };
 
-    const handleCancelApplication = async () => {
-        setIsCancelling(true);
-        cancelMutation.mutate();
-    };
-
     // 지원서 수정하기 버튼 클릭 시 호출
     const handleEditApplication = async () => {
         setShouldLoadApplicationDetail(true);
@@ -225,7 +192,6 @@ export const useStudyApplication = ({
         // State
         applicationText,
         isApplying,
-        isCancelling,
         isApplicationModalOpen,
         userApplicationStatus,
         isLoadingApplicationDetail,
@@ -236,7 +202,6 @@ export const useStudyApplication = ({
         setIsApplicationModalOpen,
         setEditingApplicationText,
         handleApply,
-        handleCancelApplication,
         handleEditApplication,
         handleUpdateApplication,
     };
