@@ -75,78 +75,81 @@ export const ApplicationSection = ({
             <p className="text-gray-600">스터디 신청이 검토 중입니다.</p>
 
             {/* 지원서 수정하기 버튼 (APPLICATION 방식인 경우에만) */}
-            {study.recruitmentMethod === StudyRecruitmentMethod.APPLICATION && (
-                <Button
-                    onClick={async () => {
-                        if (!handleEditApplication) return;
-                        try {
-                            await handleEditApplication(); // API 요청 완료까지 대기
-                            setIsApplicationModalOpen(true); // 성공 시 모달 열기
-                        } catch (e) {
-                            // TODO: 에러 토스트/알림
-                        }
-                    }}
-                    variant="outline"
-                    className="w-full border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
-                    disabled={isLoadingApplicationDetail}
-                >
-                    <Edit className="mr-1 h-4 w-4" />
-                    {isLoadingApplicationDetail
-                        ? "불러오는 중..."
-                        : "지원서 수정하기"}
-                </Button>
-            )}
+            {study.recruitmentMethod === StudyRecruitmentMethod.APPLICATION &&
+                handleEditApplication && (
+                    <Button
+                        onClick={async () => {
+                            try {
+                                await handleEditApplication(); // API 요청 완료까지 대기
+                                setIsApplicationModalOpen(true); // 성공 시 모달 열기
+                            } catch (e) {
+                                // TODO: 에러 토스트/알림
+                            }
+                        }}
+                        variant="outline"
+                        className="w-full border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
+                        disabled={isLoadingApplicationDetail}
+                    >
+                        <Edit className="mr-1 h-4 w-4" />
+                        {isLoadingApplicationDetail
+                            ? "불러오는 중..."
+                            : "지원서 수정하기"}
+                    </Button>
+                )}
 
             {/* 지원서 수정 모달 */}
-            {study.recruitmentMethod === StudyRecruitmentMethod.APPLICATION && (
-                <AlertDialog
-                    open={isApplicationModalOpen}
-                    onOpenChange={setIsApplicationModalOpen}
-                >
-                    <AlertDialogContent className="max-h-[80vh] max-w-4xl">
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>지원서 수정</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                기존 지원서 내용이 불러와졌습니다. 지원 동기 및
-                                각오를 수정해주세요.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <Textarea
-                            id="application-edit"
-                            placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
-                            value={editingApplicationText}
-                            onChange={(e) =>
-                                setEditingApplicationText(e.target.value)
-                            }
-                            className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
-                        />
-                        <AlertDialogFooter>
-                            <AlertDialogCancel
-                                onClick={() => setIsApplicationModalOpen(false)}
-                            >
-                                닫기
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                                onClick={async () => {
-                                    if (!handleUpdateApplication) return;
-                                    try {
-                                        await handleUpdateApplication();
-                                        setIsApplicationModalOpen(false);
-                                    } catch (e) {
-                                        // TODO: 에러 처리(토스트 등)
-                                    }
-                                }}
-                                disabled={
-                                    !editingApplicationText.trim() || isApplying
+            {study.recruitmentMethod === StudyRecruitmentMethod.APPLICATION &&
+                handleUpdateApplication && (
+                    <AlertDialog
+                        open={isApplicationModalOpen}
+                        onOpenChange={setIsApplicationModalOpen}
+                    >
+                        <AlertDialogContent className="max-h-[80vh] max-w-4xl">
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>지원서 수정</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    기존 지원서 내용이 불러와졌습니다. 지원 동기
+                                    및 각오를 수정해주세요.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <Textarea
+                                id="application-edit"
+                                placeholder="스터디에 지원하는 이유와 목표, 각오 등을 자유롭게 작성해주세요."
+                                value={editingApplicationText}
+                                onChange={(e) =>
+                                    setEditingApplicationText(e.target.value)
                                 }
-                                className="bg-blue-600 hover:bg-blue-700"
-                            >
-                                {isApplying ? "수정 중..." : "수정 완료"}
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            )}
+                                className="mt-2 max-h-[min(300px,60vh)] min-h-[120px] resize-y overflow-y-auto border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:min-h-[200px]"
+                            />
+                            <AlertDialogFooter>
+                                <AlertDialogCancel
+                                    onClick={() =>
+                                        setIsApplicationModalOpen(false)
+                                    }
+                                >
+                                    닫기
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={async () => {
+                                        try {
+                                            await handleUpdateApplication();
+                                            setIsApplicationModalOpen(false);
+                                        } catch (e) {
+                                            // TODO: 에러 처리(토스트 등)
+                                        }
+                                    }}
+                                    disabled={
+                                        !editingApplicationText.trim() ||
+                                        isApplying
+                                    }
+                                    className="bg-blue-600 hover:bg-blue-700"
+                                >
+                                    {isApplying ? "수정 중..." : "수정 완료"}
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                )}
         </div>
     );
 
