@@ -47,6 +47,7 @@ interface WeeklyAttendance {
 }
 
 const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
+    const [isGenerating, setIsGenerating] = useState(false);
     const [attendanceCode, setAttendanceCode] = useState<string>("");
     const [timer, setTimer] = useState<number>(0);
     const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
@@ -118,7 +119,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
 
     // 출석 코드 및 타이머 관리: localStorage 만료시각 기준으로 매 초마다 남은 시간 계산
     useEffect(() => {
-        let interval: NodeJS.Timeout | null = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
         const syncTimer = () => {
             const savedCode = localStorage.getItem(LS_KEY) || "";
             const savedExpire = Number(localStorage.getItem(LS_EXPIRE_KEY) || "0");
@@ -146,6 +147,8 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
 
     // 출석 코드 발급 API 연동
     const generateAttendanceCode = async () => {
+        if (isGenerating) return;
+        setIsGenerating(true);
         try {
             const res: AttendanceCodeResponse =
                 await fetchAttendanceCode(studyId);
@@ -158,6 +161,8 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
             localStorage.setItem(LS_SESSION_KEY, res.sessionId.toString());
         } catch (_e) {
             toast({ description: "출석 코드 발급에 실패했습니다." });
+        } finally {
+            setIsGenerating(false);
         }
     };
 
@@ -437,10 +442,10 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                             <div className="flex flex-col items-center gap-4 sm:flex-row">
                                 <Button
                                     onClick={generateAttendanceCode}
-                                    disabled={isTimerActive}
+                                    disabled={isTimerActive || isGenerating}
                                     className="w-full sm:w-auto"
                                 >
-                                    출석 코드 생성
+                                    {isGenerating ? "생성 중..." : "출석 코드 생성"}
                                 </Button>
                                 {attendanceCode && (
                                     <div className="flex items-center gap-4">
