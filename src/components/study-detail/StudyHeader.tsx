@@ -1,6 +1,9 @@
 import { Settings, UserCheck, Users, UsersIcon } from "lucide-react";
 import { useState } from "react";
-import { submitAttendanceCode } from "@/api/attendanceApi";
+import {
+    getAttendanceErrorMessage,
+    submitAttendanceCode,
+} from "@/api/attendanceApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,7 +48,8 @@ export const StudyHeader = ({
     };
 
     const handleAttendanceSubmit = async () => {
-        if (!attendanceCode.trim()) {
+        if (isSubmitting) return;
+        if (!attendanceCode.trim() || attendanceCode.length !== 4) {
             toast({ description: "출석 코드를 입력해주세요." });
             return;
         }
@@ -55,8 +59,19 @@ export const StudyHeader = ({
             await submitAttendanceCode(study.id, attendanceCode);
             toast({ description: "출석이 완료되었습니다!" });
             setAttendanceCode(""); // 성공 시 입력 필드 초기화
-        } catch (_error) {
-            toast({ description: "출석 코드가 올바르지 않습니다." });
+        } catch (error: unknown) {
+            let errorMessage = "출석 처리 중 오류가 발생했습니다.";
+
+            if (error && typeof error === "object" && "response" in error) {
+                const httpError = error as { response: { status: number } };
+                if (httpError.response?.status) {
+                    errorMessage = getAttendanceErrorMessage(
+                        httpError.response.status
+                    );
+                }
+            }
+
+            toast({ description: errorMessage });
         } finally {
             setIsSubmitting(false);
         }
