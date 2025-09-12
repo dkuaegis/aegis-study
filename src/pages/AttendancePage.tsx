@@ -388,7 +388,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                 출석 코드 관리
                             </CardTitle>
                             <CardDescription>
-                                출석 코드를 생성하고 5분간 유효합니다.
+                                출석 코드를 생성합니다.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
