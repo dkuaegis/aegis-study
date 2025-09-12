@@ -41,10 +41,8 @@ export const StudyHeader = ({
     const toast = useToast();
 
     const handleAttendanceCodeChange = (value: string) => {
-        const numericValue = value.replace(/\D/g, "");
-        if (numericValue.length <= 4) {
-            setAttendanceCode(numericValue);
-        }
+        const numericValue = value.replace(/\D/g, "").slice(0, 4);
+        setAttendanceCode(numericValue);
     };
 
     const handleAttendanceSubmit = async () => {
