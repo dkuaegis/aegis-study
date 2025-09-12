@@ -1,5 +1,5 @@
 import { Settings, UserCheck, Users, UsersIcon } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
     getAttendanceErrorMessage,
     submitAttendanceCode,
@@ -38,6 +38,7 @@ export const StudyHeader = ({
 }: StudyHeaderProps) => {
     const [attendanceCode, setAttendanceCode] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const submittingRef = useRef(false);
     const toast = useToast();
 
     const handleAttendanceCodeChange = (value: string) => {
@@ -46,13 +47,14 @@ export const StudyHeader = ({
     };
 
     const handleAttendanceSubmit = async () => {
-        if (isSubmitting) return;
+        if (submittingRef.current || isSubmitting) return;
         if (!attendanceCode.trim() || attendanceCode.length !== 4) {
             toast({ description: "출석 코드를 입력해주세요." });
             return;
         }
 
         setIsSubmitting(true);
+        submittingRef.current = true;
         try {
             await submitAttendanceCode(study.id, attendanceCode);
             toast({ description: "출석이 완료되었습니다!" });
@@ -72,6 +74,7 @@ export const StudyHeader = ({
             toast({ description: errorMessage });
         } finally {
             setIsSubmitting(false);
+            submittingRef.current = false;
         }
     };
 
