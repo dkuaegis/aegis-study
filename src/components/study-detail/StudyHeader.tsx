@@ -48,8 +48,8 @@ export const StudyHeader = ({
 
     const handleAttendanceSubmit = async () => {
         if (submittingRef.current || isSubmitting) return;
-        if (!attendanceCode.trim() || attendanceCode.length !== 4) {
-            toast({ description: "출석 코드를 입력해주세요." });
+        if (attendanceCode.length !== 4) {
+            toast({ description: "4자리 숫자 출석코드를 입력해주세요." });
             return;
         }
 
@@ -219,11 +219,11 @@ export const StudyHeader = ({
                                     </div>
                                     <Button
                                         onClick={handleAttendanceSubmit}
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || attendanceCode.length !== 4}
                                         size="sm"
                                         className="h-9"
                                     >
-                                        {isSubmitting ? "제출 중..." : "입력"}
+                                        {isSubmitting ? "제출 중..." : "제출"}
                                     </Button>
                                 </div>
                             </div>
