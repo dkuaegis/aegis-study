@@ -2,11 +2,10 @@ import {
     AlertCircle,
     Calendar,
     CheckCircle,
-    Clock,
     Timer,
     XCircle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { AttendanceCodeResponse } from "@/api/attendanceApi";
 import { fetchAttendanceCode } from "@/api/attendanceApi";
 import { Button } from "@/components/ui/button";
@@ -49,8 +48,6 @@ interface WeeklyAttendance {
 const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [attendanceCode, setAttendanceCode] = useState<string>("");
-    const [timer, setTimer] = useState<number>(0);
-    const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
     const [currentWeek, setCurrentWeek] = useState<number>(1);
     const [weeklyAttendance, setWeeklyAttendance] = useState<WeeklyAttendance>({
         1: [
@@ -112,53 +109,14 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         new Set()
     );
 
-    // 출석 코드 관련 localStorage 키
-    const LS_KEY = `attendanceCode_${studyId}`;
-    const LS_EXPIRE_KEY = `attendanceCodeExpire_${studyId}`;
-    const LS_SESSION_KEY = `attendanceSessionId_${studyId}`;
-
-    // 출석 코드 및 타이머 관리: localStorage 만료시각 기준으로 매 초마다 남은 시간 계산
-    useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | null = null;
-        const syncTimer = () => {
-            const savedCode = localStorage.getItem(LS_KEY) || "";
-            const savedExpire = Number(localStorage.getItem(LS_EXPIRE_KEY) || "0");
-            const now = Date.now();
-            if (savedCode && savedExpire > now) {
-                setAttendanceCode(savedCode);
-                const remain = Math.floor((savedExpire - now) / 1000);
-                setTimer(remain);
-                setIsTimerActive(true);
-            } else {
-                setAttendanceCode("");
-                setTimer(0);
-                setIsTimerActive(false);
-                localStorage.removeItem(LS_KEY);
-                localStorage.removeItem(LS_EXPIRE_KEY);
-                localStorage.removeItem(LS_SESSION_KEY);
-            }
-        };
-        syncTimer(); // mount 시 1회
-        interval = setInterval(syncTimer, 1000);
-        return () => {
-            if (interval) clearInterval(interval);
-        };
-    }, [LS_KEY, LS_EXPIRE_KEY, LS_SESSION_KEY]);
 
     // 출석 코드 발급 API 연동
     const generateAttendanceCode = async () => {
         if (isGenerating) return;
         setIsGenerating(true);
         try {
-            const res: AttendanceCodeResponse =
-                await fetchAttendanceCode(studyId);
+            const res: AttendanceCodeResponse = await fetchAttendanceCode(studyId);
             setAttendanceCode(res.code);
-            setTimer(300); // 5분
-            setIsTimerActive(true);
-            const expire = Date.now() + 300 * 1000;
-            localStorage.setItem(LS_KEY, res.code);
-            localStorage.setItem(LS_EXPIRE_KEY, expire.toString());
-            localStorage.setItem(LS_SESSION_KEY, res.sessionId.toString());
         } catch (_e) {
             toast({ description: "출석 코드 발급에 실패했습니다." });
         } finally {
@@ -177,11 +135,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         }
     };
 
-    const formatTime = (seconds: number) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, "0")}`;
-    };
 
     const submitAttendance = () => {
         setSubmittedWeeks((prev) => new Set([...prev, currentWeek]));
@@ -435,14 +388,14 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                 출석 코드 관리
                             </CardTitle>
                             <CardDescription>
-                                출석 코드를 생성하고 5분간 유효합니다.
+                                출석 코드를 생성합니다.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex flex-col items-center gap-4 sm:flex-row">
                                 <Button
                                     onClick={generateAttendanceCode}
-                                    disabled={isTimerActive || isGenerating}
+                                    disabled={isGenerating}
                                     className="w-full sm:w-auto"
                                 >
                                     {isGenerating ? "생성 중..." : "출석 코드 생성"}
@@ -457,14 +410,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                                 {attendanceCode}
                                             </p>
                                         </div>
-                                        {isTimerActive && (
-                                            <div className="flex items-center gap-2 text-orange-600">
-                                                <Clock className="h-4 w-4" />
-                                                <span className="font-bold font-mono">
-                                                    {formatTime(timer)}
-                                                </span>
-                                            </div>
-                                        )}
                                     </div>
                                 )}
                             </div>
