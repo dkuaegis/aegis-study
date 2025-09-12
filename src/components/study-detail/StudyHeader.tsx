@@ -1,12 +1,12 @@
 import { Settings, UserCheck, Users, UsersIcon } from "lucide-react";
 import { useState } from "react";
+import { submitAttendanceCode } from "@/api/attendanceApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/useToast";
-import { submitAttendanceCode } from "@/api/attendanceApi";
 import {
     ApplicationStatus,
     StudyCategoryLabels,
@@ -38,7 +38,7 @@ export const StudyHeader = ({
     const toast = useToast();
 
     const handleAttendanceCodeChange = (value: string) => {
-        const numericValue = value.replace(/\D/g, '');
+        const numericValue = value.replace(/\D/g, "");
         if (numericValue.length <= 4) {
             setAttendanceCode(numericValue);
         }
@@ -186,7 +186,11 @@ export const StudyHeader = ({
                                             id={`attendance-code-${study.id}`}
                                             placeholder="4자리 숫자"
                                             value={attendanceCode}
-                                            onChange={(e) => handleAttendanceCodeChange(e.target.value)}
+                                            onChange={(e) =>
+                                                handleAttendanceCodeChange(
+                                                    e.target.value
+                                                )
+                                            }
                                             disabled={isSubmitting}
                                             maxLength={4}
                                             className="h-9 text-center"
