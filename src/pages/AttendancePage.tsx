@@ -109,13 +109,13 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         new Set()
     );
 
-
     // 출석 코드 발급 API 연동
     const generateAttendanceCode = async () => {
         if (isGenerating) return;
         setIsGenerating(true);
         try {
-            const res: AttendanceCodeResponse = await fetchAttendanceCode(studyId);
+            const res: AttendanceCodeResponse =
+                await fetchAttendanceCode(studyId);
             setAttendanceCode(res.code);
         } catch (_e) {
             toast({ description: "출석 코드 발급에 실패했습니다." });
@@ -134,7 +134,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                 return <XCircle className="h-4 w-4 text-red-600" />;
         }
     };
-
 
     const submitAttendance = () => {
         setSubmittedWeeks((prev) => new Set([...prev, currentWeek]));
@@ -398,7 +397,9 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                     disabled={isGenerating}
                                     className="w-full sm:w-auto"
                                 >
-                                    {isGenerating ? "생성 중..." : "출석 코드 생성"}
+                                    {isGenerating
+                                        ? "생성 중..."
+                                        : "출석 코드 생성"}
                                 </Button>
                                 {attendanceCode && (
                                     <div className="flex items-center gap-4">

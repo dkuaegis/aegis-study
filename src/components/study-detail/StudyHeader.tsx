@@ -1,9 +1,15 @@
 import { Settings, UserCheck, Users, UsersIcon } from "lucide-react";
+import { useRef, useState } from "react";
+import {
+    getAttendanceErrorMessage,
+    submitAttendanceCode,
+} from "@/api/attendanceApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/useToast";
 import {
     ApplicationStatus,
     StudyCategoryLabels,
@@ -30,6 +36,48 @@ export const StudyHeader = ({
     onViewMembers,
     onManageAttendance,
 }: StudyHeaderProps) => {
+    const [attendanceCode, setAttendanceCode] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const submittingRef = useRef(false);
+    const toast = useToast();
+
+    const handleAttendanceCodeChange = (value: string) => {
+        const numericValue = value.replace(/\D/g, "").slice(0, 4);
+        setAttendanceCode(numericValue);
+    };
+
+    const handleAttendanceSubmit = async () => {
+        if (submittingRef.current || isSubmitting) return;
+        if (attendanceCode.length !== 4) {
+            toast({ description: "4자리 숫자 출석코드를 입력해주세요." });
+            return;
+        }
+
+        setIsSubmitting(true);
+        submittingRef.current = true;
+        try {
+            await submitAttendanceCode(study.id, attendanceCode);
+            toast({ description: "출석이 완료되었습니다!" });
+            setAttendanceCode(""); // 성공 시 입력 필드 초기화
+        } catch (error: unknown) {
+            let errorMessage = "출석 처리 중 오류가 발생했습니다.";
+
+            if (error && typeof error === "object" && "response" in error) {
+                const httpError = error as { response: { status: number } };
+                if (httpError.response?.status) {
+                    errorMessage = getAttendanceErrorMessage(
+                        httpError.response.status
+                    );
+                }
+            }
+
+            toast({ description: errorMessage });
+        } finally {
+            setIsSubmitting(false);
+            submittingRef.current = false;
+        }
+    };
+
     const getRecruitmentStatusBadge = () => {
         const isRecruiting =
             study.participantCount < study.maxParticipants ||
@@ -138,7 +186,6 @@ export const StudyHeader = ({
                         )}
                     </div>
 
-                    {/* 출석코드 입력 */}
                     {userApplicationStatus === ApplicationStatus.APPROVED &&
                         !isOwner && (
                             <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
@@ -153,16 +200,30 @@ export const StudyHeader = ({
                                         <Input
                                             type="text"
                                             id={`attendance-code-${study.id}`}
-                                            placeholder="코드를 입력하세요"
-                                            className="h-9"
+                                            placeholder="4자리 숫자"
+                                            value={attendanceCode}
+                                            onChange={(e) =>
+                                                handleAttendanceCodeChange(
+                                                    e.target.value
+                                                )
+                                            }
+                                            disabled={isSubmitting}
+                                            maxLength={4}
+                                            className="h-9 text-center"
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    handleAttendanceSubmit();
+                                                }
+                                            }}
                                         />
                                     </div>
                                     <Button
-                                        type="submit"
+                                        onClick={handleAttendanceSubmit}
+                                        disabled={isSubmitting || attendanceCode.length !== 4}
                                         size="sm"
                                         className="h-9"
                                     >
-                                        입력
+                                        {isSubmitting ? "제출 중..." : "제출"}
                                     </Button>
                                 </div>
                             </div>
