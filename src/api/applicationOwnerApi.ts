@@ -47,6 +47,14 @@ export async function fetchStudyApplications(
             .json<ApplicationApiResponse[]>();
         return res;
     } catch (err: unknown) {
+        const name = (err as { name?: string })?.name;
+        if (
+            name === "AbortError" ||
+            name === "CanceledError" ||
+            name === "CancelledError"
+        ) {
+            throw err as Error;
+        }
         if (err instanceof HTTPError) {
             const message = getApplicationActionErrorMessage(
                 err.response.status

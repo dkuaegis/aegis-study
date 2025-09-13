@@ -48,6 +48,17 @@ export function useApplications(studyId: number) {
         studyId,
         undefined,
         (error) => {
+            const name =
+                typeof error === "object" && error !== null && "name" in error
+                    ? (error as { name?: unknown }).name
+                    : undefined;
+            if (
+                name === "AbortError" ||
+                name === "CanceledError" ||
+                name === "CancelledError"
+            ) {
+                return;
+            }
             const message =
                 error instanceof Error
                     ? error.message
@@ -60,6 +71,17 @@ export function useApplications(studyId: number) {
         studyId,
         undefined,
         (error) => {
+            const name =
+                typeof error === "object" && error !== null && "name" in error
+                    ? (error as { name?: unknown }).name
+                    : undefined;
+            if (
+                name === "AbortError" ||
+                name === "CanceledError" ||
+                name === "CancelledError"
+            ) {
+                return;
+            }
             const message =
                 error instanceof Error
                     ? error.message
@@ -72,6 +94,17 @@ export function useApplications(studyId: number) {
         studyId,
         undefined,
         (error) => {
+            const name =
+                typeof error === "object" && error !== null && "name" in error
+                    ? (error as { name?: unknown }).name
+                    : undefined;
+            if (
+                name === "AbortError" ||
+                name === "CanceledError" ||
+                name === "CancelledError"
+            ) {
+                return;
+            }
             const message =
                 error instanceof Error
                     ? error.message
@@ -92,18 +125,42 @@ export function useApplications(studyId: number) {
     // 응답 에러(목록/스터디 정보 등)를 토스트로 표시
     useEffect(() => {
         if (applicationsError) {
-            const message =
-                applicationsError instanceof Error
-                    ? applicationsError.message
-                    : "지원자 목록을 불러오는 중 오류가 발생했습니다.";
-            toast({ description: message });
+            const name =
+                typeof applicationsError === "object" &&
+                applicationsError !== null &&
+                "name" in applicationsError
+                    ? (applicationsError as { name?: unknown }).name
+                    : undefined;
+            if (
+                name !== "AbortError" &&
+                name !== "CanceledError" &&
+                name !== "CancelledError"
+            ) {
+                const message =
+                    applicationsError instanceof Error
+                        ? applicationsError.message
+                        : "지원자 목록을 불러오는 중 오류가 발생했습니다.";
+                toast({ description: message });
+            }
         }
         if (studyError) {
-            const message =
-                studyError instanceof Error
-                    ? studyError.message
-                    : "스터디 정보를 불러오는 중 오류가 발생했습니다.";
-            toast({ description: message });
+            const name =
+                typeof studyError === "object" &&
+                studyError !== null &&
+                "name" in studyError
+                    ? (studyError as { name?: unknown }).name
+                    : undefined;
+            if (
+                name !== "AbortError" &&
+                name !== "CanceledError" &&
+                name !== "CancelledError"
+            ) {
+                const message =
+                    studyError instanceof Error
+                        ? studyError.message
+                        : "스터디 정보를 불러오는 중 오류가 발생했습니다.";
+                toast({ description: message });
+            }
         }
     }, [applicationsError, studyError, toast]);
 

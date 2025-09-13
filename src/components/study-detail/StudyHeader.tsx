@@ -1,9 +1,6 @@
 import { Settings, UserCheck, Users, UsersIcon } from "lucide-react";
 import { useRef, useState } from "react";
-import {
-    getAttendanceErrorMessage,
-    submitAttendanceCode,
-} from "@/api/attendanceApi";
+import { submitAttendanceCode } from "@/api/attendanceApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
@@ -60,18 +57,11 @@ export const StudyHeader = ({
             toast({ description: "출석이 완료되었습니다!" });
             setAttendanceCode(""); // 성공 시 입력 필드 초기화
         } catch (error: unknown) {
-            let errorMessage = "출석 처리 중 오류가 발생했습니다.";
-
-            if (error && typeof error === "object" && "response" in error) {
-                const httpError = error as { response: { status: number } };
-                if (httpError.response?.status) {
-                    errorMessage = getAttendanceErrorMessage(
-                        httpError.response.status
-                    );
-                }
-            }
-
-            toast({ description: errorMessage });
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "출석 처리 중 오류가 발생했습니다.";
+            toast({ description: message });
         } finally {
             setIsSubmitting(false);
             submittingRef.current = false;

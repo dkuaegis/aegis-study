@@ -92,11 +92,11 @@ export async function updateStudy(
 export const useUpdateStudyMutation = (
     studyId: number,
     onSuccess?: () => void,
-    onError?: (error: HTTPError) => void
-): UseMutationResult<void, HTTPError, StudyFormData> => {
+    onError?: (error: unknown) => void
+): UseMutationResult<void, unknown, StudyFormData> => {
     const queryClient = useQueryClient();
 
-    return useMutation<void, HTTPError, StudyFormData>({
+    return useMutation<void, unknown, StudyFormData>({
         mutationFn: async (data: StudyFormData) => {
             const controller = new AbortController();
             return updateStudy(studyId, data, controller.signal);
