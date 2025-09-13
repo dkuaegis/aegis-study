@@ -50,9 +50,13 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         onBack();
     };
 
-    const handleError = () => {
+    const handleError = (error?: unknown) => {
+        const message =
+            error instanceof Error
+                ? error.message
+                : "스터디 수정 중 오류가 발생했습니다.";
         toast({
-            description: "스터디 수정 중 오류가 발생했습니다.",
+            description: message,
         });
     };
 

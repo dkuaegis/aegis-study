@@ -5,7 +5,7 @@ import {
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
-import type { HTTPError } from "ky";
+import { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 
@@ -41,9 +41,28 @@ export async function fetchStudyApplications(
     studyId: number,
     signal?: AbortSignal
 ): Promise<ApplicationApiResponse[]> {
-    return apiClient
-        .get(API_ENDPOINTS.STUDY_APPLICATIONS(studyId), { signal })
-        .json<ApplicationApiResponse[]>();
+    try {
+        const res = await apiClient
+            .get(API_ENDPOINTS.STUDY_APPLICATIONS(studyId), { signal })
+            .json<ApplicationApiResponse[]>();
+        return res;
+    } catch (err: unknown) {
+        const name = (err as { name?: string })?.name;
+        if (
+            name === "AbortError" ||
+            name === "CanceledError" ||
+            name === "CancelledError"
+        ) {
+            throw err as Error;
+        }
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
+        }
+        throw new Error("지원자 목록을 불러오는 중 오류가 발생했습니다.");
+    }
 }
 
 export async function fetchApplicationText(
@@ -51,11 +70,33 @@ export async function fetchApplicationText(
     applicationId: number,
     signal?: AbortSignal
 ): Promise<ApplicationTextResponse> {
-    return apiClient
-        .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), {
-            signal,
-        })
-        .json<ApplicationTextResponse>();
+    try {
+        const res = await apiClient
+            .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), {
+                signal,
+            })
+            .json<ApplicationTextResponse>();
+        return res;
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
+        }
+        throw new Error("지원서를 불러오는 중 오류가 발생했습니다.");
+    }
+}
+
+export function getApplicationActionErrorMessage(statusCode: number): string {
+    switch (statusCode) {
+        case 403:
+            return "스터디장이 아닙니다.";
+        case 404:
+            return "지원서를 찾을 수 없습니다.";
+        default:
+            return "지원서 처리 중 오류가 발생했습니다.";
+    }
 }
 
 export async function updateApplicationStatus(
@@ -64,13 +105,23 @@ export async function updateApplicationStatus(
     payload: UpdateApplicationStatusPayload,
     signal?: AbortSignal
 ): Promise<void> {
-    await apiClient.patch(
-        API_ENDPOINTS.UPDATE_APPLICATION_STATUS(studyId, applicationId),
-        {
-            json: payload,
-            signal,
+    try {
+        await apiClient.patch(
+            API_ENDPOINTS.UPDATE_APPLICATION_STATUS(studyId, applicationId),
+            {
+                json: payload,
+                signal,
+            }
+        );
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
         }
-    );
+        throw new Error("지원서 상태 변경 중 오류가 발생했습니다.");
+    }
 }
 
 export async function approveApplication(
@@ -78,12 +129,22 @@ export async function approveApplication(
     applicationId: number,
     signal?: AbortSignal
 ): Promise<void> {
-    await apiClient.put(
-        API_ENDPOINTS.APPROVE_APPLICATION(studyId, applicationId),
-        {
-            signal,
+    try {
+        await apiClient.put(
+            API_ENDPOINTS.APPROVE_APPLICATION(studyId, applicationId),
+            {
+                signal,
+            }
+        );
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
         }
-    );
+        throw new Error("지원서 승인 중 오류가 발생했습니다.");
+    }
 }
 
 export async function rejectApplication(
@@ -91,19 +152,29 @@ export async function rejectApplication(
     applicationId: number,
     signal?: AbortSignal
 ): Promise<void> {
-    await apiClient.put(
-        API_ENDPOINTS.REJECT_APPLICATION(studyId, applicationId),
-        {
-            signal,
+    try {
+        await apiClient.put(
+            API_ENDPOINTS.REJECT_APPLICATION(studyId, applicationId),
+            {
+                signal,
+            }
+        );
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
         }
-    );
+        throw new Error("지원서 거절 중 오류가 발생했습니다.");
+    }
 }
 
 // Query Hooks
 export const useStudyApplicationsQuery = (
     studyId: number
-): UseQueryResult<ApplicationApiResponse[], HTTPError> => {
-    return useQuery<ApplicationApiResponse[], HTTPError>({
+): UseQueryResult<ApplicationApiResponse[], Error> => {
+    return useQuery<ApplicationApiResponse[], Error>({
         queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
         queryFn: ({ signal }) => fetchStudyApplications(studyId, signal),
         enabled: Number.isFinite(studyId) && studyId > 0,
@@ -117,8 +188,8 @@ export const useApplicationTextQuery = (
     studyId: number,
     applicationId: number,
     enabled: boolean = true
-): UseQueryResult<ApplicationTextResponse, HTTPError> => {
-    return useQuery<ApplicationTextResponse, HTTPError>({
+): UseQueryResult<ApplicationTextResponse, Error> => {
+    return useQuery<ApplicationTextResponse, Error>({
         queryKey: APPLICATION_QUERY_KEYS.applicationText(
             studyId,
             applicationId
@@ -131,7 +202,7 @@ export const useApplicationTextQuery = (
             studyId > 0 &&
             Number.isFinite(applicationId) &&
             applicationId > 0,
-        staleTime: 5 * 60_000, // 5분 (텍스트는 자주 변경되지 않음)
+        staleTime: 5 * 60_000, // 5분
         gcTime: 10 * 60_000, // 10분
         refetchOnWindowFocus: false,
     });
@@ -141,17 +212,17 @@ export const useApplicationTextQuery = (
 export const useUpdateApplicationStatusMutation = (
     studyId: number,
     onSuccess?: () => void,
-    onError?: (error: HTTPError) => void
+    onError?: (error: Error) => void
 ): UseMutationResult<
     void,
-    HTTPError,
+    Error,
     { applicationId: number; status: "APPROVED" | "REJECTED" }
 > => {
     const queryClient = useQueryClient();
 
     return useMutation<
         void,
-        HTTPError,
+        Error,
         { applicationId: number; status: "APPROVED" | "REJECTED" }
     >({
         mutationFn: ({ applicationId, status }) =>
@@ -163,7 +234,7 @@ export const useUpdateApplicationStatusMutation = (
             queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
-        onError: (error: HTTPError) => {
+        onError: (error: Error) => {
             if (onError) onError(error);
         },
     });
@@ -172,11 +243,11 @@ export const useUpdateApplicationStatusMutation = (
 export const useApproveApplicationMutation = (
     studyId: number,
     onSuccess?: () => void,
-    onError?: (error: HTTPError) => void
-): UseMutationResult<void, HTTPError, number> => {
+    onError?: (error: Error) => void
+): UseMutationResult<void, Error, number> => {
     const queryClient = useQueryClient();
 
-    return useMutation<void, HTTPError, number>({
+    return useMutation<void, Error, number>({
         mutationFn: (applicationId: number) =>
             approveApplication(studyId, applicationId),
         onSuccess: () => {
@@ -186,7 +257,7 @@ export const useApproveApplicationMutation = (
             queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
-        onError: (error: HTTPError) => {
+        onError: (error: Error) => {
             if (onError) onError(error);
         },
     });
@@ -195,11 +266,11 @@ export const useApproveApplicationMutation = (
 export const useRejectApplicationMutation = (
     studyId: number,
     onSuccess?: () => void,
-    onError?: (error: HTTPError) => void
-): UseMutationResult<void, HTTPError, number> => {
+    onError?: (error: Error) => void
+): UseMutationResult<void, Error, number> => {
     const queryClient = useQueryClient();
 
-    return useMutation<void, HTTPError, number>({
+    return useMutation<void, Error, number>({
         mutationFn: (applicationId: number) =>
             rejectApplication(studyId, applicationId),
         onSuccess: () => {
@@ -209,7 +280,7 @@ export const useRejectApplicationMutation = (
             queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
-        onError: (error: HTTPError) => {
+        onError: (error: Error) => {
             if (onError) onError(error);
         },
     });

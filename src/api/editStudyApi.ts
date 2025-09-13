@@ -3,7 +3,7 @@ import {
     useMutation,
     useQueryClient,
 } from "@tanstack/react-query";
-import type { HTTPError } from "ky";
+import { HTTPError } from "ky";
 import { STUDY_DETAIL_QUERY_KEY } from "@/api/studyDetailApi";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
@@ -41,6 +41,19 @@ export interface StudyFormData {
     requirements: RequirementItem[];
 }
 
+export function getEditStudyErrorMessage(statusCode: number): string {
+    switch (statusCode) {
+        case 400:
+            return "잘못된 요청 데이터입니다.";
+        case 403:
+            return "스터디장이 아닙니다.";
+        case 404:
+            return "스터디를 찾을 수 없습니다.";
+        default:
+            return "스터디 수정 중 오류가 발생했습니다.";
+    }
+}
+
 export async function updateStudy(
     studyId: number,
     data: StudyFormData,
@@ -62,20 +75,39 @@ export async function updateStudy(
             .filter((v) => v !== ""),
     };
 
-    await apiClient.put(`${API_ENDPOINTS.STUDIES}/${studyId}`, {
-        json: requestData,
-        signal,
-    });
+    try {
+        await apiClient.put(`${API_ENDPOINTS.STUDIES}/${studyId}`, {
+            json: requestData,
+            signal,
+        });
+    } catch (err: unknown) {
+        const name =
+            typeof err === "object" && err !== null && "name" in err
+                ? (err as { name?: unknown }).name
+                : undefined;
+        if (
+            name === "AbortError" ||
+            name === "CanceledError" ||
+            name === "CancelledError"
+        ) {
+            throw err as Error;
+        }
+        if (err instanceof HTTPError) {
+            const message = getEditStudyErrorMessage(err.response.status);
+            throw new Error(message);
+        }
+        throw new Error("스터디 수정 중 오류가 발생했습니다.");
+    }
 }
 
 export const useUpdateStudyMutation = (
     studyId: number,
     onSuccess?: () => void,
-    onError?: (error: HTTPError) => void
-): UseMutationResult<void, HTTPError, StudyFormData> => {
+    onError?: (error: unknown) => void
+): UseMutationResult<void, unknown, StudyFormData> => {
     const queryClient = useQueryClient();
 
-    return useMutation<void, HTTPError, StudyFormData>({
+    return useMutation<void, unknown, StudyFormData>({
         mutationFn: async (data: StudyFormData) => {
             const controller = new AbortController();
             return updateStudy(studyId, data, controller.signal);
