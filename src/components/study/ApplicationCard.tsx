@@ -13,6 +13,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/useToast";
 import type { Application } from "@/types/study";
 import { ApplicationStatus, StudyRecruitmentMethod } from "@/types/study";
 
@@ -35,6 +36,7 @@ const ApplicationCard = ({
     const [applicationReason, setApplicationReason] = useState<string>("");
     const [isLoadingText, setIsLoadingText] = useState(false);
     const [textError, setTextError] = useState<string | null>(null);
+    const toast = useToast();
 
     const handleLoadApplicationText = async () => {
         if (applicationReason) return; // 이미 로드된 경우 재요청하지 않음
@@ -47,9 +49,14 @@ const ApplicationCard = ({
                 application.id
             );
             setApplicationReason(response.applicationReason);
-        } catch (error) {
-            console.error("Failed to load application text:", error);
-            setTextError("지원서를 불러오는데 실패했습니다.");
+        } catch (err: unknown) {
+            console.error("Failed to load application text:", err);
+            const message =
+                err instanceof Error
+                    ? err.message
+                    : "지원서를 불러오는 데 실패했습니다.";
+            setTextError(message);
+            toast({ description: message });
         } finally {
             setIsLoadingText(false);
         }

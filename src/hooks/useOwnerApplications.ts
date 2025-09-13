@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     type ApplicationApiResponse,
     useApproveApplicationMutation,
@@ -7,6 +7,7 @@ import {
     useUpdateApplicationStatusMutation,
 } from "@/api/applicationOwnerApi";
 import { useStudyDetailQuery } from "@/api/studyDetailApi";
+import { useToast } from "@/components/ui/useToast";
 import type { Application, StudyData } from "@/types/study";
 import { ApplicationStatus } from "@/types/study";
 
@@ -41,9 +42,43 @@ export function useApplications(studyId: number) {
     } = useStudyDetailQuery(studyId);
 
     // 상태 업데이트 뮤테이션들
-    const statusMutation = useUpdateApplicationStatusMutation(studyId);
-    const approveMutation = useApproveApplicationMutation(studyId);
-    const rejectMutation = useRejectApplicationMutation(studyId);
+    const toast = useToast();
+
+    const approveMutation = useApproveApplicationMutation(
+        studyId,
+        undefined,
+        (error) => {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "지원서 승인 중 오류가 발생했습니다.";
+            toast({ description: message });
+        }
+    );
+
+    const rejectMutation = useRejectApplicationMutation(
+        studyId,
+        undefined,
+        (error) => {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "지원서 거절 중 오류가 발생했습니다.";
+            toast({ description: message });
+        }
+    );
+
+    const statusMutation = useUpdateApplicationStatusMutation(
+        studyId,
+        undefined,
+        (error) => {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "지원서 상태 변경 중 오류가 발생했습니다.";
+            toast({ description: message });
+        }
+    );
 
     // 에러 처리
     const error =
@@ -53,6 +88,24 @@ export function useApplications(studyId: number) {
         approveMutation.error?.message ||
         rejectMutation.error?.message ||
         null;
+
+    // 응답 에러(목록/스터디 정보 등)를 토스트로 표시
+    useEffect(() => {
+        if (applicationsError) {
+            const message =
+                applicationsError instanceof Error
+                    ? applicationsError.message
+                    : "지원자 목록을 불러오는 중 오류가 발생했습니다.";
+            toast({ description: message });
+        }
+        if (studyError) {
+            const message =
+                studyError instanceof Error
+                    ? studyError.message
+                    : "스터디 정보를 불러오는 중 오류가 발생했습니다.";
+            toast({ description: message });
+        }
+    }, [applicationsError, studyError, toast]);
 
     // 데이터 변환
     const applications = useMemo(

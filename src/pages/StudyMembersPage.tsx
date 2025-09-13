@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchStudyMembers } from "@/api/studyMembersApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
+import { useToast } from "@/components/ui/useToast";
 
 interface StudyMember {
     name: string;
@@ -22,33 +23,40 @@ export default function StudyMembersPage({
     const [members, setMembers] = useState<StudyMember[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const toast = useToast();
 
     useEffect(() => {
-        let ignore = false;
+        const controller = new AbortController();
+        const { signal } = controller;
         setLoading(true);
         setError(null);
-        fetchStudyMembers(studyId)
+        fetchStudyMembers(studyId, signal)
             .then((data) => {
-                if (!ignore) {
-                    setMembers(
-                        data.map((m) => ({
-                            name: m.name,
-                            studentNumber: m.studentId,
-                            phone: m.phoneNumber,
-                        }))
-                    );
-                }
+                setMembers(
+                    data.map((m) => ({
+                        name: m.name,
+                        studentNumber: m.studentId,
+                        phone: m.phoneNumber,
+                    }))
+                );
             })
-            .catch(() => {
-                if (!ignore) setError("스터디원 정보를 불러오지 못했습니다.");
+            .catch((err: unknown) => {
+                if ((err as { name?: string }).name === "AbortError") return;
+
+                const msg =
+                    err instanceof Error
+                        ? err.message
+                        : "스터디원 정보를 불러오지 못했습니다.";
+                toast({ description: msg });
+                setError(msg);
             })
             .finally(() => {
-                if (!ignore) setLoading(false);
+                setLoading(false);
             });
         return () => {
-            ignore = true;
+            controller.abort();
         };
-    }, [studyId]);
+    }, [studyId, toast]);
 
     if (loading) {
         return (
@@ -80,7 +88,7 @@ export default function StudyMembersPage({
                             ) : (
                                 members.map((member) => (
                                     <MemberCard
-                                        key={member.name + member.studentNumber}
+                                        key={member.studentNumber}
                                         member={member}
                                     />
                                 ))

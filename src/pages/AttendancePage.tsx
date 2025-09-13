@@ -109,7 +109,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         new Set()
     );
 
-    // 출석 코드 발급 API 연동
     const generateAttendanceCode = async () => {
         if (isGenerating) return;
         setIsGenerating(true);
@@ -117,8 +116,12 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
             const res: AttendanceCodeResponse =
                 await fetchAttendanceCode(studyId);
             setAttendanceCode(res.code);
-        } catch (_e) {
-            toast({ description: "출석 코드 발급에 실패했습니다." });
+        } catch (err: unknown) {
+            const message =
+                err instanceof Error
+                    ? err.message
+                    : "출석 코드 발급에 실패했습니다.";
+            toast({ description: message });
         } finally {
             setIsGenerating(false);
         }

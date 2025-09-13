@@ -5,7 +5,7 @@ import {
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
-import type { HTTPError } from "ky";
+import { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 
@@ -41,9 +41,20 @@ export async function fetchStudyApplications(
     studyId: number,
     signal?: AbortSignal
 ): Promise<ApplicationApiResponse[]> {
-    return apiClient
-        .get(API_ENDPOINTS.STUDY_APPLICATIONS(studyId), { signal })
-        .json<ApplicationApiResponse[]>();
+    try {
+        const res = await apiClient
+            .get(API_ENDPOINTS.STUDY_APPLICATIONS(studyId), { signal })
+            .json<ApplicationApiResponse[]>();
+        return res;
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
+        }
+        throw new Error("지원자 목록을 불러오는 중 오류가 발생했습니다.");
+    }
 }
 
 export async function fetchApplicationText(
@@ -51,11 +62,33 @@ export async function fetchApplicationText(
     applicationId: number,
     signal?: AbortSignal
 ): Promise<ApplicationTextResponse> {
-    return apiClient
-        .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), {
-            signal,
-        })
-        .json<ApplicationTextResponse>();
+    try {
+        const res = await apiClient
+            .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), {
+                signal,
+            })
+            .json<ApplicationTextResponse>();
+        return res;
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
+        }
+        throw new Error("지원서를 불러오는 중 오류가 발생했습니다.");
+    }
+}
+
+export function getApplicationActionErrorMessage(statusCode: number): string {
+    switch (statusCode) {
+        case 403:
+            return "스터디장이 아닙니다.";
+        case 404:
+            return "지원서를 찾을 수 없습니다.";
+        default:
+            return "지원서 처리 중 오류가 발생했습니다.";
+    }
 }
 
 export async function updateApplicationStatus(
@@ -64,13 +97,23 @@ export async function updateApplicationStatus(
     payload: UpdateApplicationStatusPayload,
     signal?: AbortSignal
 ): Promise<void> {
-    await apiClient.patch(
-        API_ENDPOINTS.UPDATE_APPLICATION_STATUS(studyId, applicationId),
-        {
-            json: payload,
-            signal,
+    try {
+        await apiClient.patch(
+            API_ENDPOINTS.UPDATE_APPLICATION_STATUS(studyId, applicationId),
+            {
+                json: payload,
+                signal,
+            }
+        );
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
         }
-    );
+        throw new Error("지원서 상태 변경 중 오류가 발생했습니다.");
+    }
 }
 
 export async function approveApplication(
@@ -78,12 +121,22 @@ export async function approveApplication(
     applicationId: number,
     signal?: AbortSignal
 ): Promise<void> {
-    await apiClient.put(
-        API_ENDPOINTS.APPROVE_APPLICATION(studyId, applicationId),
-        {
-            signal,
+    try {
+        await apiClient.put(
+            API_ENDPOINTS.APPROVE_APPLICATION(studyId, applicationId),
+            {
+                signal,
+            }
+        );
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
         }
-    );
+        throw new Error("지원서 승인 중 오류가 발생했습니다.");
+    }
 }
 
 export async function rejectApplication(
@@ -91,12 +144,22 @@ export async function rejectApplication(
     applicationId: number,
     signal?: AbortSignal
 ): Promise<void> {
-    await apiClient.put(
-        API_ENDPOINTS.REJECT_APPLICATION(studyId, applicationId),
-        {
-            signal,
+    try {
+        await apiClient.put(
+            API_ENDPOINTS.REJECT_APPLICATION(studyId, applicationId),
+            {
+                signal,
+            }
+        );
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getApplicationActionErrorMessage(
+                err.response.status
+            );
+            throw new Error(message);
         }
-    );
+        throw new Error("지원서 거절 중 오류가 발생했습니다.");
+    }
 }
 
 // Query Hooks
@@ -131,7 +194,7 @@ export const useApplicationTextQuery = (
             studyId > 0 &&
             Number.isFinite(applicationId) &&
             applicationId > 0,
-        staleTime: 5 * 60_000, // 5분 (텍스트는 자주 변경되지 않음)
+        staleTime: 5 * 60_000, // 5분
         gcTime: 10 * 60_000, // 10분
         refetchOnWindowFocus: false,
     });

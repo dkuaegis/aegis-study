@@ -219,7 +219,10 @@ export const StudyHeader = ({
                                     </div>
                                     <Button
                                         onClick={handleAttendanceSubmit}
-                                        disabled={isSubmitting || attendanceCode.length !== 4}
+                                        disabled={
+                                            isSubmitting ||
+                                            attendanceCode.length !== 4
+                                        }
                                         size="sm"
                                         className="h-9"
                                     >
