@@ -173,8 +173,8 @@ export async function rejectApplication(
 // Query Hooks
 export const useStudyApplicationsQuery = (
     studyId: number
-): UseQueryResult<ApplicationApiResponse[], HTTPError> => {
-    return useQuery<ApplicationApiResponse[], HTTPError>({
+): UseQueryResult<ApplicationApiResponse[], Error> => {
+    return useQuery<ApplicationApiResponse[], Error>({
         queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
         queryFn: ({ signal }) => fetchStudyApplications(studyId, signal),
         enabled: Number.isFinite(studyId) && studyId > 0,
@@ -188,8 +188,8 @@ export const useApplicationTextQuery = (
     studyId: number,
     applicationId: number,
     enabled: boolean = true
-): UseQueryResult<ApplicationTextResponse, HTTPError> => {
-    return useQuery<ApplicationTextResponse, HTTPError>({
+): UseQueryResult<ApplicationTextResponse, Error> => {
+    return useQuery<ApplicationTextResponse, Error>({
         queryKey: APPLICATION_QUERY_KEYS.applicationText(
             studyId,
             applicationId
@@ -212,17 +212,17 @@ export const useApplicationTextQuery = (
 export const useUpdateApplicationStatusMutation = (
     studyId: number,
     onSuccess?: () => void,
-    onError?: (error: HTTPError) => void
+    onError?: (error: Error) => void
 ): UseMutationResult<
     void,
-    HTTPError,
+    Error,
     { applicationId: number; status: "APPROVED" | "REJECTED" }
 > => {
     const queryClient = useQueryClient();
 
     return useMutation<
         void,
-        HTTPError,
+        Error,
         { applicationId: number; status: "APPROVED" | "REJECTED" }
     >({
         mutationFn: ({ applicationId, status }) =>
@@ -234,7 +234,7 @@ export const useUpdateApplicationStatusMutation = (
             queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
-        onError: (error: HTTPError) => {
+        onError: (error: Error) => {
             if (onError) onError(error);
         },
     });
@@ -243,11 +243,11 @@ export const useUpdateApplicationStatusMutation = (
 export const useApproveApplicationMutation = (
     studyId: number,
     onSuccess?: () => void,
-    onError?: (error: HTTPError) => void
-): UseMutationResult<void, HTTPError, number> => {
+    onError?: (error: Error) => void
+): UseMutationResult<void, Error, number> => {
     const queryClient = useQueryClient();
 
-    return useMutation<void, HTTPError, number>({
+    return useMutation<void, Error, number>({
         mutationFn: (applicationId: number) =>
             approveApplication(studyId, applicationId),
         onSuccess: () => {
@@ -257,7 +257,7 @@ export const useApproveApplicationMutation = (
             queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
-        onError: (error: HTTPError) => {
+        onError: (error: Error) => {
             if (onError) onError(error);
         },
     });
@@ -266,11 +266,11 @@ export const useApproveApplicationMutation = (
 export const useRejectApplicationMutation = (
     studyId: number,
     onSuccess?: () => void,
-    onError?: (error: HTTPError) => void
-): UseMutationResult<void, HTTPError, number> => {
+    onError?: (error: Error) => void
+): UseMutationResult<void, Error, number> => {
     const queryClient = useQueryClient();
 
-    return useMutation<void, HTTPError, number>({
+    return useMutation<void, Error, number>({
         mutationFn: (applicationId: number) =>
             rejectApplication(studyId, applicationId),
         onSuccess: () => {
@@ -280,7 +280,7 @@ export const useRejectApplicationMutation = (
             queryClient.invalidateQueries({ queryKey: ["userRoles"] });
             if (onSuccess) onSuccess();
         },
-        onError: (error: HTTPError) => {
+        onError: (error: Error) => {
             if (onError) onError(error);
         },
     });

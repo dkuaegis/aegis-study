@@ -81,6 +81,17 @@ export async function updateStudy(
             signal,
         });
     } catch (err: unknown) {
+        const name =
+            typeof err === "object" && err !== null && "name" in err
+                ? (err as { name?: unknown }).name
+                : undefined;
+        if (
+            name === "AbortError" ||
+            name === "CanceledError" ||
+            name === "CancelledError"
+        ) {
+            throw err as Error;
+        }
         if (err instanceof HTTPError) {
             const message = getEditStudyErrorMessage(err.response.status);
             throw new Error(message);
