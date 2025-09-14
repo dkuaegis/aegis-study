@@ -179,10 +179,12 @@ export const ApplicationSection = ({
                     </p>
                     <Button
                         onClick={() => setIsApplicationModalOpen(true)}
-                        className="w-full bg-blue-600 text-white hover:bg-blue-700"
-                        disabled={isApplying}
+                            className="group relative w-full max-w-xl overflow-hidden bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
                     >
-                        {isApplying ? "처리 중..." : "지원서 작성하기"}
+                        <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                            <span className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-all duration-500 ease-out group-hover:scale-100 group-hover:opacity-20" />
+                        </span>
+                        <span className="relative">{isApplying ? "처리 중..." : "지원서 작성하기"}</span>
                     </Button>
 
                     {/* 지원서 작성 모달 */}
@@ -236,13 +238,18 @@ export const ApplicationSection = ({
             const recruiting = isStudyRecruiting(study);
             return (
                 <>
-                    <Button
-                        onClick={handleApply}
-                        disabled={isApplying || !recruiting}
-                        className="w-full bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
-                    >
-                        {isApplying ? "처리 중..." : "지원하기"}
-                    </Button>
+                    <div className="flex justify-center">
+                        <Button
+                            onClick={handleApply}
+                            disabled={isApplying || !recruiting}
+                            className="group relative w-full max-w-xl overflow-hidden bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
+                        >
+                            <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                                <span className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-all duration-500 ease-out group-hover:scale-100 group-hover:opacity-20" />
+                            </span>
+                            <span className="relative">{isApplying ? "처리 중..." : "지원하기"}</span>
+                        </Button>
+                    </div>
                     <p className="text-center text-gray-500 text-xs">
                         {recruiting
                             ? "선착순으로 모집되며, 정원이 마감되면 자동으로 마감됩니다."
