@@ -31,12 +31,18 @@ const StudyList = ({
             <div className="mb-6 flex w-full justify-end px-6 pt-6">
                 <Button
                     onClick={onCreateStudy}
-                    className="group relative overflow-hidden bg-blue-600 text-white hover:bg-blue-700"
+                    className="group relative overflow-hidden bg-blue-600 text-white transition-colors hover:bg-blue-700"
                 >
-                    <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                        <span className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-all duration-500 ease-out group-hover:scale-100 group-hover:opacity-20" />
+                    <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
+                    >
+                        <span
+                            aria-hidden="true"
+                            className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
+                        />
                     </span>
-                    <span className="relative">스터디 개설하기</span>
+                    <span className="relative z-10">스터디 개설하기</span>
                 </Button>
             </div>
             <main className="mx-auto max-w-6xl items-center px-6 pb-6">
