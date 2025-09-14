@@ -179,12 +179,14 @@ export const ApplicationSection = ({
                     </p>
                     <Button
                         onClick={() => setIsApplicationModalOpen(true)}
-                            className="group relative w-full max-w-xl overflow-hidden bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
+                        className="group relative w-full max-w-xl overflow-hidden bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
                     >
                         <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
                             <span className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-all duration-500 ease-out group-hover:scale-100 group-hover:opacity-20" />
                         </span>
-                        <span className="relative">{isApplying ? "처리 중..." : "지원서 작성하기"}</span>
+                        <span className="relative">
+                            {isApplying ? "처리 중..." : "지원서 작성하기"}
+                        </span>
                     </Button>
 
                     {/* 지원서 작성 모달 */}
@@ -247,7 +249,9 @@ export const ApplicationSection = ({
                             <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
                                 <span className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-all duration-500 ease-out group-hover:scale-100 group-hover:opacity-20" />
                             </span>
-                            <span className="relative">{isApplying ? "처리 중..." : "지원하기"}</span>
+                            <span className="relative">
+                                {isApplying ? "처리 중..." : "지원하기"}
+                            </span>
                         </Button>
                     </div>
                     <p className="text-center text-gray-500 text-xs">
