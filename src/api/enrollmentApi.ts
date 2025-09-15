@@ -76,6 +76,8 @@ export async function enrollInStudy(
             switch (status) {
                 case 400:
                     throw new Error("잘못된 요청 데이터입니다.");
+                case 403:
+                    throw new Error("지원 기간이 아닙니다.");
                 case 404:
                     throw new Error("스터디를 찾을 수 없습니다.");
                 case 409:
