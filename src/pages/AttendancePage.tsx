@@ -1,5 +1,5 @@
 import { Timer } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import type { AttendanceCodeResponse } from "@/api/attendanceApi";
 import { fetchAttendanceCode } from "@/api/attendanceApi";
 import { Button } from "@/components/ui/button";
@@ -22,9 +22,11 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [attendanceCode, setAttendanceCode] = useState<string>("");
     const toast = useToast();
+    const inFlight = useRef(false);
 
     const generateAttendanceCode = async () => {
-        if (isGenerating) return;
+        if (inFlight.current) return;
+        inFlight.current = true;
         setIsGenerating(true);
         try {
             const res: AttendanceCodeResponse =
@@ -37,6 +39,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                     : "출석 코드 발급에 실패했습니다.";
             toast({ description: message });
         } finally {
+            inFlight.current = false;
             setIsGenerating(false);
         }
     };
