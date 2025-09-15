@@ -1,5 +1,5 @@
 import { Timer } from "lucide-react";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import type { AttendanceCodeResponse } from "@/api/attendanceApi";
 import { fetchAttendanceCode } from "@/api/attendanceApi";
 import { Button } from "@/components/ui/button";
