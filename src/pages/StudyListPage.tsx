@@ -45,8 +45,8 @@ const StudyList = ({
                     <span className="relative z-10">스터디 개설하기</span>
                 </Button>
             </div>
-            <main className="mx-auto max-w-6xl items-center px-6 pb-6">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <main className="mx-auto max-w-none items-center px-6 pb-6">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     {loading ? (
                         <div className="col-span-full flex items-center justify-center py-8">
                             <div className="text-gray-500">로딩 중...</div>
@@ -61,7 +61,7 @@ const StudyList = ({
                         studies.map((study: StudyListItem) => (
                             <Card
                                 key={study.id}
-                                className="cursor-pointer border-gray-200 transition-shadow hover:shadow-md"
+                                className="w-full min-w-0 cursor-pointer border-gray-200 transition-shadow hover:shadow-md sm:w-[300px]"
                                 onClick={() => onViewStudyDetail(study.id)}
                             >
                                 <CardContent className="p-6">
