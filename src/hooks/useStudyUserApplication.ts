@@ -38,7 +38,13 @@ export const useStudyApplication = ({
     const toast = useToast();
 
     // 상태 조회 쿼리
-    const { data: statusData } = useStudyStatusQuery(studyId);
+    // 선착순(FCFS)일 경우나 특정 에러(예: 403) 발생 직후에는 상태 조회를 수행하지 않도록 제어
+    const [suppressStatusFetch, setSuppressStatusFetch] = useState(false);
+
+    const { data: statusData } = useStudyStatusQuery(
+        studyId,
+        recruitmentMethod !== StudyRecruitmentMethod.FCFS && !suppressStatusFetch
+    );
 
     // 지원서 상세 조회 쿼리 (PENDING 상태이고 APPLICATION 방식일 때 자동 활성화)
     const shouldAutoLoadApplication =
@@ -104,6 +110,12 @@ export const useStudyApplication = ({
             toast({
                 description: errorMessage,
             });
+            if (error instanceof Error && /지원 기간/i.test(error.message)) {
+                setSuppressStatusFetch(true);
+                // 억제는 일시적으로 유지하고 몇 초 후 자동 해제
+                setTimeout(() => setSuppressStatusFetch(false), 5000);
+            }
+
             setIsApplying(false);
         }
     );
