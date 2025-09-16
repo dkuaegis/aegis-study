@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import { useApplications } from "@/hooks/useOwnerApplications";
 import { useUserRole } from "@/hooks/useUserRole";
-import { ApplicationStatus } from "@/types/study";
 import ForbiddenPage from "@/pages/ForbiddenPage";
+import { ApplicationStatus } from "@/types/study";
 
 interface ApplicationStatusProps {
     studyId: number;

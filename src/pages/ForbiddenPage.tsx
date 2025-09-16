@@ -1,6 +1,6 @@
-import Header from "@/components/ui/Header";
 import Lottie from "lottie-react";
 import meditateData from "@/assets/Meditate girl.json";
+import Header from "@/components/ui/Header";
 
 interface ForbiddenPageProps {
     title: string;
@@ -8,7 +8,11 @@ interface ForbiddenPageProps {
     onBack?: (() => void) | undefined;
 }
 
-const ForbiddenPage = ({ title, message = "권한이 없습니다.", onBack }: ForbiddenPageProps) => {
+const ForbiddenPage = ({
+    title,
+    message = "권한이 없습니다.",
+    onBack,
+}: ForbiddenPageProps) => {
     return (
         <div className="flex min-h-screen flex-col bg-gray-50">
             <Header title={title} onBack={onBack} />
@@ -22,7 +26,9 @@ const ForbiddenPage = ({ title, message = "권한이 없습니다.", onBack }: F
                             style={{ width: 300, height: 300 }}
                         />
                     </div>
-                    <p className="font-medium text-gray-600 text-xl">{message}</p>
+                    <p className="font-medium text-gray-600 text-xl">
+                        {message}
+                    </p>
                 </div>
             </div>
         </div>

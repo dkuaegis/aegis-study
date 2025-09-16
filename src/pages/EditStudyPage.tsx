@@ -5,8 +5,8 @@ import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
 import { useUserRole } from "@/hooks/useUserRole";
-import type { StudyRecruitmentMethod } from "@/types/study";
 import ForbiddenPage from "@/pages/ForbiddenPage";
+import type { StudyRecruitmentMethod } from "@/types/study";
 
 interface EditStudyProps {
     studyId: number;
@@ -36,7 +36,11 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         error: roleError,
     } = useUserRole();
 
-    const { data: study, isLoading: isStudyLoading, isError } = useStudyDetailQuery(studyId);
+    const {
+        data: study,
+        isLoading: isStudyLoading,
+        isError,
+    } = useStudyDetailQuery(studyId);
 
     // 로딩 상태 처리
     const isLoading = isStudyLoading || isRoleLoading;
