@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import { useApplications } from "@/hooks/useOwnerApplications";
+import { useUserRole } from "@/hooks/useUserRole";
 import { ApplicationStatus } from "@/types/study";
 
 interface ApplicationStatusProps {
@@ -12,6 +13,13 @@ interface ApplicationStatusProps {
 }
 
 const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
+    // 사용자 역할 확인
+    const {
+        isInstructor,
+        isLoading: isRoleLoading,
+        error: roleError,
+    } = useUserRole();
+
     const {
         selectedFilter,
         setSelectedFilter,
@@ -23,7 +31,13 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
         error,
     } = useApplications(studyId);
 
-    if (loading) {
+    // 로딩 상태 처리
+    const isLoading = loading || isRoleLoading;
+
+    // 권한 확인 - 강사만 지원현황을 볼 수 있음
+    const isOwner = isInstructor(studyId);
+
+    if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50">
                 <Header title="스터디 지원현황" onBack={onBack} />
@@ -32,7 +46,35 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                         <div className="text-center">
                             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-blue-600 border-b-2"></div>
                             <p className="text-gray-500">
-                                지원자 데이터를 불러오는 중...
+                                {isRoleLoading
+                                    ? "권한 정보를 불러오는 중..."
+                                    : "지원자 데이터를 불러오는 중..."}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (roleError) {
+        console.error("사용자 권한 조회 오류:", roleError);
+        // 권한 오류 시에도 기본 권한으로 계속 진행
+    }
+
+    // 권한이 없는 경우
+    if (!isOwner) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="스터디 지원현황" onBack={onBack} />
+                <div className="mx-auto max-w-7xl p-6">
+                    <div className="flex items-center justify-center py-12">
+                        <div className="text-center">
+                            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+                                <AlertCircle className="h-8 w-8 text-red-600" />
+                            </div>
+                            <p className="text-lg text-red-600">
+                                이 스터디의 지원현황을 볼 수 있는 권한이 없습니다.
                             </p>
                         </div>
                     </div>

@@ -1,9 +1,10 @@
-import { Copy, User } from "lucide-react";
+import { AlertCircle, Copy, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { fetchStudyMembers } from "@/api/studyMembersApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
+import { useUserRole } from "@/hooks/useUserRole";
 
 interface StudyMember {
     name: string;
@@ -20,10 +21,23 @@ export default function StudyMembersPage({
     studyId,
     onBack,
 }: StudyMembersProps) {
+    // 사용자 역할 확인
+    const {
+        isInstructor,
+        isLoading: isRoleLoading,
+        error: roleError,
+    } = useUserRole();
+
     const [members, setMembers] = useState<StudyMember[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const toast = useToast();
+
+    // 권한 확인 - 강사만 스터디원 관리를 할 수 있음
+    const isOwner = isInstructor(studyId);
+
+    // 로딩 상태 처리
+    const isLoading = loading || isRoleLoading;
 
     useEffect(() => {
         const controller = new AbortController();
@@ -58,15 +72,54 @@ export default function StudyMembersPage({
         };
     }, [studyId, toast]);
 
-    if (loading) {
+    if (isLoading) {
         return (
-            <div className="p-8 text-center">
-                스터디원 정보를 불러오는 중...
+            <div className="min-h-screen bg-gray-50">
+                <Header title="스터디원 관리" onBack={onBack} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-gray-500">
+                        {isRoleLoading
+                            ? "권한 정보를 불러오는 중..."
+                            : "스터디원 정보를 불러오는 중..."}
+                    </div>
+                </div>
             </div>
         );
     }
+
+    if (roleError) {
+        console.error("사용자 권한 조회 오류:", roleError);
+        // 권한 오류 시에도 기본 권한으로 계속 진행
+    }
+
+    // 권한이 없는 경우
+    if (!isOwner) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="스터디원 관리" onBack={onBack} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-center">
+                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+                            <AlertCircle className="h-8 w-8 text-red-600" />
+                        </div>
+                        <p className="text-lg text-red-600">
+                            이 스터디의 스터디원을 관리할 수 있는 권한이 없습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (error) {
-        return <div className="p-8 text-center text-red-600">{error}</div>;
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="스터디원 관리" onBack={onBack} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-red-600">{error}</div>
+                </div>
+            </div>
+        );
     }
 
     return (
