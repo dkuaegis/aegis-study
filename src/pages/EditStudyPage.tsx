@@ -36,17 +36,20 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
         error: roleError,
     } = useUserRole();
 
+    // 권한 확인 - 강사만 스터디를 수정할 수 있음
+    const isOwner = isInstructor(studyId);
+
+    // 스터디 정보를 로드할 수 있는지 확인
+    const canLoad = !isRoleLoading && isOwner;
+
     const {
         data: study,
         isLoading: isStudyLoading,
         isError,
-    } = useStudyDetailQuery(studyId);
+    } = useStudyDetailQuery(studyId, { enabled: canLoad });
 
     // 로딩 상태 처리
     const isLoading = isStudyLoading || isRoleLoading;
-
-    // 권한 확인 - 강사만 스터디를 수정할 수 있음
-    const isOwner = isInstructor(studyId);
 
     const mapFormValuesToStudyData = (
         formValues: FormValues

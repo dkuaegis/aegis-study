@@ -1,4 +1,4 @@
-import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { type UseQueryOptions, type UseQueryResult, useQuery } from "@tanstack/react-query";
 import type { HTTPError, TimeoutError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
@@ -20,7 +20,8 @@ export async function fetchStudyDetail(
 }
 
 export const useStudyDetailQuery = (
-    studyId: number
+    studyId: number,
+    options?: Partial<UseQueryOptions<StudyDetail, StudyDetailError>>
 ): UseQueryResult<StudyDetail, StudyDetailError> => {
     return useQuery<StudyDetail, StudyDetailError>({
         queryKey: STUDY_DETAIL_QUERY_KEY(studyId),
@@ -29,5 +30,6 @@ export const useStudyDetailQuery = (
         staleTime: 60_000,
         gcTime: 5 * 60_000,
         refetchOnWindowFocus: false,
+        ...options,
     });
 };

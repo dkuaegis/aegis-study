@@ -37,7 +37,7 @@ const StudyDetailPage = ({
         isLoading: isStudyLoading,
         isError,
         error,
-    } = useStudyDetailQuery(studyId);
+    } = useStudyDetailQuery(studyId, { enabled: !isRoleLoading });
 
     const {
         applicationText,

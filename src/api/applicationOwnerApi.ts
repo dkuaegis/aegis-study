@@ -1,5 +1,6 @@
 import {
     type UseMutationResult,
+    type UseQueryOptions,
     type UseQueryResult,
     useMutation,
     useQuery,
@@ -172,7 +173,8 @@ export async function rejectApplication(
 
 // Query Hooks
 export const useStudyApplicationsQuery = (
-    studyId: number
+    studyId: number,
+    options?: Partial<UseQueryOptions<ApplicationApiResponse[], Error>>
 ): UseQueryResult<ApplicationApiResponse[], Error> => {
     return useQuery<ApplicationApiResponse[], Error>({
         queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
@@ -181,6 +183,7 @@ export const useStudyApplicationsQuery = (
         staleTime: 30_000, // 30초
         gcTime: 5 * 60_000, // 5분
         refetchOnWindowFocus: false,
+        ...options,
     });
 };
 
