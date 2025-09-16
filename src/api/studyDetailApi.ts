@@ -19,17 +19,34 @@ export async function fetchStudyDetail(
         .json<StudyDetail>();
 }
 
+type StudyDetailQueryOptions = Omit<
+    UseQueryOptions<
+        StudyDetail,
+        StudyDetailError,
+        StudyDetail,
+        ReturnType<typeof STUDY_DETAIL_QUERY_KEY>
+    >,
+    "queryKey" | "queryFn"
+>;
+
 export const useStudyDetailQuery = (
     studyId: number,
-    options?: Partial<UseQueryOptions<StudyDetail, StudyDetailError>>
+    options?: StudyDetailQueryOptions
 ): UseQueryResult<StudyDetail, StudyDetailError> => {
-    return useQuery<StudyDetail, StudyDetailError>({
+    const { enabled: optEnabled, ...rest } = options ?? {};
+    const enabled = (Number.isFinite(studyId) && studyId > 0) && (optEnabled ?? true);
+    return useQuery<
+        StudyDetail,
+        StudyDetailError,
+        StudyDetail,
+        ReturnType<typeof STUDY_DETAIL_QUERY_KEY>
+    >({
         queryKey: STUDY_DETAIL_QUERY_KEY(studyId),
         queryFn: ({ signal }) => fetchStudyDetail(studyId, signal),
-        enabled: Number.isFinite(studyId) && studyId > 0,
+        enabled,
         staleTime: 60_000,
         gcTime: 5 * 60_000,
         refetchOnWindowFocus: false,
-        ...options,
+        ...rest,
     });
 };

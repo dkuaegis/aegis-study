@@ -172,18 +172,36 @@ export async function rejectApplication(
 }
 
 // Query Hooks
+type StudyApplicationsQueryOptions = Omit<
+    UseQueryOptions<
+        ApplicationApiResponse[],
+        Error,
+        ApplicationApiResponse[],
+        ReturnType<typeof APPLICATION_QUERY_KEYS.studyApplications>
+    >,
+    "queryKey" | "queryFn"
+>;
+
 export const useStudyApplicationsQuery = (
     studyId: number,
-    options?: Partial<UseQueryOptions<ApplicationApiResponse[], Error>>
+    options?: StudyApplicationsQueryOptions
 ): UseQueryResult<ApplicationApiResponse[], Error> => {
-    return useQuery<ApplicationApiResponse[], Error>({
+    const { enabled: optEnabled, ...rest } = options ?? {};
+    const enabled =
+        Number.isFinite(studyId) && studyId > 0 && (optEnabled ?? true);
+    return useQuery<
+        ApplicationApiResponse[],
+        Error,
+        ApplicationApiResponse[],
+        ReturnType<typeof APPLICATION_QUERY_KEYS.studyApplications>
+    >({
         queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
         queryFn: ({ signal }) => fetchStudyApplications(studyId, signal),
-        enabled: Number.isFinite(studyId) && studyId > 0,
+        enabled,
         staleTime: 30_000, // 30초
         gcTime: 5 * 60_000, // 5분
         refetchOnWindowFocus: false,
-        ...options,
+        ...rest,
     });
 };
 
