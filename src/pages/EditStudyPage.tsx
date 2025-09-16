@@ -1,4 +1,3 @@
-import { AlertCircle } from "lucide-react";
 import { type StudyFormData, useUpdateStudyMutation } from "@/api/editStudyApi";
 import { useStudyDetailQuery } from "@/api/studyDetailApi";
 import StudyFormContent from "@/components/study/StudyFormContent";
@@ -7,6 +6,7 @@ import { useToast } from "@/components/ui/useToast";
 import { StudyFormProvider } from "@/hooks/useStudyForm";
 import { useUserRole } from "@/hooks/useUserRole";
 import type { StudyRecruitmentMethod } from "@/types/study";
+import ForbiddenPage from "@/pages/ForbiddenPage";
 
 interface EditStudyProps {
     studyId: number;
@@ -109,19 +109,11 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     // 권한이 없는 경우
     if (!isOwner) {
         return (
-            <div className="min-h-screen bg-gray-50">
-                <Header title="스터디 수정하기" onBack={onBack} />
-                <div className="flex min-h-screen items-center justify-center">
-                    <div className="text-center">
-                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-                            <AlertCircle className="h-8 w-8 text-red-600" />
-                        </div>
-                        <p className="text-lg text-red-600">
-                            이 스터디를 수정할 수 있는 권한이 없습니다.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <ForbiddenPage
+                title="스터디 수정하기"
+                message="이 스터디를 수정할 수 있는 권한이 없습니다."
+                onBack={onBack}
+            />
         );
     }
 

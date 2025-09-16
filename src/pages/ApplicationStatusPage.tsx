@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle, Clock, User, XCircle } from "lucide-react";
+import { CheckCircle, Clock, User, XCircle } from "lucide-react";
 import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +6,7 @@ import Header from "@/components/ui/Header";
 import { useApplications } from "@/hooks/useOwnerApplications";
 import { useUserRole } from "@/hooks/useUserRole";
 import { ApplicationStatus } from "@/types/study";
+import ForbiddenPage from "@/pages/ForbiddenPage";
 
 interface ApplicationStatusProps {
     studyId: number;
@@ -65,21 +66,11 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     // 권한이 없는 경우
     if (!isOwner) {
         return (
-            <div className="min-h-screen bg-gray-50">
-                <Header title="스터디 지원현황" onBack={onBack} />
-                <div className="mx-auto max-w-7xl p-6">
-                    <div className="flex items-center justify-center py-12">
-                        <div className="text-center">
-                            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-                                <AlertCircle className="h-8 w-8 text-red-600" />
-                            </div>
-                            <p className="text-lg text-red-600">
-                                이 스터디의 지원현황을 볼 수 있는 권한이 없습니다.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <ForbiddenPage
+                title="스터디 지원현황"
+                message="이 스터디의 지원현황을 볼 수 있는 권한이 없습니다."
+                onBack={onBack}
+            />
         );
     }
 
@@ -91,7 +82,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                     <div className="flex items-center justify-center py-12">
                         <div className="text-center">
                             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-                                <AlertCircle className="h-8 w-8 text-red-600" />
+                                <XCircle className="h-8 w-8 text-red-600" />
                             </div>
                             <p className="text-lg text-red-600">{error}</p>
                             <button

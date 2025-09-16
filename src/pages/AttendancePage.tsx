@@ -1,4 +1,4 @@
-import { AlertCircle, Timer } from "lucide-react";
+import { Timer } from "lucide-react";
 import { useRef, useState } from "react";
 import type { AttendanceCodeResponse } from "@/api/attendanceApi";
 import { fetchAttendanceCode } from "@/api/attendanceApi";
@@ -13,6 +13,7 @@ import {
 import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
 import { useUserRole } from "@/hooks/useUserRole";
+import ForbiddenPage from "@/pages/ForbiddenPage";
 
 interface AttendanceProps {
     studyId: number;
@@ -56,19 +57,11 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     // 권한이 없는 경우
     if (!isOwner) {
         return (
-            <div className="min-h-screen bg-gray-50">
-                <Header title="출석 관리" onBack={() => onBack(studyId)} />
-                <div className="flex min-h-screen items-center justify-center">
-                    <div className="text-center">
-                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-                            <AlertCircle className="h-8 w-8 text-red-600" />
-                        </div>
-                        <p className="text-lg text-red-600">
-                            이 스터디의 출석을 관리할 수 있는 권한이 없습니다.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <ForbiddenPage
+                title="출석 관리"
+                message="이 스터디의 출석을 관리할 수 있는 권한이 없습니다."
+                onBack={() => onBack(studyId)}
+            />
         );
     }
 

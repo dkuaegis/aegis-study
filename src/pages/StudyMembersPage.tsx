@@ -1,10 +1,11 @@
-import { AlertCircle, Copy, User } from "lucide-react";
+import { Copy, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { fetchStudyMembers } from "@/api/studyMembersApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
 import { useUserRole } from "@/hooks/useUserRole";
+import ForbiddenPage from "@/pages/ForbiddenPage";
 
 interface StudyMember {
     name: string;
@@ -42,6 +43,13 @@ export default function StudyMembersPage({
     useEffect(() => {
         const controller = new AbortController();
         const { signal } = controller;
+        // 권한 로딩 중이면 대기
+        if (isRoleLoading) return;
+        // 비소유자는 즉시 로딩 종료 후 반환 (API 호출 금지)
+        if (!isOwner) {
+            setLoading(false);
+            return;
+        }
         setLoading(true);
         setError(null);
         fetchStudyMembers(studyId, signal)
@@ -70,7 +78,7 @@ export default function StudyMembersPage({
         return () => {
             controller.abort();
         };
-    }, [studyId, toast]);
+    }, [studyId, toast, isOwner, isRoleLoading]);
 
     if (isLoading) {
         return (
@@ -95,19 +103,11 @@ export default function StudyMembersPage({
     // 권한이 없는 경우
     if (!isOwner) {
         return (
-            <div className="min-h-screen bg-gray-50">
-                <Header title="스터디원 관리" onBack={onBack} />
-                <div className="flex min-h-screen items-center justify-center">
-                    <div className="text-center">
-                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-                            <AlertCircle className="h-8 w-8 text-red-600" />
-                        </div>
-                        <p className="text-lg text-red-600">
-                            이 스터디의 스터디원을 관리할 수 있는 권한이 없습니다.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <ForbiddenPage
+                title="스터디원 관리"
+                message="이 스터디의 스터디원을 관리할 수 있는 권한이 없습니다."
+                onBack={onBack}
+            />
         );
     }
 
