@@ -4,6 +4,8 @@ import { fetchStudyMembers } from "@/api/studyMembersApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
+import { useUserRole } from "@/hooks/useUserRole";
+import ForbiddenPage from "@/pages/ForbiddenPage";
 
 interface StudyMember {
     name: string;
@@ -20,14 +22,34 @@ export default function StudyMembersPage({
     studyId,
     onBack,
 }: StudyMembersProps) {
+    // 사용자 역할 확인
+    const {
+        isInstructor,
+        isLoading: isRoleLoading,
+        error: roleError,
+    } = useUserRole();
+
     const [members, setMembers] = useState<StudyMember[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const toast = useToast();
 
+    // 권한 확인 - 강사만 스터디원 관리를 할 수 있음
+    const isOwner = isInstructor(studyId);
+
+    // 로딩 상태 처리
+    const isLoading = loading || isRoleLoading;
+
     useEffect(() => {
         const controller = new AbortController();
         const { signal } = controller;
+        // 권한 로딩 중이면 대기
+        if (isRoleLoading) return;
+        // 비소유자는 즉시 로딩 종료 후 반환 (API 호출 금지)
+        if (!isOwner) {
+            setLoading(false);
+            return;
+        }
         setLoading(true);
         setError(null);
         fetchStudyMembers(studyId, signal)
@@ -56,17 +78,48 @@ export default function StudyMembersPage({
         return () => {
             controller.abort();
         };
-    }, [studyId, toast]);
+    }, [studyId, toast, isOwner, isRoleLoading]);
 
-    if (loading) {
+    if (isLoading) {
         return (
-            <div className="p-8 text-center">
-                스터디원 정보를 불러오는 중...
+            <div className="min-h-screen bg-gray-50">
+                <Header title="스터디원 관리" onBack={onBack} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-gray-500">
+                        {isRoleLoading
+                            ? "권한 정보를 불러오는 중..."
+                            : "스터디원 정보를 불러오는 중..."}
+                    </div>
+                </div>
             </div>
         );
     }
+
+    if (roleError) {
+        console.error("사용자 권한 조회 오류:", roleError);
+        // 권한 오류 시에도 기본 권한으로 계속 진행
+    }
+
+    // 권한이 없는 경우
+    if (!isOwner) {
+        return (
+            <ForbiddenPage
+                title="스터디원 관리"
+                message="이 스터디의 스터디원을 관리할 수 있는 권한이 없습니다."
+                onBack={onBack}
+            />
+        );
+    }
+
     if (error) {
-        return <div className="p-8 text-center text-red-600">{error}</div>;
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="스터디원 관리" onBack={onBack} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-red-600">{error}</div>
+                </div>
+            </div>
+        );
     }
 
     return (
