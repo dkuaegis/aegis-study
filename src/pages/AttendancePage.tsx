@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
+import { useUserRole } from "@/hooks/useUserRole";
+import ForbiddenPage from "@/pages/ForbiddenPage";
 
 interface AttendanceProps {
     studyId: number;
@@ -19,10 +21,49 @@ interface AttendanceProps {
 }
 
 const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
+    // 사용자 역할 확인
+    const {
+        isInstructor,
+        isLoading: isRoleLoading,
+        error: roleError,
+    } = useUserRole();
+
     const [isGenerating, setIsGenerating] = useState(false);
     const [attendanceCode, setAttendanceCode] = useState<string>("");
     const toast = useToast();
     const inFlight = useRef(false);
+
+    // 권한 확인 - 강사만 출석 코드를 생성할 수 있음
+    const isOwner = isInstructor(studyId);
+
+    if (isRoleLoading) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-gray-500">
+                        권한 정보를 불러오는 중...
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (roleError) {
+        console.error("사용자 권한 조회 오류:", roleError);
+        // 권한 오류 시에도 기본 권한으로 계속 진행
+    }
+
+    // 권한이 없는 경우
+    if (!isOwner) {
+        return (
+            <ForbiddenPage
+                title="출석 관리"
+                message="이 스터디의 출석을 관리할 수 있는 권한이 없습니다."
+                onBack={() => onBack(studyId)}
+            />
+        );
+    }
 
     const generateAttendanceCode = async () => {
         if (inFlight.current) return;

@@ -8,6 +8,7 @@ import {
 } from "@/api/applicationOwnerApi";
 import { useStudyDetailQuery } from "@/api/studyDetailApi";
 import { useToast } from "@/components/ui/useToast";
+import { useUserRole } from "@/hooks/useUserRole";
 import type { Application, StudyData } from "@/types/study";
 import { ApplicationStatus } from "@/types/study";
 
@@ -28,18 +29,25 @@ export function useApplications(studyId: number) {
         "ALL" | ApplicationStatus
     >("ALL");
 
+    // 사용자 역할 확인
+    const { isInstructor, isLoading: isRoleLoading } = useUserRole();
+
+    // 권한 확인
+    const isOwner = isInstructor(studyId);
+    const canLoadStudyDetail = !isRoleLoading && isOwner;
+
     // API 쿼리 사용
     const {
         data: apiApplications,
         isLoading: applicationsLoading,
         error: applicationsError,
-    } = useStudyApplicationsQuery(studyId);
+    } = useStudyApplicationsQuery(studyId, { enabled: canLoadStudyDetail });
 
     const {
         data: studyDetail,
         isLoading: studyLoading,
         error: studyError,
-    } = useStudyDetailQuery(studyId);
+    } = useStudyDetailQuery(studyId, { enabled: canLoadStudyDetail });
 
     // 상태 업데이트 뮤테이션들
     const toast = useToast();
