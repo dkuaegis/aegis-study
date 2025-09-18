@@ -1,5 +1,5 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-import useAuth, { AuthStatus } from "./hooks/useAuth";
+import useAuth from "./hooks/useAuth";
 import CreateStudyPage from "./pages/CreateStudyPage";
 import LoginPage from "./pages/LoginPage";
 import StudyListPage from "./pages/StudyListPage";
@@ -23,7 +23,7 @@ const App = () => {
     }
 
     // 인증되지 않은 경우 로그인 페이지 표시
-    if (isAuthenticated !== AuthStatus.COMPLETED) {
+    if (!isAuthenticated) {
         return <LoginPage />;
     }
 

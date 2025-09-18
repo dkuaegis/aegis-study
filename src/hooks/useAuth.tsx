@@ -36,3 +36,5 @@ export const useAuth = () => {
         checkAuth,
     };
 };
+
+export default useAuth;
