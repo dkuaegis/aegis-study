@@ -11,6 +11,7 @@ import {
     ApplicationStatus,
     StudyCategoryLabels,
     type StudyDetail,
+    StudyRecruitmentMethod,
     type UserApplicationStatus,
 } from "@/types/study";
 
@@ -141,17 +142,20 @@ export const StudyHeader = ({
                                     <Settings className="mr-1 h-4 w-4" />
                                     스터디 수정
                                 </Button>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() =>
-                                        onViewApplications?.(study.id)
-                                    }
-                                    className="border-green-600 text-green-600 hover:bg-green-50"
-                                >
-                                    <UsersIcon className="mr-1 h-4 w-4" />
-                                    스터디 지원현황
-                                </Button>
+                                {study.recruitmentMethod !==
+                                    StudyRecruitmentMethod.FCFS && (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() =>
+                                            onViewApplications?.(study.id)
+                                        }
+                                        className="border-green-600 text-green-600 hover:bg-green-50"
+                                    >
+                                        <UsersIcon className="mr-1 h-4 w-4" />
+                                        스터디 지원현황
+                                    </Button>
+                                )}
                                 <Button
                                     variant="outline"
                                     size="sm"
