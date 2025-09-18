@@ -5,8 +5,8 @@ import {
     useUpdateUserApplicationMutation,
     useUserApplicationDetailQuery,
 } from "@/api/enrollmentApi";
-import { useUserRole } from "@/hooks/useUserRole";
 import { useToast } from "@/components/ui/useToast";
+import { useUserRole } from "@/hooks/useUserRole";
 import {
     ApplicationStatus,
     StudyRecruitmentMethod,
@@ -45,17 +45,11 @@ export const useStudyApplication = ({
     // 사용자 역할로 참여 여부를 판별한다. 이때 role 로딩 중이면 대기.
     const shouldFetchStatus = recruitmentMethod !== StudyRecruitmentMethod.FCFS;
 
-    // 상태 조회 쿼리 (FCFS인 경우 비활성화)
     const statusQueryEnabled = shouldFetchStatus && !isRoleLoading;
-    if (process.env.NODE_ENV !== "production") {
-        console.debug(
-            "useStudyUserApplication: statusQueryEnabled=",
-            statusQueryEnabled,
-            { studyId, recruitmentMethod }
-        );
-    }
-
-    const { data: statusData } = useStudyStatusQuery(studyId, statusQueryEnabled);
+    const { data: statusData } = useStudyStatusQuery(
+        studyId,
+        statusQueryEnabled
+    );
 
     // 지원서 상세 조회 쿼리 (PENDING 상태이고 APPLICATION 방식일 때 자동 활성화)
     const shouldAutoLoadApplication =
