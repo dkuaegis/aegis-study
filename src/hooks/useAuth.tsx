@@ -39,6 +39,16 @@ const useAuth = () => {
         };
 
         checkAuth();
+
+        const handleUnauthorized = () => {
+            setAuthenticated(AuthStatus.UNAUTHORIZED);
+        };
+
+        window.addEventListener("unauthorized", handleUnauthorized);
+
+        return () => {
+            window.removeEventListener("unauthorized", handleUnauthorized);
+        };
     }, []);
 
     return {
