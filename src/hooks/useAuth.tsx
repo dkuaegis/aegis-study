@@ -1,49 +1,39 @@
-import { useEffect, useState } from "react";
-import { apiClient } from "@/lib/apiClient";
-import { API_ENDPOINTS } from "@/lib/apiEndpoints";
+import { useCallback, useEffect } from "react";
+import { AuthStatus, useAuthStore } from "@/stores/useAuthStore";
 
-export enum AuthStatus {
-    LOADING = "LOADING", // 로딩 상태 추가
-    UNAUTHORIZED = "UNAUTHORIZED",
-    NOT_COMPLETED = "NOT_COMPLETED", // 가입 완료 안됨
-    COMPLETED = "COMPLETED", // 가입 완료
-}
+export const useAuth = () => {
+    const { status, setAuthenticated, setUnauthorized, setLoading } =
+        useAuthStore();
 
-const useAuth = () => {
-    const [isAuthenticated, setAuthenticated] = useState<AuthStatus>(
-        AuthStatus.LOADING
-    );
+    const checkAuth = useCallback(async () => {
+        setLoading();
+        try {
+            const response = await fetch("/api/auth/check", {
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                // We only care that the user is authenticated; the app no longer stores user payload here.
+                setAuthenticated();
+            } else {
+                setUnauthorized();
+            }
+        } catch (error) {
+            console.error("Auth check failed:", error);
+            setUnauthorized();
+        }
+    }, [setAuthenticated, setUnauthorized, setLoading]); // Zustand 액션들은 안정적임
 
     useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH);
-
-                if (response.status === 401) {
-                    setAuthenticated(AuthStatus.UNAUTHORIZED);
-                    return;
-                }
-                if (!response.ok) {
-                    throw new Error("알 수 없는 에러 발생.");
-                }
-                const data: { status: string } = await response.json();
-                if (data.status === "COMPLETED" || data.status === "OVERPAID") {
-                    setAuthenticated(AuthStatus.COMPLETED);
-                } else {
-                    setAuthenticated(AuthStatus.NOT_COMPLETED);
-                }
-            } catch (error) {
-                console.error("로그인 인증 에러:", error);
-                setAuthenticated(AuthStatus.UNAUTHORIZED);
-            }
-        };
-
         checkAuth();
-    }, []);
+    }, [checkAuth]);
 
     return {
-        isAuthenticated,
-        isLoading: isAuthenticated === AuthStatus.LOADING,
+        status,
+        isLoading: status === AuthStatus.LOADING,
+        isAuthenticated: status === AuthStatus.AUTHENTICATED,
+        isUnauthorized: status === AuthStatus.UNAUTHORIZED,
+        checkAuth,
     };
 };
 
