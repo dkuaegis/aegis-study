@@ -6,6 +6,7 @@ import {
     useUserApplicationDetailQuery,
 } from "@/api/enrollmentApi";
 import { useToast } from "@/components/ui/useToast";
+import { useUserRole } from "@/hooks/useUserRole";
 import {
     ApplicationStatus,
     StudyRecruitmentMethod,
@@ -37,8 +38,18 @@ export const useStudyApplication = ({
 
     const toast = useToast();
 
-    // 상태 조회 쿼리
-    const { data: statusData } = useStudyStatusQuery(studyId);
+    // 사용자 역할 훅
+    const { hasApplied, isLoading: isRoleLoading } = useUserRole();
+
+    // 선착순(FCFS)인 경우 서버의 /status 호출을 하지 않고
+    // 사용자 역할로 참여 여부를 판별한다. 이때 role 로딩 중이면 대기.
+    const shouldFetchStatus = recruitmentMethod !== StudyRecruitmentMethod.FCFS;
+
+    const statusQueryEnabled = shouldFetchStatus && !isRoleLoading;
+    const { data: statusData } = useStudyStatusQuery(
+        studyId,
+        statusQueryEnabled
+    );
 
     // 지원서 상세 조회 쿼리 (PENDING 상태이고 APPLICATION 방식일 때 자동 활성화)
     const shouldAutoLoadApplication =
@@ -55,6 +66,17 @@ export const useStudyApplication = ({
 
     // 상태 데이터가 변경되면 로컬 상태 업데이트
     useEffect(() => {
+        // FCFS(선착순)인 경우에는 서버 status 대신 user role로 참여 여부 판단
+        if (recruitmentMethod === StudyRecruitmentMethod.FCFS) {
+            // role 정보가 아직 로드되지 않았다면 대기
+            if (isRoleLoading) return;
+            const applied = hasApplied(studyId);
+            const safeStatus = applied ? ApplicationStatus.APPROVED : null;
+            setUserApplicationStatus(safeStatus);
+            lastKnownStatusRef.current = safeStatus;
+            return;
+        }
+
         const raw = statusData?.status;
         if (typeof raw === "string") {
             // API 상태를 로컬 상태 형식으로 안전하게 변환 (대문자 처리)
@@ -73,7 +95,7 @@ export const useStudyApplication = ({
             setUserApplicationStatus(null);
             lastKnownStatusRef.current = null;
         }
-    }, [statusData]);
+    }, [statusData, recruitmentMethod, isRoleLoading, hasApplied, studyId]);
 
     // API Mutations
     const enrollMutation = useEnrollInStudyMutation(
