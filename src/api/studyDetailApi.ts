@@ -38,8 +38,7 @@ export const useStudyDetailQuery = (
     options?: StudyDetailQueryOptions
 ): UseQueryResult<StudyDetail, StudyDetailError> => {
     const { enabled: optEnabled, ...rest } = options ?? {};
-    const enabled =
-        Number.isFinite(studyId) && studyId > 0 && (optEnabled ?? true);
+    const enabled = Number.isFinite(studyId) && studyId > 0 && (optEnabled ?? true);
     return useQuery<
         StudyDetail,
         StudyDetailError,
