@@ -1,4 +1,8 @@
-import { type UseQueryOptions, type UseQueryResult, useQuery } from "@tanstack/react-query";
+import {
+    type UseQueryOptions,
+    type UseQueryResult,
+    useQuery,
+} from "@tanstack/react-query";
 import type { HTTPError, TimeoutError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
@@ -34,7 +38,7 @@ export const useStudyDetailQuery = (
     options?: StudyDetailQueryOptions
 ): UseQueryResult<StudyDetail, StudyDetailError> => {
     const { enabled: optEnabled, ...rest } = options ?? {};
-    const enabled = (Number.isFinite(studyId) && studyId > 0) && (optEnabled ?? true);
+    const enabled = Number.isFinite(studyId) && studyId > 0 && (optEnabled ?? true);
     return useQuery<
         StudyDetail,
         StudyDetailError,

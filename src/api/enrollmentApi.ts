@@ -142,12 +142,13 @@ export const ENROLLMENT_QUERY_KEYS = {
 
 // Query Hooks
 export const useStudyStatusQuery = (
-    studyId: number
+    studyId: number,
+    enabled: boolean = true
 ): UseQueryResult<StudyStatusResponse | null, Error> => {
     return useQuery<StudyStatusResponse | null, Error>({
         queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
         queryFn: ({ signal }) => getStudyStatus(studyId, signal),
-        enabled: Number.isFinite(studyId) && studyId > 0,
+        enabled: enabled && Number.isFinite(studyId) && studyId > 0,
         staleTime: 5 * 60 * 1000, // 5분
         gcTime: 10 * 60 * 1000, // 10분
     });

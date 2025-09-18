@@ -55,7 +55,7 @@ const StudyDetailPage = ({
     } = useStudyApplication({
         studyId: studyId,
         recruitmentMethod:
-            study?.recruitmentMethod ?? StudyRecruitmentMethod.APPLICATION,
+            study?.recruitmentMethod ?? StudyRecruitmentMethod.FCFS,
     });
 
     // 로딩 상태 처리
