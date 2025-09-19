@@ -1,7 +1,12 @@
-import { Timer } from "lucide-react";
-import { useRef, useState } from "react";
-import type { AttendanceCodeResponse } from "@/api/attendanceApi";
-import { fetchAttendanceCode } from "@/api/attendanceApi";
+import {
+    Calendar,
+    Check,
+    Timer,
+    X,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import type { AttendanceCodeResponse, AttendanceInstructorResponse } from "@/api/attendanceApi";
+import { fetchAttendanceCode, fetchAttendanceInstructor } from "@/api/attendanceApi";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -30,11 +35,44 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
 
     const [isGenerating, setIsGenerating] = useState(false);
     const [attendanceCode, setAttendanceCode] = useState<string>("");
+    const [attendanceData, setAttendanceData] = useState<AttendanceInstructorResponse | null>(null);
+    const [isLoadingAttendance, setIsLoadingAttendance] = useState(false);
+    const [attendanceError, setAttendanceError] = useState<string | null>(null);
     const toast = useToast();
     const inFlight = useRef(false);
 
     // 권한 확인 - 강사만 출석 코드를 생성할 수 있음
     const isOwner = isInstructor(studyId);
+
+    useEffect(() => {
+        if (isRoleLoading) return;
+        if (!isOwner) return;
+
+        const controller = new AbortController();
+        let cancelled = false;
+
+        const fetchData = async () => {
+            setIsLoadingAttendance(true);
+            try {
+                const data = await fetchAttendanceInstructor(studyId, controller.signal);
+                if (cancelled) return;
+                setAttendanceData(data);
+                setAttendanceError(null);
+            } catch (error) {
+                if (cancelled) return;
+                const message = error instanceof Error ? error.message : "출석 데이터를 불러오는데 실패했습니다.";
+                setAttendanceError(message);
+                toast({ description: message });
+            } finally {
+                if (!cancelled) setIsLoadingAttendance(false);
+            }
+        };
+        fetchData();
+        return () => {
+            cancelled = true;
+            controller.abort();
+        };
+    }, [studyId, isOwner, isRoleLoading, toast]);
 
     if (isRoleLoading) {
         return (
@@ -65,6 +103,47 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         );
     }
 
+    if (isLoadingAttendance) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-gray-500">
+                        출석 데이터를 불러오는 중...
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (attendanceError) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-red-600">
+                        {attendanceError}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!attendanceData) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-gray-500">
+                        출석 데이터가 없습니다.
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const { sessions, members } = attendanceData;
+
     const generateAttendanceCode = async () => {
         if (inFlight.current) return;
         inFlight.current = true;
@@ -85,47 +164,137 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         }
     };
 
+    const getStatusIcon = (attendance: boolean | null) => {
+        if (attendance === true) return <Check className="h-4 w-4 text-green-600" />;
+        if (attendance === false) return <X className="h-4 w-4 text-red-600" />;
+        return <span className="text-gray-400">—</span>;
+    };
+
+
+
     return (
         <div className="min-h-screen bg-gray-50">
             <Header title="출석 관리" onBack={() => onBack(studyId)} />
-            <div className="mx-auto max-w-2xl space-y-6 p-4">
+            <div className="mx-auto max-w-6xl space-y-6 p-4">
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <Timer className="h-5 w-5" />
-                            출석 코드 관리
+                            <Calendar className="h-5 w-5" />
+                            출석 현황
                         </CardTitle>
                         <CardDescription>
-                            출석 코드를 생성합니다.
+                            스터디의 출석 현황을 확인할 수 있습니다.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="flex flex-col items-center gap-4 sm:flex-row">
-                            <Button
-                                onClick={generateAttendanceCode}
-                                disabled={isGenerating}
-                                className="w-full sm:w-auto"
-                            >
-                                {isGenerating ? "생성 중..." : "출석 코드 생성"}
-                            </Button>
-                            {attendanceCode && (
-                                <div className="flex items-center gap-4">
-                                    <div className="text-center">
-                                        <p className="text-gray-600 text-sm">
-                                            출석 코드
-                                        </p>
-                                        <p className="font-bold font-mono text-2xl text-blue-600">
-                                            {attendanceCode}
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
+                    <CardContent>
+                        <div className="space-y-4">
+                            <div className="overflow-x-auto">
+                                <table className="w-full border-collapse rounded-lg border border-gray-200">
+                                    <thead>
+                                        <tr className="bg-gray-50">
+                                            <th className="min-w-[100px] border border-gray-200 p-3 text-left font-medium">
+                                                이름
+                                            </th>
+                                            {sessions.map((session, idx) => (
+                                                <th
+                                                    key={session.sessionId}
+                                                    className="min-w-[65px] border border-gray-200 p-3 text-center font-medium"
+                                                >
+                                                    {idx + 1}회차
+                                                </th>
+                                            ))}
+                                            <th className="min-w-[80px] border border-gray-200 p-3 text-center font-medium">
+                                                출석률
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {members.map((member) => {
+                                            const attendance = member.attendance ?? [];
+                                            const attendanceCount = attendance.filter(Boolean).length;
+                                            const denominator = sessions.length;
+                                            const attendanceRate = denominator ? Math.round((attendanceCount / denominator) * 100) : 0;
+
+                                            return (
+                                                <tr
+                                                    key={member.memberId}
+                                                    className="hover:bg-gray-50"
+                                                >
+                                                    <td className="min-w-[100px] border border-gray-200 p-3 font-medium">
+                                                        {member.name}
+                                                    </td>
+                                                    {sessions.map((session, idx) => {
+                                                        const att = attendance[idx];
+
+                                                        return (
+                                                            <td
+                                                                key={session.sessionId}
+                                                                className="min-w-[60px] border border-gray-200 p-2 text-center"
+                                                            >
+                                                                <div className="flex flex-col items-center gap-1">
+                                                                    {getStatusIcon(att)}
+                                                                </div>
+                                                            </td>
+                                                        );
+                                                    })}
+                                                    <td className="min-w-[80px] border border-gray-200 p-3 text-center font-medium">
+                                                        <span className="rounded-full bg-green-100 px-2 py-1 text-green-800 text-sm">
+                                                            {attendanceRate}%
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
+
+                <div className="space-y-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Timer className="h-5 w-5" />
+                                출석 코드 관리
+                            </CardTitle>
+                            <CardDescription>
+                                출석 코드를 생성합니다.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex flex-col items-center gap-4 sm:flex-row">
+                                <Button
+                                    onClick={generateAttendanceCode}
+                                    disabled={isGenerating}
+                                    className="w-full sm:w-auto"
+                                >
+                                    {isGenerating
+                                        ? "생성 중..."
+                                        : "출석 코드 생성"}
+                                </Button>
+                                {attendanceCode && (
+                                    <div className="flex items-center gap-4">
+                                        <div className="text-center">
+                                            <p className="text-gray-600 text-sm">
+                                                출석 코드
+                                            </p>
+                                            <p className="font-bold font-mono text-2xl text-blue-600">
+                                                {attendanceCode}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                </div>
             </div>
         </div>
     );
 };
 
 export default AttendancePage;
+
