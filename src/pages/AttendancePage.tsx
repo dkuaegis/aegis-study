@@ -18,7 +18,6 @@ import {
 import Header from "@/components/ui/Header";
 import { useToast } from "@/components/ui/useToast";
 import { useUserRole } from "@/hooks/useUserRole";
-import { cn } from "@/lib/utils";
 import ForbiddenPage from "@/pages/ForbiddenPage";
 
 interface AttendanceProps {
@@ -239,11 +238,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                                         );
                                                     })}
                                                     <td className="min-w-[80px] border border-gray-200 p-3 text-center font-medium">
-                                                        <span
-                                                            className={cn(
-                                                                "rounded-full bg-green-100 px-2 py-1 text-green-800 text-sm"
-                                                            )}
-                                                        >
+                                                        <span className="rounded-full bg-green-100 px-2 py-1 text-green-800 text-sm">
                                                             {attendanceRate}%
                                                         </span>
                                                     </td>
