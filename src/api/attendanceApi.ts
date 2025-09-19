@@ -37,6 +37,17 @@ export function getAttendanceCodeErrorMessage(statusCode: number): string {
     }
 }
 
+export function getAttendanceInstructorErrorMessage(statusCode: number): string {
+    switch (statusCode) {
+        case 403:
+            return "스터디장이 아닙니다.";
+        case 404:
+            return "스터디를 찾을 수 없습니다.";
+        default:
+            return "출석 정보를 불러오는 중 오류가 발생했습니다.";
+    }
+}
+
 export async function fetchAttendanceCode(
     studyId: number
 ): Promise<AttendanceCodeResponse> {
@@ -71,5 +82,39 @@ export async function submitAttendanceCode(
             throw new Error(message);
         }
         throw new Error("출석 처리 중 오류가 발생했습니다.");
+    }
+}
+
+export interface AttendanceSession {
+    sessionId: number;
+    date: string;
+}
+
+export interface AttendanceMember {
+    memberId: number;
+    name: string;
+    attendance: boolean[];
+}
+
+export interface AttendanceInstructorResponse {
+    sessions: AttendanceSession[];
+    members: AttendanceMember[];
+}
+
+//출석조회(스터디장)
+export async function fetchAttendanceInstructor(
+    studyId: number
+): Promise<AttendanceInstructorResponse> {
+    try {
+        const res = await apiClient
+            .get(`studies/${studyId}/attendance-instructor`)
+            .json<AttendanceInstructorResponse>();
+        return res;
+    } catch (err: unknown) {
+        if (err instanceof HTTPError) {
+            const message = getAttendanceInstructorErrorMessage(err.response.status);
+            throw new Error(message);
+        }
+        throw new Error("출석 정보를 불러오는 중 오류가 발생했습니다.");
     }
 }
