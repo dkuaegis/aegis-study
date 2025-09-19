@@ -37,6 +37,8 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [attendanceCode, setAttendanceCode] = useState<string>("");
     const [attendanceData, setAttendanceData] = useState<AttendanceInstructorResponse | null>(null);
+    const [isLoadingAttendance, setIsLoadingAttendance] = useState(false);
+    const [attendanceError, setAttendanceError] = useState<string | null>(null);
     const toast = useToast();
     const inFlight = useRef(false);
 
@@ -44,17 +46,34 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     const isOwner = isInstructor(studyId);
 
     useEffect(() => {
+        if (isRoleLoading) return;
+        if (!isOwner) return;
+
+        const controller = new AbortController();
+        let cancelled = false;
+
         const fetchData = async () => {
+            setIsLoadingAttendance(true);
             try {
-                const data = await fetchAttendanceInstructor(studyId);
+                const data = await fetchAttendanceInstructor(studyId, controller.signal);
+                if (cancelled) return;
                 setAttendanceData(data);
+                setAttendanceError(null);
             } catch (error) {
+                if (cancelled) return;
                 const message = error instanceof Error ? error.message : "출석 데이터를 불러오는데 실패했습니다.";
+                setAttendanceError(message);
                 toast({ description: message });
+            } finally {
+                if (!cancelled) setIsLoadingAttendance(false);
             }
         };
         fetchData();
-    }, [studyId, toast]);
+        return () => {
+            cancelled = true;
+            controller.abort();
+        };
+    }, [studyId, isOwner, isRoleLoading, toast]);
 
     if (isRoleLoading) {
         return (
@@ -85,13 +104,39 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         );
     }
 
-    if (!attendanceData) {
+    if (isLoadingAttendance) {
         return (
             <div className="min-h-screen bg-gray-50">
                 <Header title="출석 관리" onBack={() => onBack(studyId)} />
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="text-gray-500">
                         출석 데이터를 불러오는 중...
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (attendanceError) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-red-600">
+                        {attendanceError}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!attendanceData) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <div className="flex min-h-screen items-center justify-center">
+                    <div className="text-gray-500">
+                        출석 데이터가 없습니다.
                     </div>
                 </div>
             </div>
@@ -120,8 +165,10 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         }
     };
 
-    const getStatusIcon = (attendance: boolean) => {
-        return attendance ? <Check className="h-4 w-4 text-green-600" /> : <X className="h-4 w-4 text-red-600" />;
+    const getStatusIcon = (attendance: boolean | null) => {
+        if (attendance === true) return <Check className="h-4 w-4 text-green-600" />;
+        if (attendance === false) return <X className="h-4 w-4 text-red-600" />;
+        return <span className="text-gray-400">—</span>;
     };
 
 
@@ -164,9 +211,10 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                     </thead>
                                     <tbody>
                                         {members.map((member) => {
-                                            const attendance = member.attendance;
-                                            const attendanceCount = attendance.filter(a => a).length;
-                                            const attendanceRate = Math.round((attendanceCount / attendance.length) * 100);
+                                            const attendance = member.attendance ?? [];
+                                            const attendanceCount = attendance.filter(Boolean).length;
+                                            const denominator = sessions.length;
+                                            const attendanceRate = denominator ? Math.round((attendanceCount / denominator) * 100) : 0;
 
                                             return (
                                                 <tr

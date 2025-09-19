@@ -103,11 +103,12 @@ export interface AttendanceInstructorResponse {
 
 //출석조회(스터디장)
 export async function fetchAttendanceInstructor(
-    studyId: number
+    studyId: number,
+    signal?: AbortSignal
 ): Promise<AttendanceInstructorResponse> {
     try {
         const res = await apiClient
-            .get(`studies/${studyId}/attendance-instructor`)
+            .get(`studies/${studyId}/attendance-instructor`, { signal })
             .json<AttendanceInstructorResponse>();
         return res;
     } catch (err: unknown) {
