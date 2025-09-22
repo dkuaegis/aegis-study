@@ -79,6 +79,16 @@ const LoginPage = () => {
             );
         return () => {
             tl.kill();
+            // Reset elements to initial state on cleanup
+            if (titleRef.current) gsap.set(titleRef.current, { opacity: 0, y: 20 });
+            if (subtitleRef.current) gsap.set(subtitleRef.current, { opacity: 0, y: 20 });
+            if (buttonRef.current) gsap.set(buttonRef.current, { opacity: 0, y: 20 });
+            if (iconsRef.current) {
+                iconsRef.current.filter(Boolean).forEach((el) => {
+                    gsap.set(el, { opacity: 0, x: -50, scale: 0.9 });
+                });
+            }
+            if (cardRef.current) gsap.set(cardRef.current, { scale: 0.95, opacity: 1 });
         };
     }, []);
 
@@ -141,13 +151,13 @@ const LoginPage = () => {
                         <div className="space-y-3">
                             <h2
                                 ref={titleRef}
-                                className="font-bold text-3xl text-gray-900"
+                                className="font-bold text-3xl text-gray-900 opacity-0"
                             >
                                 환영합니다
                             </h2>
                             <p
                                 ref={subtitleRef}
-                                className="text-gray-600 leading-relaxed"
+                                className="text-gray-600 leading-relaxed opacity-0"
                             >
                                 Aegis는 단국대학교 학생들을 위해
                                 <br />
@@ -161,7 +171,7 @@ const LoginPage = () => {
                                     ref={(el) => {
                                         iconsRef.current[index] = el;
                                     }}
-                                    className={`h-14 w-14 ${item.bg} flex items-center justify-center rounded-2xl transition-all duration-300 hover:scale-110 ${item.shadow} cursor-pointer border border-gray-200/50 hover:shadow-lg`}
+                                    className={`h-14 w-14 ${item.bg} flex items-center justify-center rounded-2xl transition-all duration-300 hover:scale-110 ${item.shadow} cursor-pointer border border-gray-200/50 opacity-0 hover:shadow-lg`}
                                 >
                                     <item.Icon
                                         className={`h-7 w-7 ${item.color}`}
@@ -172,7 +182,7 @@ const LoginPage = () => {
 
                         <Button
                             ref={buttonRef}
-                            className="h-12 w-full py-0 text-xl"
+                            className="h-12 w-full py-0 text-xl opacity-0"
                             asChild
                         >
                             <a
