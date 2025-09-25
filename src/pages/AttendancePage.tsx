@@ -1,12 +1,14 @@
-import {
-    Calendar,
-    Check,
-    Timer,
-    X,
-} from "lucide-react";
+import { Calendar, Check, Timer, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { AttendanceCodeResponse, AttendanceInstructorResponse } from "@/api/attendanceApi";
-import { fetchAttendanceCode, fetchAttendanceInstructor } from "@/api/attendanceApi";
+import type {
+    AttendanceCodeResponse,
+    AttendanceInstructorResponse,
+} from "@/api/attendanceApi";
+import {
+    fetchAttendanceCode,
+    fetchAttendanceInstructor,
+} from "@/api/attendanceApi";
+import StudyConfirmationDialog from "@/components/study/StudyConfirmationDialog";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -35,7 +37,8 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
 
     const [isGenerating, setIsGenerating] = useState(false);
     const [attendanceCode, setAttendanceCode] = useState<string>("");
-    const [attendanceData, setAttendanceData] = useState<AttendanceInstructorResponse | null>(null);
+    const [attendanceData, setAttendanceData] =
+        useState<AttendanceInstructorResponse | null>(null);
     const [isLoadingAttendance, setIsLoadingAttendance] = useState(false);
     const [attendanceError, setAttendanceError] = useState<string | null>(null);
     const toast = useToast();
@@ -54,13 +57,19 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
         const fetchData = async () => {
             setIsLoadingAttendance(true);
             try {
-                const data = await fetchAttendanceInstructor(studyId, controller.signal);
+                const data = await fetchAttendanceInstructor(
+                    studyId,
+                    controller.signal
+                );
                 if (cancelled) return;
                 setAttendanceData(data);
                 setAttendanceError(null);
             } catch (error) {
                 if (cancelled) return;
-                const message = error instanceof Error ? error.message : "출석 데이터를 불러오는데 실패했습니다.";
+                const message =
+                    error instanceof Error
+                        ? error.message
+                        : "출석 데이터를 불러오는데 실패했습니다.";
                 setAttendanceError(message);
                 toast({ description: message });
             } finally {
@@ -121,9 +130,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
             <div className="min-h-screen bg-gray-50">
                 <Header title="출석 관리" onBack={() => onBack(studyId)} />
                 <div className="flex min-h-screen items-center justify-center">
-                    <div className="text-red-600">
-                        {attendanceError}
-                    </div>
+                    <div className="text-red-600">{attendanceError}</div>
                 </div>
             </div>
         );
@@ -134,9 +141,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
             <div className="min-h-screen bg-gray-50">
                 <Header title="출석 관리" onBack={() => onBack(studyId)} />
                 <div className="flex min-h-screen items-center justify-center">
-                    <div className="text-gray-500">
-                        출석 데이터가 없습니다.
-                    </div>
+                    <div className="text-gray-500">출석 데이터가 없습니다.</div>
                 </div>
             </div>
         );
@@ -165,12 +170,11 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     };
 
     const getStatusIcon = (attendance: boolean | null) => {
-        if (attendance === true) return <Check className="h-4 w-4 text-green-600" />;
+        if (attendance === true)
+            return <Check className="h-4 w-4 text-green-600" />;
         if (attendance === false) return <X className="h-4 w-4 text-red-600" />;
         return <span className="text-gray-400">—</span>;
     };
-
-
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -197,7 +201,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                             </th>
                                             {sessions.map((session, idx) => (
                                                 <th
-                                                    key={session.sessionId}
+                                                    key={`${session.sessionId}-${idx}`}
                                                     className="min-w-[65px] border border-gray-200 p-3 text-center font-medium"
                                                 >
                                                     {idx + 1}회차
@@ -210,10 +214,20 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                     </thead>
                                     <tbody>
                                         {members.map((member) => {
-                                            const attendance = member.attendance ?? [];
-                                            const attendanceCount = attendance.filter(Boolean).length;
+                                            const attendance =
+                                                member.attendance ?? [];
+                                            const attendanceCount =
+                                                attendance.filter(
+                                                    Boolean
+                                                ).length;
                                             const denominator = sessions.length;
-                                            const attendanceRate = denominator ? Math.round((attendanceCount / denominator) * 100) : 0;
+                                            const attendanceRate = denominator
+                                                ? Math.round(
+                                                      (attendanceCount /
+                                                          denominator) *
+                                                          100
+                                                  )
+                                                : 0;
 
                                             return (
                                                 <tr
@@ -223,20 +237,25 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                                     <td className="min-w-[100px] border border-gray-200 p-3 font-medium">
                                                         {member.name}
                                                     </td>
-                                                    {sessions.map((session, idx) => {
-                                                        const att = attendance[idx];
+                                                    {sessions.map(
+                                                        (session, idx) => {
+                                                            const att =
+                                                                attendance[idx];
 
-                                                        return (
-                                                            <td
-                                                                key={session.sessionId}
-                                                                className="min-w-[60px] border border-gray-200 p-2 text-center"
-                                                            >
-                                                                <div className="flex flex-col items-center gap-1">
-                                                                    {getStatusIcon(att)}
-                                                                </div>
-                                                            </td>
-                                                        );
-                                                    })}
+                                                            return (
+                                                                <td
+                                                                    key={`${session.sessionId}-${idx}`}
+                                                                    className="min-w-[60px] border border-gray-200 p-2 text-center"
+                                                                >
+                                                                    <div className="flex flex-col items-center gap-1">
+                                                                        {getStatusIcon(
+                                                                            att
+                                                                        )}
+                                                                    </div>
+                                                                </td>
+                                                            );
+                                                        }
+                                                    )}
                                                     <td className="min-w-[80px] border border-gray-200 p-3 text-center font-medium">
                                                         <span className="rounded-full bg-green-100 px-2 py-1 text-green-800 text-sm">
                                                             {attendanceRate}%
@@ -265,15 +284,34 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex flex-col items-center gap-4 sm:flex-row">
-                                <Button
-                                    onClick={generateAttendanceCode}
-                                    disabled={isGenerating}
-                                    className="w-full sm:w-auto"
+                                <StudyConfirmationDialog
+                                    onConfirm={generateAttendanceCode}
+                                    isSubmitting={isGenerating}
+                                    submitText="생성"
+                                    submittingText="생성 중..."
+                                    title="출석 코드 생성 확인"
+                                    description="정말로 생성하시겠습니까? 생성된 출석 코드는 생성한 당일에만 유효합니다."
                                 >
-                                    {isGenerating
-                                        ? "생성 중..."
-                                        : "출석 코드 생성"}
-                                </Button>
+                                    <Button
+                                        disabled={isGenerating}
+                                        className="group relative w-full overflow-hidden bg-blue-600 text-white transition-colors hover:bg-blue-700 sm:w-auto"
+                                    >
+                                        <span
+                                            aria-hidden="true"
+                                            className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
+                                        >
+                                            <span
+                                                aria-hidden="true"
+                                                className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
+                                            />
+                                        </span>
+                                        <span className="relative z-10">
+                                            {isGenerating
+                                                ? "생성 중..."
+                                                : "출석 코드 생성"}
+                                        </span>
+                                    </Button>
+                                </StudyConfirmationDialog>
                                 {attendanceCode && (
                                     <div className="flex items-center gap-4">
                                         <div className="text-center">
@@ -289,7 +327,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                             </div>
                         </CardContent>
                     </Card>
-
                 </div>
             </div>
         </div>
@@ -297,4 +334,3 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
 };
 
 export default AttendancePage;
-
