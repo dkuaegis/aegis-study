@@ -21,10 +21,7 @@ const StudyFormContent = ({
     return (
         <form
             className="space-y-6"
-            onSubmit={(e) => {
-                e.preventDefault();
-                setConfirmOpen(true);
-            }}
+            onSubmit={form.handleSubmit(() => setConfirmOpen(true))}
         >
             <StudyFormFields />
             <div className="flex justify-end gap-3 pt-6">
