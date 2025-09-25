@@ -1,3 +1,4 @@
+import { useState } from "react";
 import StudyConfirmationDialog from "@/components/study/StudyConfirmationDialog";
 import StudyFormFields from "@/components/study/StudyFormFields";
 import { Button } from "@/components/ui/button";
@@ -15,9 +16,16 @@ const StudyFormContent = ({
     submittingText,
 }: StudyFormContentProps) => {
     const { form, onSubmit } = useStudyFormContext();
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     return (
-        <form className="space-y-6">
+        <form
+            className="space-y-6"
+            onSubmit={(e) => {
+                e.preventDefault();
+                setConfirmOpen(true);
+            }}
+        >
             <StudyFormFields />
             <div className="flex justify-end gap-3 pt-6">
                 <Button
@@ -40,8 +48,10 @@ const StudyFormContent = ({
                 <StudyConfirmationDialog
                     onConfirm={form.handleSubmit(onSubmit)}
                     isSubmitting={form.formState.isSubmitting}
-                    submitText="개설"
+                    submitText={submitText}
                     submittingText={submittingText}
+                    open={confirmOpen}
+                    onOpenChange={setConfirmOpen}
                 >
                     <Button
                         type="button"

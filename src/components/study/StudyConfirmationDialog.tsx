@@ -19,6 +19,8 @@ interface StudyConfirmationDialogProps {
     submittingText: string;
     title?: string;
     description?: string;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
 const StudyConfirmationDialog = ({
@@ -29,9 +31,11 @@ const StudyConfirmationDialog = ({
     submittingText,
     title = "스터디 개설 확인",
     description = "정말로 개설하시겠습니까?",
+    open,
+    onOpenChange,
 }: StudyConfirmationDialogProps) => {
     return (
-        <AlertDialog>
+        <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
