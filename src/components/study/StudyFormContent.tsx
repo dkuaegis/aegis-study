@@ -15,7 +15,7 @@ const StudyFormContent = ({
     submitText,
     submittingText,
 }: StudyFormContentProps) => {
-    const { form, onSubmit } = useStudyFormContext();
+    const { form, onSubmit, isEditMode } = useStudyFormContext();
     const [confirmOpen, setConfirmOpen] = useState(false);
 
     return (
@@ -47,6 +47,8 @@ const StudyFormContent = ({
                     isSubmitting={form.formState.isSubmitting}
                     submitText={submitText}
                     submittingText={submittingText}
+                    title={isEditMode ? "스터디 수정 확인" : "스터디 개설 확인"}
+                    description={isEditMode ? "정말로 수정하시겠습니까?" : "정말로 개설하시겠습니까?"}
                     open={confirmOpen}
                     onOpenChange={setConfirmOpen}
                 >
