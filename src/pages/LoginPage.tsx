@@ -80,15 +80,19 @@ const LoginPage = () => {
         return () => {
             tl.kill();
             // Reset elements to initial state on cleanup
-            if (titleRef.current) gsap.set(titleRef.current, { opacity: 0, y: 20 });
-            if (subtitleRef.current) gsap.set(subtitleRef.current, { opacity: 0, y: 20 });
-            if (buttonRef.current) gsap.set(buttonRef.current, { opacity: 0, y: 20 });
+            if (titleRef.current)
+                gsap.set(titleRef.current, { opacity: 0, y: 20 });
+            if (subtitleRef.current)
+                gsap.set(subtitleRef.current, { opacity: 0, y: 20 });
+            if (buttonRef.current)
+                gsap.set(buttonRef.current, { opacity: 0, y: 20 });
             if (iconsRef.current) {
                 iconsRef.current.filter(Boolean).forEach((el) => {
                     gsap.set(el, { opacity: 0, x: -50, scale: 0.9 });
                 });
             }
-            if (cardRef.current) gsap.set(cardRef.current, { scale: 0.95, opacity: 1 });
+            if (cardRef.current)
+                gsap.set(cardRef.current, { scale: 0.95, opacity: 1 });
         };
     }, []);
 

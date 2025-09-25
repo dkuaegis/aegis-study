@@ -37,7 +37,9 @@ export function getAttendanceCodeErrorMessage(statusCode: number): string {
     }
 }
 
-export function getAttendanceInstructorErrorMessage(statusCode: number): string {
+export function getAttendanceInstructorErrorMessage(
+    statusCode: number
+): string {
     switch (statusCode) {
         case 403:
             return "스터디장이 아닙니다.";
@@ -113,7 +115,9 @@ export async function fetchAttendanceInstructor(
         return res;
     } catch (err: unknown) {
         if (err instanceof HTTPError) {
-            const message = getAttendanceInstructorErrorMessage(err.response.status);
+            const message = getAttendanceInstructorErrorMessage(
+                err.response.status
+            );
             throw new Error(message);
         }
         throw new Error("출석 정보를 불러오는 중 오류가 발생했습니다.");
