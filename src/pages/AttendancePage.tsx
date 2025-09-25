@@ -334,4 +334,3 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
 };
 
 export default AttendancePage;
-

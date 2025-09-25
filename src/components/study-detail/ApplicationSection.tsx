@@ -105,7 +105,7 @@ export const ApplicationSection = ({
                         open={isApplicationModalOpen}
                         onOpenChange={setIsApplicationModalOpen}
                     >
-                        <AlertDialogContent className="max-h-[80vh] max-w-4xl">
+                        <AlertDialogContent className="max-h-[80vh] max-w-[calc(100vw-12rem)] sm:max-w-4xl">
                             <AlertDialogHeader>
                                 <AlertDialogTitle>지원서 수정</AlertDialogTitle>
                                 <AlertDialogDescription>
@@ -203,7 +203,7 @@ export const ApplicationSection = ({
                         open={isApplicationModalOpen}
                         onOpenChange={setIsApplicationModalOpen}
                     >
-                        <AlertDialogContent className="max-h-[80vh] max-w-4xl">
+                        <AlertDialogContent className="max-h-[80vh] max-w-[calc(100vw-12rem)] sm:max-w-4xl">
                             <AlertDialogHeader>
                                 <AlertDialogTitle>지원서 작성</AlertDialogTitle>
                                 <AlertDialogDescription>
@@ -270,7 +270,7 @@ export const ApplicationSection = ({
                                     </span>
                                 </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent>
+                            <AlertDialogContent className="max-w-[calc(100vw-12rem)] sm:max-w-lg">
                                 <AlertDialogHeader>
                                     <AlertDialogTitle>
                                         스터디 신청 확인
