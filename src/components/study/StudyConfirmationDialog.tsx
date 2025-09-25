@@ -37,7 +37,7 @@ const StudyConfirmationDialog = ({
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="max-w-[calc(100vw-8rem)] sm:max-w-lg">
                 <AlertDialogHeader>
                     <AlertDialogTitle>{title}</AlertDialogTitle>
                     <AlertDialogDescription>
