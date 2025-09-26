@@ -9,9 +9,20 @@
 <img src="https://github.com/user-attachments/assets/62ae1456-8ec4-43a5-9d5e-0a295f26a51e" width="100%"/>
 <!-- 스터디 목록 -->
 <img src="https://github.com/user-attachments/assets/455d2179-d49b-4968-879c-79fb57d4995c" width="100%"/>
-<!-- [스터디장] 스터디 상세페이지 -->
+<!-- [스터디장] 스터디 상세 페이지 -->
 <img src="https://github.com/user-attachments/assets/515bf738-b9b1-4549-aa56-58154d69a253" width="100%"/>
-
+<!-- [스터디원] 스터디 상세 페이지 -->
+<img src="https://github.com/user-attachments/assets/21b605ff-d36c-4e70-b790-7d431b78d993" width="100%"/>
+<!-- [일반 회원] 스터디 개설 페이지 -->
+<img src="https://github.com/user-attachments/assets/5ba46971-40a6-451c-96b6-edf5044b1228" width="100%"/>
+<!-- [스터디장] 스터디 수정 페이지 -->
+<img src="https://github.com/user-attachments/assets/a8b7a9a7-b8d6-4877-8a25-573c7158c0aa" width="100%"/>
+<!-- [스터디장] 스터디 지원 현황 페이지 -->
+<img src="https://github.com/user-attachments/assets/9cb7c2d9-0a7f-4a23-8e9f-10101808c10f" width="100%"/>
+<!-- [스터디장] 스터디원 관리 페이지 -->
+<img src="https://github.com/user-attachments/assets/7e49ce90-6571-4461-a3fb-4d298658216b" width="100%"/>
+<!-- [스터디장] 출석 현황 페이지 -->
+<img src="https://github.com/user-attachments/assets/aeae228e-47ba-4e8b-8878-09581063a6ce" width="100%"/>
 
 ## 프로젝트 개요
 
