@@ -5,6 +5,13 @@
 ## 서비스 소개
 
 스터디 생성, 참여, 출석 관리까지 원스톱으로 해결하는 스터디 관리 플랫폼
+<!-- 로그인 -->
+<img src="https://github.com/user-attachments/assets/62ae1456-8ec4-43a5-9d5e-0a295f26a51e" width="100%"/>
+<!-- 스터디 목록 -->
+<img src="https://github.com/user-attachments/assets/455d2179-d49b-4968-879c-79fb57d4995c" width="100%"/>
+<!-- [스터디장] 스터디 상세페이지 -->
+<img src="https://github.com/user-attachments/assets/515bf738-b9b1-4549-aa56-58154d69a253" width="100%"/>
+
 
 ## 프로젝트 개요
 
