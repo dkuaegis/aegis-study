@@ -131,6 +131,13 @@ npm run dev
 | `/members/:studyId` | 스터디 멤버 페이지 |
 | `/attendance/:studyId` | 출석 관리 페이지 |
 
+## 팀원 소개
+
+|<img src="https://github.com/ilcm96.png" width="200">|<img src="https://github.com/KwonDeaGeun.png" width="200">|
+|:-:|:-:|
+|[윤성민](https://github.com/ilcm96)|[권대근](https://github.com/KwonDeaGeun)|
+|BE|FE|
+
 ## 라이센스
 
 이 프로젝트는 단국대학교 개발 보안 동아리 Aegis의 프로젝트 입니다.
