@@ -47,7 +47,7 @@ Aegis Study는 개발자 및 학습자들이 스터디 그룹을 쉽게 생성�
 
 ## 프로젝트 구조
 
-```
+```text
 src/
 ├── api/                    # API 호출 관련
 ├── assets/                 # 정적 파일
@@ -90,7 +90,7 @@ npm install
 npm run dev
 ```
 
-4. 브라우저에서 http://localhost:5173 접속
+4. 브라우저에서 [http://localhost:5173](http://localhost:5173) 접속
 
 ### 사용 가능한 스크립트
 
