@@ -76,7 +76,7 @@ src/
 
 1. 저장소 클론
 ```bash
-git clone <repository-url>
+git clone [<repository-url>](https://github.com/dkuaegis/aegis-study.git)
 cd aegis-study
 ```
 
