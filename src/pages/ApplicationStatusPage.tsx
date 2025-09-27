@@ -1,4 +1,6 @@
 import { CheckCircle, Clock, User, XCircle } from "lucide-react";
+import Lottie from "lottie-react";
+import fireData from "@/assets/Fire Element Effect Animation.json";
 import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +8,7 @@ import Header from "@/components/ui/Header";
 import { useApplications } from "@/hooks/useOwnerApplications";
 import { useUserRole } from "@/hooks/useUserRole";
 import ForbiddenPage from "@/pages/ForbiddenPage";
-import { ApplicationStatus } from "@/types/study";
+import { ApplicationStatus, StudyRecruitmentMethod } from "@/types/study";
 
 interface ApplicationStatusProps {
     studyId: number;
@@ -71,6 +73,31 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                 message="이 스터디의 지원현황을 볼 수 있는 권한이 없습니다."
                 onBack={onBack}
             />
+        );
+    }
+
+    // 선착순 스터디의 경우 지원 현황이 없음
+    if (studyInfo?.recruitmentMethod === StudyRecruitmentMethod.FCFS) {
+        return (
+            <div className="flex min-h-screen flex-col bg-gray-50">
+                <Header title="스터디 지원현황" onBack={onBack} />
+                <div className="flex flex-1 items-center justify-center px-6">
+                    <div className="mx-auto max-w-md text-center">
+                        <div className="mb-8">
+                            <Lottie
+                                loop
+                                autoplay
+                                animationData={fireData}
+                                style={{ width: 300, height: 300 }}
+                            />
+                        </div>
+                        <p className="font-medium text-gray-600 text-xl">
+                            선착순 모집 스터디입니다.
+                        </p>
+                        <p className="mt-2 text-gray-500">지원 현황이 없습니다.</p>
+                    </div>
+                </div>
+            </div>
         );
     }
 
