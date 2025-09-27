@@ -101,7 +101,10 @@ const StudyDetailPage = ({
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Header title={isOwner ? "스터디 상세 보기" : "스터디 지원하기"} onBack={onBack} />
+            <Header
+                title={isOwner ? "스터디 상세 보기" : "스터디 지원하기"}
+                onBack={onBack}
+            />
 
             <div className="mx-auto max-w-4xl p-6">
                 <StudyHeader
