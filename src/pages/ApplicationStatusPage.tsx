@@ -1,5 +1,5 @@
-import { CheckCircle, Clock, User, XCircle } from "lucide-react";
 import Lottie from "lottie-react";
+import { CheckCircle, Clock, User, XCircle } from "lucide-react";
 import fireData from "@/assets/Fire Element Effect Animation.json";
 import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
@@ -94,7 +94,9 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
                         <p className="font-medium text-gray-600 text-xl">
                             선착순 모집 스터디입니다.
                         </p>
-                        <p className="mt-2 text-gray-500">지원 현황이 없습니다.</p>
+                        <p className="mt-2 text-gray-500">
+                            지원 현황이 없습니다.
+                        </p>
                     </div>
                 </div>
             </div>
