@@ -14,11 +14,13 @@ import {
     StudyRecruitmentMethod,
     type UserApplicationStatus,
 } from "@/types/study";
+import { UserRole } from "@/types/user";
 
 interface StudyHeaderProps {
     study: StudyDetail;
     isOwner?: boolean;
     userApplicationStatus?: UserApplicationStatus;
+    userRole?: UserRole;
     onEdit?: (studyId: number) => void;
     onViewApplications?: (studyId: number) => void;
     onViewMembers?: (studyId: number) => void;
@@ -29,6 +31,7 @@ export const StudyHeader = ({
     study,
     isOwner = false,
     userApplicationStatus,
+    userRole,
     onEdit,
     onViewApplications,
     onViewMembers,
@@ -180,7 +183,7 @@ export const StudyHeader = ({
                         )}
                     </div>
 
-                    {userApplicationStatus === ApplicationStatus.APPROVED &&
+                    {userRole === UserRole.PARTICIPANT &&
                         !isOwner && (
                             <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
                                 <div className="flex items-end gap-2">

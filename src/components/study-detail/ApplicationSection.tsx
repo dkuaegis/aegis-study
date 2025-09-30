@@ -18,6 +18,7 @@ import {
     StudyRecruitmentMethod,
     type UserApplicationStatus,
 } from "@/types/study";
+import { UserRole } from "@/types/user";
 import {
     getApplicationSectionTitle,
     isStudyRecruiting,
@@ -26,6 +27,7 @@ import {
 interface ApplicationSectionProps {
     study: StudyDetail;
     isOwner?: boolean;
+    userRole?: UserRole;
     applicationState: {
         applicationText: string;
         isApplying: boolean;
@@ -45,6 +47,7 @@ interface ApplicationSectionProps {
 export const ApplicationSection = ({
     study,
     isOwner = false,
+    userRole,
     applicationState,
 }: ApplicationSectionProps) => {
     const {
@@ -154,7 +157,7 @@ export const ApplicationSection = ({
         </div>
     );
 
-    const renderApprovedStatus = () => (
+    const renderParticipantStatus = () => (
         <div className="space-y-4">
             <div className="text-center">
                 <p className="mb-2 font-medium text-green-600">
@@ -327,11 +330,14 @@ export const ApplicationSection = ({
     };
 
     const renderContent = () => {
+        // 스터디원 권한이 있는 경우
+        if (userRole === UserRole.PARTICIPANT) {
+            return renderParticipantStatus();
+        }
+
         switch (userApplicationStatus) {
             case "PENDING":
                 return renderPendingStatus();
-            case "APPROVED":
-                return renderApprovedStatus();
             case "REJECTED":
                 return renderRejectedStatus();
             default:
