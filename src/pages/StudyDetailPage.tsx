@@ -28,6 +28,7 @@ const StudyDetailPage = ({
     // 사용자 역할 확인
     const {
         isInstructor,
+        isParticipant,
         isLoading: isRoleLoading,
         error: roleError,
     } = useUserRole();
@@ -98,6 +99,7 @@ const StudyDetailPage = ({
 
     // 사용자가 이 스터디의 강사인지 확인
     const isOwner = isInstructor(studyId);
+    const isMember = isParticipant(studyId);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -110,6 +112,7 @@ const StudyDetailPage = ({
                 <StudyHeader
                     study={study}
                     isOwner={isOwner}
+                    isMember={isMember}
                     userApplicationStatus={userApplicationStatus}
                     onEdit={onEdit}
                     onViewApplications={onViewApplications}
@@ -126,6 +129,7 @@ const StudyDetailPage = ({
                         <ApplicationSection
                             study={study}
                             isOwner={isOwner}
+                            isMember={isMember}
                             applicationState={{
                                 applicationText,
                                 isApplying,

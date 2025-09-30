@@ -26,6 +26,7 @@ import {
 interface ApplicationSectionProps {
     study: StudyDetail;
     isOwner?: boolean;
+    isMember?: boolean;
     applicationState: {
         applicationText: string;
         isApplying: boolean;
@@ -45,6 +46,7 @@ interface ApplicationSectionProps {
 export const ApplicationSection = ({
     study,
     isOwner = false,
+    isMember = false,
     applicationState,
 }: ApplicationSectionProps) => {
     const {
@@ -327,11 +329,12 @@ export const ApplicationSection = ({
     };
 
     const renderContent = () => {
+        if (isMember) {
+            return renderApprovedStatus();
+        }
         switch (userApplicationStatus) {
             case "PENDING":
                 return renderPendingStatus();
-            case "APPROVED":
-                return renderApprovedStatus();
             case "REJECTED":
                 return renderRejectedStatus();
             default:
