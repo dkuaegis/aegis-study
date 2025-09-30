@@ -91,17 +91,18 @@ export const StudyHeader = ({
     };
 
     const getApplicationStatusBadge = () => {
+        // 스터디원 권한이 있는 경우
+        if (userRole === UserRole.PARTICIPANT) {
+            return (
+                <Badge className="bg-green-100 text-green-800">참여 중</Badge>
+            );
+        }
+
         switch (userApplicationStatus) {
             case ApplicationStatus.PENDING:
                 return (
                     <Badge className="bg-yellow-100 text-yellow-800">
                         신청 대기 중
-                    </Badge>
-                );
-            case ApplicationStatus.APPROVED:
-                return (
-                    <Badge className="bg-green-100 text-green-800">
-                        참여 중
                     </Badge>
                 );
             case ApplicationStatus.REJECTED:
@@ -183,51 +184,50 @@ export const StudyHeader = ({
                         )}
                     </div>
 
-                    {userRole === UserRole.PARTICIPANT &&
-                        !isOwner && (
-                            <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
-                                <div className="flex items-end gap-2">
-                                    <div className="grid w-full max-w-sm items-center gap-1.5">
-                                        <Label
-                                            htmlFor={`attendance-code-${study.id}`}
-                                            className="font-medium text-sm"
-                                        >
-                                            출석코드
-                                        </Label>
-                                        <Input
-                                            type="text"
-                                            id={`attendance-code-${study.id}`}
-                                            placeholder="4자리 숫자"
-                                            value={attendanceCode}
-                                            onChange={(e) =>
-                                                handleAttendanceCodeChange(
-                                                    e.target.value
-                                                )
-                                            }
-                                            disabled={isSubmitting}
-                                            maxLength={4}
-                                            className="h-9 text-center"
-                                            onKeyDown={(e) => {
-                                                if (e.key === "Enter") {
-                                                    handleAttendanceSubmit();
-                                                }
-                                            }}
-                                        />
-                                    </div>
-                                    <Button
-                                        onClick={handleAttendanceSubmit}
-                                        disabled={
-                                            isSubmitting ||
-                                            attendanceCode.length !== 4
-                                        }
-                                        size="sm"
-                                        className="h-9"
+                    {userRole === UserRole.PARTICIPANT && !isOwner && (
+                        <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
+                            <div className="flex items-end gap-2">
+                                <div className="grid w-full max-w-sm items-center gap-1.5">
+                                    <Label
+                                        htmlFor={`attendance-code-${study.id}`}
+                                        className="font-medium text-sm"
                                     >
-                                        {isSubmitting ? "제출 중..." : "제출"}
-                                    </Button>
+                                        출석코드
+                                    </Label>
+                                    <Input
+                                        type="text"
+                                        id={`attendance-code-${study.id}`}
+                                        placeholder="4자리 숫자"
+                                        value={attendanceCode}
+                                        onChange={(e) =>
+                                            handleAttendanceCodeChange(
+                                                e.target.value
+                                            )
+                                        }
+                                        disabled={isSubmitting}
+                                        maxLength={4}
+                                        className="h-9 text-center"
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                handleAttendanceSubmit();
+                                            }
+                                        }}
+                                    />
                                 </div>
+                                <Button
+                                    onClick={handleAttendanceSubmit}
+                                    disabled={
+                                        isSubmitting ||
+                                        attendanceCode.length !== 4
+                                    }
+                                    size="sm"
+                                    className="h-9"
+                                >
+                                    {isSubmitting ? "제출 중..." : "제출"}
+                                </Button>
                             </div>
-                        )}
+                        </div>
+                    )}
                 </div>
             </CardHeader>
         </Card>
