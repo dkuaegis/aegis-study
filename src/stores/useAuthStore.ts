@@ -4,6 +4,7 @@ export enum AuthStatus {
     LOADING = "loading",
     AUTHENTICATED = "authenticated",
     UNAUTHORIZED = "unauthorized",
+    PENDING = "pending",
 }
 
 interface AuthState {
@@ -13,6 +14,7 @@ interface AuthState {
     setStatus: (status: AuthStatus) => void;
     setUnauthorized: () => void;
     setAuthenticated: () => void;
+    setPending: () => void;
     setLoading: () => void;
     reset: () => void;
 }
@@ -38,6 +40,14 @@ export const useAuthStore = create<AuthState>()(
                     },
                     false,
                     "setAuthenticated"
+                ),
+            setPending: () =>
+                set(
+                    {
+                        status: AuthStatus.PENDING,
+                    },
+                    false,
+                    "setPending"
                 ),
             setLoading: () =>
                 set(

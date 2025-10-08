@@ -10,7 +10,7 @@ import StudyDetailWrapper from "./pages/wrappers/StudyDetailWrapper";
 import StudyMembersWrapper from "./pages/wrappers/StudyMemberWrapper";
 
 const App = () => {
-    const { isAuthenticated, isLoading } = useAuth();
+    const { isAuthenticated, isLoading, isPending } = useAuth();
     const navigate = useNavigate();
 
     // 로딩 중에는 로딩 화면 표시
@@ -22,8 +22,8 @@ const App = () => {
         );
     }
 
-    // 인증되지 않은 경우 로그인 페이지 표시
-    if (!isAuthenticated) {
+    // PENDING 상태이거나 인증되지 않은 경우 로그인 페이지 표시
+    if (isPending || !isAuthenticated) {
         return <LoginPage />;
     }
 
