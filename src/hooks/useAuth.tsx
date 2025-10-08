@@ -1,4 +1,6 @@
 import { useCallback, useEffect } from "react";
+import { apiClient } from "@/lib/apiClient";
+import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import { AuthStatus, useAuthStore } from "@/stores/useAuthStore";
 
 export const useAuth = () => {
@@ -8,9 +10,7 @@ export const useAuth = () => {
     const checkAuth = useCallback(async () => {
         setLoading();
         try {
-            const response = await fetch("/api/auth/check", {
-                credentials: "include",
-            });
+            const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH);
 
             if (response.ok) {
                 // We only care that the user is authenticated; the app no longer stores user payload here.
