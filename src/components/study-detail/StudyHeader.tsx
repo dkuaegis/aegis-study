@@ -18,6 +18,7 @@ import {
 interface StudyHeaderProps {
     study: StudyDetail;
     isOwner?: boolean;
+    isParticipant?: boolean;
     userApplicationStatus?: UserApplicationStatus;
     onEdit?: (studyId: number) => void;
     onViewApplications?: (studyId: number) => void;
@@ -28,6 +29,7 @@ interface StudyHeaderProps {
 export const StudyHeader = ({
     study,
     isOwner = false,
+    isParticipant = false,
     userApplicationStatus,
     onEdit,
     onViewApplications,
@@ -87,8 +89,12 @@ export const StudyHeader = ({
         );
     };
 
+    const effectiveStatus: UserApplicationStatus | undefined = isParticipant
+        ? ApplicationStatus.APPROVED
+        : userApplicationStatus;
+
     const getApplicationStatusBadge = () => {
-        switch (userApplicationStatus) {
+        switch (effectiveStatus) {
             case ApplicationStatus.PENDING:
                 return (
                     <Badge className="bg-yellow-100 text-yellow-800">
@@ -180,7 +186,7 @@ export const StudyHeader = ({
                         )}
                     </div>
 
-                    {userApplicationStatus === ApplicationStatus.APPROVED &&
+                    {effectiveStatus === ApplicationStatus.APPROVED &&
                         !isOwner && (
                             <div className="w-full shrink-0 border-gray-200 border-t pt-4 md:w-auto md:border-gray-200 md:border-t-0 md:border-l md:pl-4">
                                 <div className="flex items-end gap-2">

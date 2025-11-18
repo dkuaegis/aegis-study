@@ -17,6 +17,7 @@ import {
     type StudyDetail,
     StudyRecruitmentMethod,
     type UserApplicationStatus,
+    ApplicationStatus,
 } from "@/types/study";
 import {
     getApplicationSectionTitle,
@@ -26,6 +27,7 @@ import {
 interface ApplicationSectionProps {
     study: StudyDetail;
     isOwner?: boolean;
+    isParticipant?: boolean;
     applicationState: {
         applicationText: string;
         isApplying: boolean;
@@ -45,6 +47,7 @@ interface ApplicationSectionProps {
 export const ApplicationSection = ({
     study,
     isOwner = false,
+    isParticipant = false,
     applicationState,
 }: ApplicationSectionProps) => {
     const {
@@ -66,8 +69,12 @@ export const ApplicationSection = ({
         return null; // 스터디장은 신청 섹션이 불필요
     }
 
+    const effectiveStatus: UserApplicationStatus = isParticipant
+        ? ApplicationStatus.APPROVED
+        : userApplicationStatus;
+
     const cardTitle = getApplicationSectionTitle(
-        userApplicationStatus,
+        effectiveStatus,
         study.recruitmentMethod
     );
 
@@ -327,7 +334,7 @@ export const ApplicationSection = ({
     };
 
     const renderContent = () => {
-        switch (userApplicationStatus) {
+        switch (effectiveStatus) {
             case "PENDING":
                 return renderPendingStatus();
             case "APPROVED":
