@@ -192,7 +192,7 @@ const LoginPage = () => {
                             <a
                                 href={`${import.meta.env.VITE_API_URL}/oauth2/authorization/google`}
                             >
-                                Google로 로그인
+                                단국대 Gmail로 로그인
                             </a>
                         </Button>
                     </div>
