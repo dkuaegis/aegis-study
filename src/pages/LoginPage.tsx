@@ -1,8 +1,37 @@
 import { gsap } from "gsap";
+import type { LucideIcon } from "lucide-react";
 import { BrainCircuit, CodeXml, Gamepad2, Globe, Lock } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+
+interface IconConfig {
+    id: string;
+    Icon: LucideIcon;
+}
+
+const ICONS: IconConfig[] = [
+    { id: "lock", Icon: Lock },
+    { id: "globe", Icon: Globe },
+    { id: "codeXml", Icon: CodeXml },
+    { id: "gamepad", Icon: Gamepad2 },
+    { id: "braincircuit", Icon: BrainCircuit },
+];
+
+const ANIMATION_CONFIG = {
+    INITIAL_DELAY: 0.3,
+    CARD_DURATION: 0.5,
+    TITLE_DURATION: 0.6,
+    TEXT_DURATION: 0.5,
+    ICON_DURATION: 0.5,
+    ICON_STAGGER: 0.1,
+} as const;
+
+const INITIAL_STATE = {
+    HIDDEN_ELEMENT: { opacity: 0, y: 20 },
+    HIDDEN_ICON: { opacity: 0, x: -50, scale: 0.9 },
+    CARD_INITIAL: { scale: 0.95, opacity: 1 },
+} as const;
 
 const LoginPage = () => {
     const iconsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -12,27 +41,20 @@ const LoginPage = () => {
     const cardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const tl = gsap.timeline({ delay: 0.3 });
+        const tl = gsap.timeline({ delay: ANIMATION_CONFIG.INITIAL_DELAY });
 
-        gsap.set([titleRef.current, subtitleRef.current, buttonRef.current], {
-            opacity: 0,
-            y: 20,
-        });
+        // Set initial states
+        gsap.set(
+            [titleRef.current, subtitleRef.current, buttonRef.current],
+            INITIAL_STATE.HIDDEN_ELEMENT
+        );
+        gsap.set(iconsRef.current, INITIAL_STATE.HIDDEN_ICON);
+        gsap.set(cardRef.current, INITIAL_STATE.CARD_INITIAL);
 
-        gsap.set(iconsRef.current, {
-            opacity: 0,
-            x: -50,
-            scale: 0.9,
-        });
-
-        gsap.set(cardRef.current, {
-            scale: 0.95,
-            opacity: 1,
-        });
-
+        // Animate elements
         tl.to(cardRef.current, {
             scale: 1,
-            duration: 0.5,
+            duration: ANIMATION_CONFIG.CARD_DURATION,
             ease: "power2.out",
         })
             .to(
@@ -40,7 +62,7 @@ const LoginPage = () => {
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 0.6,
+                    duration: ANIMATION_CONFIG.TITLE_DURATION,
                     ease: "power2.out",
                 },
                 "-=0.2"
@@ -50,7 +72,7 @@ const LoginPage = () => {
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 0.5,
+                    duration: ANIMATION_CONFIG.TEXT_DURATION,
                     ease: "power2.out",
                 },
                 "-=0.3"
@@ -60,10 +82,10 @@ const LoginPage = () => {
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 0.5,
+                    duration: ANIMATION_CONFIG.TEXT_DURATION,
                     ease: "power2.out",
                 },
-                "-=0.5" // subtitle과 버튼이 동시에 등장하도록 offset을 동일하게 맞춤
+                "-=0.5"
             )
             .to(
                 iconsRef.current,
@@ -71,68 +93,19 @@ const LoginPage = () => {
                     opacity: 1,
                     x: 0,
                     scale: 1,
-                    duration: 0.5,
-                    stagger: 0.1,
+                    duration: ANIMATION_CONFIG.ICON_DURATION,
+                    stagger: ANIMATION_CONFIG.ICON_STAGGER,
                     ease: "back.out(1.4)",
                 },
                 "-=0.2"
             );
+
         return () => {
             tl.kill();
-            // Reset elements to initial state on cleanup
-            if (titleRef.current)
-                gsap.set(titleRef.current, { opacity: 0, y: 20 });
-            if (subtitleRef.current)
-                gsap.set(subtitleRef.current, { opacity: 0, y: 20 });
-            if (buttonRef.current)
-                gsap.set(buttonRef.current, { opacity: 0, y: 20 });
-            if (iconsRef.current) {
-                iconsRef.current.filter(Boolean).forEach((el) => {
-                    gsap.set(el, { opacity: 0, x: -50, scale: 0.9 });
-                });
-            }
-            if (cardRef.current)
-                gsap.set(cardRef.current, { scale: 0.95, opacity: 1 });
         };
     }, []);
 
-    const icons = [
-        {
-            id: "lock",
-            Icon: Lock,
-            color: "text-gray-900",
-            bg: "bg-white",
-            shadow: "hover:shadow-gray-300",
-        },
-        {
-            id: "globe",
-            Icon: Globe,
-            color: "text-gray-900",
-            bg: "bg-white",
-            shadow: "hover:shadow-gray-300",
-        },
-        {
-            id: "codeXml",
-            Icon: CodeXml,
-            color: "text-gray-900",
-            bg: "bg-white",
-            shadow: "hover:shadow-gray-300",
-        },
-        {
-            id: "gamepad",
-            Icon: Gamepad2,
-            color: "text-gray-900",
-            bg: "bg-white",
-            shadow: "hover:shadow-gray-300",
-        },
-        {
-            id: "braincircuit",
-            Icon: BrainCircuit,
-            color: "text-gray-900",
-            bg: "bg-white",
-            shadow: "hover:shadow-gray-300",
-        },
-    ];
+
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 p-4">
@@ -169,17 +142,15 @@ const LoginPage = () => {
                             </p>
                         </div>
                         <div className="flex justify-center gap-4">
-                            {icons.map((item, index) => (
+                            {ICONS.map((item, index) => (
                                 <div
                                     key={item.id}
                                     ref={(el) => {
                                         iconsRef.current[index] = el;
                                     }}
-                                    className={`h-14 w-14 ${item.bg} flex items-center justify-center rounded-2xl transition-all duration-300 hover:scale-110 ${item.shadow} cursor-pointer border border-gray-200/50 opacity-0 hover:shadow-lg`}
+                                    className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-2xl border border-gray-200/50 bg-white opacity-0 transition-all duration-300 hover:scale-110 hover:shadow-gray-300 hover:shadow-lg"
                                 >
-                                    <item.Icon
-                                        className={`h-7 w-7 ${item.color}`}
-                                    />
+                                    <item.Icon className="h-7 w-7 text-gray-900" />
                                 </div>
                             ))}
                         </div>
