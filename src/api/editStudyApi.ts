@@ -65,7 +65,7 @@ export async function updateStudy(
         level: data.difficulty,
         description: data.introduction,
         recruitmentMethod: data.recruitmentMethod, // enum 값을 그대로 사용
-        maxParticipants: parseInt(data.maxParticipants),
+        maxParticipants: parseInt(data.maxParticipants, 10),
         schedule: data.schedule,
         curricula: data.curriculum
             .map((item: CurriculumItem) => item.value.trim())
