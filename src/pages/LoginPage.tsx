@@ -105,8 +105,6 @@ const LoginPage = () => {
         };
     }, []);
 
-
-
     return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 p-4">
             <div className="absolute inset-0 opacity-[0.02]">

@@ -4,8 +4,13 @@ import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import { AuthStatus, useAuthStore } from "@/stores/useAuthStore";
 
 export const useAuth = () => {
-    const { status, setAuthenticated, setUnauthorized, setPending, setLoading } =
-        useAuthStore();
+    const {
+        status,
+        setAuthenticated,
+        setUnauthorized,
+        setPending,
+        setLoading,
+    } = useAuthStore();
 
     const checkAuth = useCallback(async () => {
         setLoading();
@@ -14,7 +19,7 @@ export const useAuth = () => {
 
             if (response.ok) {
                 const data = await response.json<{ status: string }>();
-                
+
                 if (data.status === "COMPLETED") {
                     setAuthenticated();
                 } else if (data.status === "PENDING") {
