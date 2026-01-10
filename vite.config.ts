@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+// biome-ignore lint/style/useNodejsImportProtocol: path module works without node: prefix
 import path from "path"; // 추가!
 
 // https://vite.dev/config/
