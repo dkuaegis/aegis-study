@@ -31,5 +31,10 @@
             "trailingCommas": "es5",
             "semicolons": "always"
         }
+    },
+    "css": {
+        "linter": {
+            "enabled": false
+        }
     }
 }

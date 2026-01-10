@@ -1,2 +1,4 @@
-dist
-*.css
+dist/
+**/*.css
+src/index.css
+index.html
