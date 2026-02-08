@@ -27,7 +27,7 @@ const StudyList = ({
 
     return (
         <div className="flex min-h-screen flex-col bg-gray-50">
-            <Header title="스터디 목록" />
+            <Header />
             <div className="mb-6 flex w-full justify-end px-6 pt-6">
                 <Button
                     onClick={onCreateStudy}

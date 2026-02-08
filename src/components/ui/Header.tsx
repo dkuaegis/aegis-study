@@ -3,12 +3,11 @@ import type React from "react";
 import { Button } from "./button";
 
 interface HeaderProps {
-    title: string;
     onBack?: () => void;
     right?: React.ReactNode;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, onBack, right }) => (
+const Header: React.FC<HeaderProps> = ({ onBack, right }) => (
     <header className="sticky top-0 z-50 border-gray-200 border-b bg-white px-6 py-4">
         <div className="flex items-center">
             {onBack && (
@@ -23,7 +22,12 @@ const Header: React.FC<HeaderProps> = ({ title, onBack, right }) => (
                 </Button>
             )}
             <div className="flex items-center">
-                <span className="font-bold text-gray-900 text-xl">{title}</span>
+                <span
+                    className="font-bold text-2xl text-gray-900"
+                    style={{ fontFamily: '"Stack Sans Notch", sans-serif' }}
+                >
+                    AEGIS
+                </span>
             </div>
             {right && <div className="ml-auto">{right}</div>}
         </div>

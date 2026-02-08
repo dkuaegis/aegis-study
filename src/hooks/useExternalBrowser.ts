@@ -23,7 +23,7 @@ export function useExternalBrowser() {
         const detected = IN_APP_BROWSER_PATTERNS.find((browser) =>
             ua.includes(browser.pattern)
         );
-        
+
         if (detected) {
             setIsInAppBrowser(true);
             setBrowserName(detected.name);
