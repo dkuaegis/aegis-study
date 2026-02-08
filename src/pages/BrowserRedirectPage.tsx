@@ -14,6 +14,7 @@ const BrowserRedirectPage = () => {
             <Label className="text-3xl">
                 {browserName} 브라우저에서 접속 중
             </Label>
+
             <Label className="text-muted-foreground text-xl">
                 원활한 회원가입을 위해 외부 브라우저를 사용해주세요
             </Label>
