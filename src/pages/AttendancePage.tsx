@@ -86,7 +86,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     if (isRoleLoading) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <Header onBack={() => onBack(studyId)} />
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="text-gray-500">
                         권한 정보를 불러오는 중...
@@ -105,7 +105,6 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     if (!isOwner) {
         return (
             <ForbiddenPage
-                title="출석 관리"
                 message="이 스터디의 출석을 관리할 수 있는 권한이 없습니다."
                 onBack={() => onBack(studyId)}
             />
@@ -115,7 +114,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     if (isLoadingAttendance) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <Header onBack={() => onBack(studyId)} />
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="text-gray-500">
                         출석 데이터를 불러오는 중...
@@ -128,7 +127,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     if (attendanceError) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <Header onBack={() => onBack(studyId)} />
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="text-red-600">{attendanceError}</div>
                 </div>
@@ -139,7 +138,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
     if (!attendanceData) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="출석 관리" onBack={() => onBack(studyId)} />
+                <Header onBack={() => onBack(studyId)} />
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="text-gray-500">출석 데이터가 없습니다.</div>
                 </div>
@@ -178,7 +177,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Header title="출석 관리" onBack={() => onBack(studyId)} />
+            <Header onBack={() => onBack(studyId)} />
             <div className="mx-auto max-w-6xl space-y-6 p-4">
                 <Card>
                     <CardHeader>

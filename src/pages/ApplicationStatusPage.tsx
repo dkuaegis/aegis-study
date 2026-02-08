@@ -43,7 +43,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="스터디 지원현황" onBack={onBack} />
+                <Header onBack={onBack} />
                 <div className="mx-auto max-w-7xl p-6">
                     <div className="flex items-center justify-center py-12">
                         <div className="text-center">
@@ -69,7 +69,6 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     if (!isOwner) {
         return (
             <ForbiddenPage
-                title="스터디 지원현황"
                 message="이 스터디의 지원현황을 볼 수 있는 권한이 없습니다."
                 onBack={onBack}
             />
@@ -80,7 +79,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     if (studyInfo?.recruitmentMethod === StudyRecruitmentMethod.FCFS) {
         return (
             <div className="flex min-h-screen flex-col bg-gray-50">
-                <Header title="스터디 지원현황" onBack={onBack} />
+                <Header onBack={onBack} />
                 <div className="flex flex-1 items-center justify-center px-6">
                     <div className="mx-auto max-w-md text-center">
                         <div className="mb-8">
@@ -106,7 +105,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     if (error) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="스터디 지원현황" onBack={onBack} />
+                <Header onBack={onBack} />
                 <div className="mx-auto max-w-7xl p-6">
                     <div className="flex items-center justify-center py-12">
                         <div className="text-center">
@@ -131,7 +130,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
     if (!studyInfo) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="스터디 지원현황" onBack={onBack} />
+                <Header onBack={onBack} />
                 <div className="mx-auto max-w-7xl p-6">
                     <div className="flex items-center justify-center py-12">
                         <div className="text-center">
@@ -193,7 +192,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Header title="스터디 지원현황" onBack={onBack} />
+            <Header onBack={onBack} />
 
             <div className="mx-auto max-w-7xl p-6">
                 <div className="flex flex-col gap-6 lg:flex-row">

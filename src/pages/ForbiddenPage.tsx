@@ -3,19 +3,17 @@ import meditateData from "@/assets/Meditate girl.json";
 import Header from "@/components/ui/Header";
 
 interface ForbiddenPageProps {
-    title: string;
     message?: string;
     onBack?: (() => void) | undefined;
 }
 
 const ForbiddenPage = ({
-    title,
     message = "권한이 없습니다.",
     onBack,
 }: ForbiddenPageProps) => {
     return (
         <div className="flex min-h-screen flex-col bg-gray-50">
-            <Header title={title} onBack={onBack} />
+            <Header onBack={onBack} />
             <div className="flex flex-1 items-center justify-center px-6">
                 <div className="mx-auto max-w-md text-center">
                     <div className="mb-8">

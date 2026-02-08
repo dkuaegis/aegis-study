@@ -96,7 +96,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="스터디 수정하기" onBack={onBack} />
+                <Header onBack={onBack} />
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="text-gray-500">
                         {isRoleLoading
@@ -117,7 +117,6 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     if (!isOwner) {
         return (
             <ForbiddenPage
-                title="스터디 수정하기"
                 message="이 스터디를 수정할 수 있는 권한이 없습니다."
                 onBack={onBack}
             />
@@ -127,7 +126,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
     if (isError || !study) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="스터디 수정하기" onBack={onBack} />
+                <Header onBack={onBack} />
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="text-red-500">
                         스터디 정보를 불러올 수 없습니다.
@@ -158,7 +157,7 @@ const EditStudyPage = ({ studyId, onBack }: EditStudyProps) => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Header title="스터디 수정하기" onBack={onBack} />
+            <Header onBack={onBack} />
 
             <div className="mx-auto max-w-4xl p-6">
                 <StudyFormProvider

@@ -83,7 +83,7 @@ export default function StudyMembersPage({
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="스터디원 관리" onBack={onBack} />
+                <Header onBack={onBack} />
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="text-gray-500">
                         {isRoleLoading
@@ -104,7 +104,6 @@ export default function StudyMembersPage({
     if (!isOwner) {
         return (
             <ForbiddenPage
-                title="스터디원 관리"
                 message="이 스터디의 스터디원을 관리할 수 있는 권한이 없습니다."
                 onBack={onBack}
             />
@@ -114,7 +113,7 @@ export default function StudyMembersPage({
     if (error) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <Header title="스터디원 관리" onBack={onBack} />
+                <Header onBack={onBack} />
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="text-red-600">{error}</div>
                 </div>
@@ -124,7 +123,7 @@ export default function StudyMembersPage({
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Header title="스터디원 관리" onBack={onBack} />
+            <Header onBack={onBack} />
             <div className="mx-auto max-w-4xl p-6">
                 <Card className="border-gray-200">
                     <CardHeader>

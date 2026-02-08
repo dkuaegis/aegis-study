@@ -19,7 +19,7 @@ const CreateStudyPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Header title="스터디 개설하기" onBack={handleBack} />
+            <Header onBack={handleBack} />
 
             <div className="mx-auto max-w-4xl p-6">
                 <StudyFormProvider
