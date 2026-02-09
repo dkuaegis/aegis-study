@@ -5,81 +5,65 @@ import { Button } from "@/components/ui/button";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
 
 interface StudyFormContentProps {
-    onCancel: () => void;
-    submitText: string;
-    submittingText: string;
+  onCancel: () => void;
+  submitText: string;
+  submittingText: string;
 }
 
 const StudyFormContent = ({
-    onCancel,
-    submitText,
-    submittingText,
+  onCancel,
+  submitText,
+  submittingText,
 }: StudyFormContentProps) => {
-    const { form, onSubmit, isEditMode } = useStudyFormContext();
-    const [confirmOpen, setConfirmOpen] = useState(false);
+  const { form, onSubmit, isEditMode } = useStudyFormContext();
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
-    return (
-        <form
-            className="space-y-6"
-            onSubmit={form.handleSubmit(() => setConfirmOpen(true))}
+  return (
+    <form
+      className="study-form"
+      onSubmit={form.handleSubmit(() => setConfirmOpen(true))}
+    >
+      <StudyFormFields />
+      <div className="study-form-actions">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+          className="form-btn-cancel"
         >
-            <StudyFormFields />
-            <div className="flex justify-end gap-3 pt-6">
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={onCancel}
-                    className="group relative min-w-[120px] overflow-hidden border-gray-200 bg-transparent text-gray-700 transition-colors hover:bg-gray-200"
-                >
-                    <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
-                    >
-                        <span
-                            aria-hidden="true"
-                            className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
-                        />
-                    </span>
-                    <span className="relative z-10">취소</span>
-                </Button>
-                <StudyConfirmationDialog
-                    onConfirm={form.handleSubmit(onSubmit)}
-                    isSubmitting={form.formState.isSubmitting}
-                    submitText={submitText}
-                    submittingText={submittingText}
-                    title={isEditMode ? "스터디 수정 확인" : "스터디 개설 확인"}
-                    description={
-                        isEditMode
-                            ? "정말로 수정하시겠습니까?"
-                            : "정말로 개설하시겠습니까?"
-                    }
-                    open={confirmOpen}
-                    onOpenChange={setConfirmOpen}
-                >
-                    <Button
-                        type="button"
-                        disabled={form.formState.isSubmitting}
-                        className="group relative min-w-[120px] overflow-hidden bg-blue-600 text-white transition-colors hover:bg-blue-700"
-                    >
-                        <span
-                            aria-hidden="true"
-                            className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
-                        >
-                            <span
-                                aria-hidden="true"
-                                className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
-                            />
-                        </span>
-                        <span className="relative z-10">
-                            {form.formState.isSubmitting
-                                ? submittingText
-                                : submitText}
-                        </span>
-                    </Button>
-                </StudyConfirmationDialog>
-            </div>
-        </form>
-    );
+          <span aria-hidden="true" className="dialog-btn-ripple-container">
+            <span aria-hidden="true" className="dialog-btn-ripple" />
+          </span>
+          <span className="dialog-btn-text">취소</span>
+        </Button>
+        <StudyConfirmationDialog
+          onConfirm={form.handleSubmit(onSubmit)}
+          isSubmitting={form.formState.isSubmitting}
+          submitText={submitText}
+          submittingText={submittingText}
+          title={isEditMode ? "스터디 수정 확인" : "스터디 개설 확인"}
+          description={
+            isEditMode ? "정말로 수정하시겠습니까?" : "정말로 개설하시겠습니까?"
+          }
+          open={confirmOpen}
+          onOpenChange={setConfirmOpen}
+        >
+          <Button
+            type="button"
+            disabled={form.formState.isSubmitting}
+            className="form-btn-submit"
+          >
+            <span aria-hidden="true" className="dialog-btn-ripple-container">
+              <span aria-hidden="true" className="dialog-btn-ripple" />
+            </span>
+            <span className="dialog-btn-text">
+              {form.formState.isSubmitting ? submittingText : submitText}
+            </span>
+          </Button>
+        </StudyConfirmationDialog>
+      </div>
+    </form>
+  );
 };
 
 export default StudyFormContent;

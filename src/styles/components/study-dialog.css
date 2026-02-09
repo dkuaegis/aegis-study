@@ -1,0 +1,50 @@
+@layer components {
+  /* Study Confirmation Dialog Styles */
+  .study-dialog-content {
+    @apply max-w-[calc(100vw-8rem)] sm:max-w-lg;
+  }
+
+  .dialog-btn-base {
+    @apply group relative min-w-[120px] overflow-hidden transition-colors;
+  }
+
+  .dialog-btn-cancel {
+    @apply dialog-btn-base bg-gray-200 text-gray-700 hover:bg-gray-300;
+  }
+
+  .dialog-btn-confirm {
+    @apply dialog-btn-base bg-blue-600 text-white hover:bg-blue-700;
+  }
+
+  .dialog-btn-ripple-container {
+    @apply pointer-events-none absolute inset-0 z-0 flex items-center justify-center;
+  }
+
+  .dialog-btn-ripple {
+    @apply h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 
+           transition-opacity transition-transform duration-500 ease-out 
+           group-hover:scale-100 group-hover:opacity-20 
+           motion-reduce:transform-none motion-reduce:transition-none;
+  }
+
+  .dialog-btn-text {
+    @apply relative z-10;
+  }
+
+  /* Study Form Styles */
+  .study-form {
+    @apply space-y-6;
+  }
+
+  .study-form-actions {
+    @apply flex justify-end gap-3 pt-6;
+  }
+
+  .form-btn-cancel {
+    @apply dialog-btn-base border-gray-200 bg-transparent text-gray-700 hover:bg-gray-200;
+  }
+
+  .form-btn-submit {
+    @apply dialog-btn-base bg-blue-600 text-white hover:bg-blue-700;
+  }
+}
