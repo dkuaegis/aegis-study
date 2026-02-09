@@ -43,7 +43,7 @@ const StudyConfirmationDialog = ({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="dialog-btn-cancel">
+          <AlertDialogCancel className="group dialog-btn-cancel">
             <span aria-hidden="true" className="dialog-btn-ripple-container">
               <span aria-hidden="true" className="dialog-btn-ripple" />
             </span>
@@ -52,7 +52,7 @@ const StudyConfirmationDialog = ({
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isSubmitting}
-            className="dialog-btn-confirm"
+            className="group dialog-btn-confirm"
           >
             <span aria-hidden="true" className="dialog-btn-ripple-container">
               <span aria-hidden="true" className="dialog-btn-ripple" />

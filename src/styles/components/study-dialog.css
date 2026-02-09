@@ -4,16 +4,31 @@
     @apply max-w-[calc(100vw-8rem)] sm:max-w-lg;
   }
 
-  .dialog-btn-base {
-    @apply group relative min-w-[120px] overflow-hidden transition-colors;
+  /* Button specificity - override default variant */
+  .dialog-btn-cancel {
+    position: relative;
+    min-width: 120px;
+    overflow: hidden;
+    transition-property: color, background-color, border-color;
+    background-color: rgb(229 231 235);
+    color: rgb(55 65 81);
   }
 
-  .dialog-btn-cancel {
-    @apply dialog-btn-base bg-gray-200 text-gray-700 hover:bg-gray-300;
+  .dialog-btn-cancel:hover {
+    background-color: rgb(209 213 219);
   }
 
   .dialog-btn-confirm {
-    @apply dialog-btn-base bg-blue-600 text-white hover:bg-blue-700;
+    position: relative;
+    min-width: 120px;
+    overflow: hidden;
+    transition-property: color, background-color, border-color;
+    background-color: rgb(37 99 235);
+    color: white;
+  }
+
+  .dialog-btn-confirm:hover {
+    background-color: rgb(29 78 216);
   }
 
   .dialog-btn-ripple-container {
@@ -23,8 +38,12 @@
   .dialog-btn-ripple {
     @apply h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 
            transition-opacity transition-transform duration-500 ease-out 
-           group-hover:scale-100 group-hover:opacity-20 
            motion-reduce:transform-none motion-reduce:transition-none;
+  }
+
+  /* Ripple hover effect - activated by parent group */
+  .group:hover .dialog-btn-ripple {
+    @apply scale-100 opacity-20;
   }
 
   .dialog-btn-text {
@@ -40,11 +59,30 @@
     @apply flex justify-end gap-3 pt-6;
   }
 
+  /* Button specificity - override default variant */
   .form-btn-cancel {
-    @apply dialog-btn-base border-gray-200 bg-transparent text-gray-700 hover:bg-gray-200;
+    position: relative;
+    min-width: 120px;
+    overflow: hidden;
+    transition-property: color, background-color, border-color;
+    background-color: transparent;
+    color: rgb(55 65 81);
+  }
+
+  .form-btn-cancel:hover {
+    background-color: rgb(229 231 235);
   }
 
   .form-btn-submit {
-    @apply dialog-btn-base bg-blue-600 text-white hover:bg-blue-700;
+    position: relative;
+    min-width: 120px;
+    overflow: hidden;
+    transition-property: color, background-color, border-color;
+    background-color: rgb(37 99 235);
+    color: white;
+  }
+
+  .form-btn-submit:hover {
+    background-color: rgb(29 78 216);
   }
 }

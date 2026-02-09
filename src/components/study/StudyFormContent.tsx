@@ -29,7 +29,7 @@ const StudyFormContent = ({
           type="button"
           variant="outline"
           onClick={onCancel}
-          className="form-btn-cancel"
+          className="group form-btn-cancel"
         >
           <span aria-hidden="true" className="dialog-btn-ripple-container">
             <span aria-hidden="true" className="dialog-btn-ripple" />
@@ -51,7 +51,7 @@ const StudyFormContent = ({
           <Button
             type="button"
             disabled={form.formState.isSubmitting}
-            className="form-btn-submit"
+            className="group form-btn-submit !bg-blue-600 !text-white hover:!bg-blue-700"
           >
             <span aria-hidden="true" className="dialog-btn-ripple-container">
               <span aria-hidden="true" className="dialog-btn-ripple" />
