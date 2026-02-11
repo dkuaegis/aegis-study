@@ -97,7 +97,7 @@ const ApplicationCard = ({
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="application-status-section">
             {getStatusBadge(application.status)}
           </div>
         </div>

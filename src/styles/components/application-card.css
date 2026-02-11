@@ -47,6 +47,10 @@
     @apply flex space-x-2;
   }
 
+  .application-status-section {
+    @apply flex items-center space-x-3;
+  }
+
   .dialog-content {
     @apply mt-6;
   }
