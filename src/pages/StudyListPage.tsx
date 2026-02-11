@@ -81,7 +81,7 @@ const StudyList = ({
                                                     study.maxParticipants ||
                                                 study.maxParticipants === 0
                                                     ? "모집중"
-                                                    : "진행중"}
+                                                    : "모집완료"}
                                             </Badge>
                                         </div>
 

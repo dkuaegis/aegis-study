@@ -24,7 +24,6 @@ export function useExternalBrowser() {
             ua.includes(browser.pattern)
         );
 
-
         if (detected) {
             setIsInAppBrowser(true);
             setBrowserName(detected.name);

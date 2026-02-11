@@ -84,7 +84,7 @@ export const StudyHeader = ({
                         : "bg-gray-100 text-gray-800"
                 }`}
             >
-                {isRecruiting ? "모집중" : "진행중"}
+                {isRecruiting ? "모집중" : "모집완료"}
             </Badge>
         );
     };
