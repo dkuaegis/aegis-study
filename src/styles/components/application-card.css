@@ -47,42 +47,6 @@
     @apply flex space-x-2;
   }
 
-  .status-badge-pending {
-    @apply border-yellow-200 bg-yellow-100 text-yellow-800;
-  }
-
-  .status-badge-approved {
-    @apply border-green-200 bg-green-100 text-green-800;
-  }
-
-  .status-badge-rejected {
-    @apply border-red-200 bg-red-100 text-red-800;
-  }
-
-  .btn-view-application {
-    @apply border-blue-200 bg-white text-blue-600 hover:bg-blue-50;
-  }
-
-  .btn-approve {
-    @apply bg-green-600 text-white shadow-sm hover:bg-green-700;
-  }
-
-  .btn-reject {
-    @apply border-red-200 bg-white text-red-600 hover:bg-red-50;
-  }
-
-  .dialog-max-width {
-    @apply max-w-2xl;
-  }
-
-  .dialog-header-title {
-    @apply flex items-center;
-  }
-
-  .dialog-icon {
-    @apply mr-2 h-5 w-5 text-blue-600;
-  }
-
   .dialog-content {
     @apply mt-6;
   }
@@ -129,5 +93,44 @@
 
   .icon-size-xs {
     @apply mr-1 h-4 w-4;
+  }
+}
+
+/* Utilities that need to override component defaults */
+@layer utilities {
+  .dialog-max-width {
+    @apply max-w-2xl sm:max-w-2xl;
+  }
+
+  .dialog-header-title {
+    @apply flex items-center;
+  }
+
+  .dialog-icon {
+    @apply mr-2 h-5 w-5 text-blue-600;
+  }
+
+  .status-badge-pending {
+    @apply border-yellow-200 bg-yellow-100 text-yellow-800;
+  }
+
+  .status-badge-approved {
+    @apply border-green-200 bg-green-100 text-green-800;
+  }
+
+  .status-badge-rejected {
+    @apply border-red-200 bg-red-100 text-red-800;
+  }
+
+  .btn-view-application {
+    @apply border-blue-200 bg-white text-blue-600 hover:bg-blue-50;
+  }
+
+  .btn-approve {
+    @apply bg-green-600 text-white shadow-sm hover:bg-green-700;
+  }
+
+  .btn-reject {
+    @apply border-red-200 bg-white text-red-600 hover:bg-red-50;
   }
 }

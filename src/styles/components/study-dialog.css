@@ -5,7 +5,7 @@
 
   .dialog-btn-ripple {
     @apply h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 
-           transition-opacity transition-transform duration-500 ease-out 
+           transition duration-500 ease-out 
            motion-reduce:transform-none motion-reduce:transition-none;
   }
 
