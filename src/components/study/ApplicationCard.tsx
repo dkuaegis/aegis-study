@@ -87,8 +87,8 @@ const ApplicationCard = ({
             </Avatar>
             <div>
               <h3 className="application-name">{application.name}</h3>
-              <div className="mt-1 flex items-center text-gray-500 text-sm">
-                <span className="mr-2 font-medium">📞</span>
+              <div className="application-contact-info">
+                <span className="application-contact-icon">📞</span>
                 {application.phone}
               </div>
               <div className="application-contact-info">
