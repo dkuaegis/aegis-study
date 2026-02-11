@@ -51,7 +51,7 @@ const StudyFormContent = ({
           <Button
             type="button"
             disabled={form.formState.isSubmitting}
-            className="group form-btn-submit !bg-blue-600 !text-white hover:!bg-blue-700"
+            className="group form-btn-submit"
           >
             <span aria-hidden="true" className="dialog-btn-ripple-container">
               <span aria-hidden="true" className="dialog-btn-ripple" />

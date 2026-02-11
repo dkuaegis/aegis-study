@@ -78,10 +78,10 @@ const ApplicationCard = ({
   return (
     <Card className="application-card">
       <CardContent className="application-card-content">
-        <div className="mb-6 flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-12 w-12">
-              <AvatarFallback className="bg-blue-100 font-semibold text-blue-600 text-lg">
+        <div className="application-header">
+          <div className="application-avatar-section">
+            <Avatar className="application-avatar">
+              <AvatarFallback className="application-avatar-fallback">
                 {getInitials(application.name)}
               </AvatarFallback>
             </Avatar>

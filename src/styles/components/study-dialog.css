@@ -1,36 +1,4 @@
 @layer components {
-  /* Study Confirmation Dialog Styles */
-  .study-dialog-content {
-    @apply max-w-[calc(100vw-8rem)] sm:max-w-lg;
-  }
-
-  /* Button specificity - override default variant */
-  .dialog-btn-cancel {
-    position: relative;
-    min-width: 120px;
-    overflow: hidden;
-    transition-property: color, background-color, border-color;
-    background-color: rgb(229 231 235);
-    color: rgb(55 65 81);
-  }
-
-  .dialog-btn-cancel:hover {
-    background-color: rgb(209 213 219);
-  }
-
-  .dialog-btn-confirm {
-    position: relative;
-    min-width: 120px;
-    overflow: hidden;
-    transition-property: color, background-color, border-color;
-    background-color: rgb(37 99 235);
-    color: white;
-  }
-
-  .dialog-btn-confirm:hover {
-    background-color: rgb(29 78 216);
-  }
-
   .dialog-btn-ripple-container {
     @apply pointer-events-none absolute inset-0 z-0 flex items-center justify-center;
   }
@@ -58,8 +26,39 @@
   .study-form-actions {
     @apply flex justify-end gap-3 pt-6;
   }
+}
 
-  /* Button specificity - override default variant */
+@layer utilities {
+  .study-dialog-content {
+    @apply max-w-[calc(100vw-8rem)] sm:max-w-lg;
+  }
+
+  .dialog-btn-cancel {
+    position: relative;
+    min-width: 120px;
+    overflow: hidden;
+    transition-property: color, background-color, border-color;
+    background-color: rgb(229 231 235);
+    color: rgb(55 65 81);
+  }
+
+  .dialog-btn-cancel:hover {
+    background-color: rgb(209 213 219);
+  }
+
+  .dialog-btn-confirm {
+    position: relative;
+    min-width: 120px;
+    overflow: hidden;
+    transition-property: color, background-color, border-color;
+    background-color: rgb(37 99 235);
+    color: white;
+  }
+
+  .dialog-btn-confirm:hover {
+    background-color: rgb(29 78 216);
+  }
+
   .form-btn-cancel {
     position: relative;
     min-width: 120px;

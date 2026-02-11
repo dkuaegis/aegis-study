@@ -1,5 +1,4 @@
 @layer components {
-  /* Application Card Styles */
   .application-card {
     @apply border border-gray-200 transition-all duration-200 hover:shadow-md;
   }
@@ -48,7 +47,6 @@
     @apply flex space-x-2;
   }
 
-  /* Status Badge Styles */
   .status-badge-pending {
     @apply border-yellow-200 bg-yellow-100 text-yellow-800;
   }
@@ -61,7 +59,6 @@
     @apply border-red-200 bg-red-100 text-red-800;
   }
 
-  /* Button Styles */
   .btn-view-application {
     @apply border-blue-200 bg-white text-blue-600 hover:bg-blue-50;
   }
@@ -74,7 +71,6 @@
     @apply border-red-200 bg-white text-red-600 hover:bg-red-50;
   }
 
-  /* Dialog Styles */
   .dialog-max-width {
     @apply max-w-2xl;
   }
