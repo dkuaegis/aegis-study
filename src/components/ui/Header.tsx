@@ -5,10 +5,9 @@ import { Button } from "./button";
 
 interface HeaderProps {
     onBack?: () => void;
-    right?: React.ReactNode;
 }
 
-const Header: React.FC<HeaderProps> = ({ onBack, right }) => {
+const Header: React.FC<HeaderProps> = ({ onBack }) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
@@ -50,7 +49,6 @@ const Header: React.FC<HeaderProps> = ({ onBack, right }) => {
                         >
                             MYPAGE
                         </a>
-                        {right}
                     </div>
 
                     <button
