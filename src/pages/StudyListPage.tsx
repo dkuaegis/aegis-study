@@ -41,7 +41,7 @@ const StudyList = ({
           <span className="relative z-10">스터디 개설하기</span>
         </Button>
       </div>
-      <main className="mx-auto max-w-none items-center px-6 pb-6">
+      <main className="mx-auto max-w-none items-center px-6 pb-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {loading ? (
             <div className="col-span-full flex items-center justify-center py-8">
