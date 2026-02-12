@@ -46,7 +46,7 @@ const StudyList = ({
                 </Button>
             </div>
             <main className="mx-auto max-w-none items-center px-6 pb-6">
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {loading ? (
                         <div className="col-span-full flex items-center justify-center py-8">
                             <div className="text-gray-500">로딩 중...</div>
