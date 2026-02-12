@@ -57,7 +57,7 @@ const StudyList = ({
             studies.map((study: StudyListItem) => (
               <Card
                 key={study.id}
-                className="w-full min-w-0 cursor-pointer border-gray-200 transition-shadow hover:shadow-md sm:w-[250px]"
+                className="w-full min-w-0 cursor-pointer border-gray-200 transition-shadow hover:shadow-md"
                 onClick={() => onViewStudyDetail(study.id)}
               >
                 <CardContent className="p-6">
