@@ -115,9 +115,9 @@ export const useStudyApplication = ({
             }
             setApplicationText("");
             setIsApplying(false);
+            setIsApplicationModalOpen(false);
         },
         (error) => {
-            // 에러 콜백
             console.error("Enrollment failed:", error);
             const errorMessage =
                 error instanceof Error
@@ -139,7 +139,7 @@ export const useStudyApplication = ({
             });
             setIsApplying(false);
             setShouldLoadApplicationDetail(false);
-            setIsApplicationModalOpen(false); // 모달 닫기
+            setIsApplicationModalOpen(false);
         },
         (error) => {
             console.error("Update application failed:", error);
@@ -176,12 +176,10 @@ export const useStudyApplication = ({
         enrollMutation.mutate({ applicationReason });
     };
 
-    // 지원서 수정하기 버튼 클릭 시 호출
     const handleEditApplication = async () => {
         setShouldLoadApplicationDetail(true);
         try {
             const result = await refetchApplicationDetail();
-            // 편집 시작 시에만 설정
             setEditingApplicationText(result.data?.applicationReason || "");
             setIsApplicationModalOpen(true);
         } catch (error) {
@@ -192,12 +190,9 @@ export const useStudyApplication = ({
         }
     };
 
-    // 지원서 수정 완료 시 호출
     const handleUpdateApplication = async () => {
-        // 중복 요청 방지
         if (isApplying) return;
 
-        // 공백 입력 차단
         const trimmedText = editingApplicationText.trim();
         if (!trimmedText) {
             toast({
@@ -211,7 +206,6 @@ export const useStudyApplication = ({
     };
 
     return {
-        // State
         applicationText,
         isApplying,
         isApplicationModalOpen,
@@ -219,7 +213,6 @@ export const useStudyApplication = ({
         isLoadingApplicationDetail,
         editingApplicationText,
 
-        // Actions
         setApplicationText,
         setIsApplicationModalOpen,
         setEditingApplicationText,

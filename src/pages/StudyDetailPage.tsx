@@ -25,7 +25,6 @@ const StudyDetailPage = ({
     onViewMembers,
     onManageAttendance,
 }: StudyDetailProps) => {
-    // 사용자 역할 확인
     const {
         isInstructor,
         isParticipant,
@@ -59,7 +58,6 @@ const StudyDetailPage = ({
             study?.recruitmentMethod ?? StudyRecruitmentMethod.FCFS,
     });
 
-    // 로딩 상태 처리
     const isLoading = isStudyLoading || isRoleLoading;
 
     if (isLoading) {
@@ -76,7 +74,6 @@ const StudyDetailPage = ({
 
     if (roleError) {
         console.error("사용자 권한 조회 오류:", roleError);
-        // 권한 오류 시에도 기본 권한으로 계속 진행
     }
 
     if (isError) {
@@ -97,7 +94,6 @@ const StudyDetailPage = ({
         );
     }
 
-    // 사용자가 이 스터디의 강사인지 확인
     const isOwner = isInstructor(studyId);
     const isMember = isParticipant(studyId);
 
