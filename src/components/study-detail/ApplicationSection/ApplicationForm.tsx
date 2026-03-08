@@ -12,24 +12,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useApplicationState } from "./ApplicationStateContext";
 
-interface ApplicationFormProps {
-  isApplying: boolean;
-  isApplicationModalOpen: boolean;
-  applicationText: string;
-  setApplicationText: (text: string) => void;
-  setIsApplicationModalOpen: (open: boolean) => void;
-  handleApply: () => Promise<void>;
-}
-
-const ApplicationForm = ({
-  isApplying,
-  isApplicationModalOpen,
-  applicationText,
-  setIsApplicationModalOpen,
-  handleApply,
-  setApplicationText,
-}: ApplicationFormProps) => {
+const ApplicationForm = () => {
+  const {
+    isApplying,
+    isApplicationModalOpen,
+    applicationText,
+    setIsApplicationModalOpen,
+    handleApply,
+    setApplicationText,
+  } = useApplicationState();
   return (
     <>
       <p className="mb-2 text-center text-gray-500 text-xs">
