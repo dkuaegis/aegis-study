@@ -118,6 +118,7 @@ export const useStudyApplication = ({
             setIsApplicationModalOpen(false);
         },
         (error) => {
+            console.error("Enrollment failed:", error);
             const errorMessage =
                 error instanceof Error
                     ? error.message

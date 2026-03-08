@@ -74,8 +74,7 @@ const ApplicationForm = ({ recruiting }: Iprops) => {
                         </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={async () => {
-                                await handleApply();
-                                setIsApplicationModalOpen(false);
+                                void handleApply();
                             }}
                             disabled={!applicationText.trim() || isApplying}
                             className="bg-blue-600 hover:bg-blue-700"
