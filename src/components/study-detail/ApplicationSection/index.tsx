@@ -35,10 +35,10 @@ export const ApplicationSection = ({
     );
 
     const renderApplicationForm = () => {
+        const recruiting = isStudyRecruiting(study);
         if (study.recruitmentMethod === StudyRecruitmentMethod.APPLICATION) {
-            return <ApplicationForm />;
+            return <ApplicationForm recruiting={recruiting} />;
         } else {
-            const recruiting = isStudyRecruiting(study);
             return <FirstComeForm recruiting={recruiting} />;
         }
     };

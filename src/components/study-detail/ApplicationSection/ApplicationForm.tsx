@@ -14,7 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useApplicationState } from "./ApplicationStateContext";
 
-const ApplicationForm = () => {
+interface Iprops {
+    recruiting: boolean;
+}
+
+const ApplicationForm = ({ recruiting }: Iprops) => {
     const {
         isApplying,
         isApplicationModalOpen,
@@ -23,6 +27,7 @@ const ApplicationForm = () => {
         handleApply,
         setApplicationText,
     } = useApplicationState();
+
     return (
         <>
             <p className="mb-2 text-center text-gray-500 text-xs">
@@ -30,7 +35,7 @@ const ApplicationForm = () => {
             </p>
             <Button
                 onClick={() => setIsApplicationModalOpen(true)}
-                disabled={isApplying}
+                disabled={isApplying || !recruiting}
                 aria-busy={isApplying}
                 className="group relative w-full max-w-xl overflow-hidden bg-blue-600 text-white transition-colors hover:bg-blue-700 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
             >
@@ -44,7 +49,7 @@ const ApplicationForm = () => {
             </Button>
 
             <AlertDialog
-                open={isApplicationModalOpen}
+                open={isApplicationModalOpen && recruiting}
                 onOpenChange={setIsApplicationModalOpen}
             >
                 <AlertDialogContent className="max-h-[80vh] max-w-[calc(100vw-12rem)] sm:max-w-4xl">

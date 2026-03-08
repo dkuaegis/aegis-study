@@ -7,7 +7,7 @@ export const useApplicationState = () => {
     const context = useContext(ApplicationStateContext);
     if (!context) {
         throw new Error(
-            "useApplicationState must be used within an ApplicationStateProvider"
+            "useApplicationState must be used within an ApplicationStateContext.Provider"
         );
     }
     return context;

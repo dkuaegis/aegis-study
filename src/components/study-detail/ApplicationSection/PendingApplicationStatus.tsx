@@ -37,14 +37,7 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
             {study.recruitmentMethod === StudyRecruitmentMethod.APPLICATION &&
                 handleEditApplication && (
                     <Button
-                        onClick={async () => {
-                            try {
-                                await handleEditApplication();
-                                setIsApplicationModalOpen(true);
-                            } catch (_e) {
-                                console.error(_e);
-                            }
-                        }}
+                        onClick={handleEditApplication}
                         variant="outline"
                         className="w-full border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50"
                         disabled={isLoadingApplicationDetail}
@@ -89,13 +82,8 @@ const PendingApplicationStatus = ({ study }: PendingApplicationStatusProps) => {
                                     닫기
                                 </AlertDialogCancel>
                                 <AlertDialogAction
-                                    onClick={async () => {
-                                        try {
-                                            await handleUpdateApplication();
-                                            setIsApplicationModalOpen(false);
-                                        } catch (e) {
-                                            console.error(e);
-                                        }
+                                    onClick={() => {
+                                        void handleUpdateApplication();
                                     }}
                                     disabled={
                                         !editingApplicationText.trim() ||
