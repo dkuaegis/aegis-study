@@ -57,19 +57,14 @@ const BasicInfoFields = () => {
                                     <SelectValue placeholder="카테고리를 선택하세요" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {categories.map(
-                                        (category: {
-                                            value: string;
-                                            label: string;
-                                        }) => (
-                                            <SelectItem
-                                                key={category.value}
-                                                value={category.value}
-                                            >
-                                                {category.label}
-                                            </SelectItem>
-                                        )
-                                    )}
+                                    {categories.map((category) => (
+                                        <SelectItem
+                                            key={category.value}
+                                            value={category.value}
+                                        >
+                                            {category.label}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         )}
@@ -93,19 +88,14 @@ const BasicInfoFields = () => {
                                     <SelectValue placeholder="난이도를 선택하세요" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {difficulties.map(
-                                        (difficulty: {
-                                            value: string;
-                                            label: string;
-                                        }) => (
-                                            <SelectItem
-                                                key={difficulty.value}
-                                                value={difficulty.value}
-                                            >
-                                                {difficulty.label}
-                                            </SelectItem>
-                                        )
-                                    )}
+                                    {difficulties.map((difficulty) => (
+                                        <SelectItem
+                                            key={difficulty.value}
+                                            value={difficulty.value}
+                                        >
+                                            {difficulty.label}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         )}
