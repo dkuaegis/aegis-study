@@ -116,7 +116,6 @@ const BasicInfoFields = () => {
                     {(field, { hasError, isDirty }) => (
                         <Textarea
                             {...field}
-                            id="introduction"
                             maxLength={INTRODUCTION_MAX_LENGTH}
                             placeholder="스터디에 대한 자세한 소개를 작성해주세요"
                             className={`mt-1 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}

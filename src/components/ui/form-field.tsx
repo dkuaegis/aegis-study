@@ -3,6 +3,7 @@ import {
     Controller,
     type ControllerRenderProps,
     type FieldError,
+    get,
     type RegisterOptions,
     useFormContext,
 } from "react-hook-form";
@@ -13,7 +14,7 @@ interface IProps {
     required?: boolean;
     rules?: RegisterOptions;
     children: (
-        field: ControllerRenderProps,
+        field: ControllerRenderProps & { id: string },
         meta: {
             hasError: boolean;
             isDirty: boolean;
@@ -37,15 +38,18 @@ const FormField = ({ name, label, required, children, rules }: IProps) => {
                 control={control}
                 rules={rules}
                 render={({ field }) =>
-                    children(field, {
-                        hasError: !!errors[name],
-                        isDirty: !!dirtyFields[name],
-                    })
+                    children(
+                        { ...field, id: name },
+                        {
+                            hasError: !!get(errors, name),
+                            isDirty: !!get(dirtyFields, name),
+                        }
+                    )
                 }
             />
-            {errors[name] && (
+            {get(errors, name) && (
                 <span className="mt-1 block text-red-500 text-xs">
-                    {(errors[name] as FieldError).message}
+                    {(get(errors, name) as FieldError).message}
                 </span>
             )}
         </div>
