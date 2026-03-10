@@ -13,7 +13,11 @@ interface IProps {
     required?: boolean;
     rules?: RegisterOptions;
     children: (
-        field: ControllerRenderProps & { id: string },
+        field: ControllerRenderProps & {
+            id: string;
+            "aria-invalid": boolean;
+            "aria-describedby"?: string;
+        },
         meta: {
             hasError: boolean;
             isDirty: boolean;
@@ -27,6 +31,9 @@ const FormField = ({ name, label, required, children, rules }: IProps) => {
         formState: { errors, dirtyFields },
     } = useFormContext();
 
+    const error = errors[name] as FieldError | undefined;
+    const errorId = `${name}-error`;
+
     return (
         <div>
             <Label htmlFor={name} className="font-medium text-gray-900 text-sm">
@@ -38,17 +45,22 @@ const FormField = ({ name, label, required, children, rules }: IProps) => {
                 rules={rules}
                 render={({ field }) =>
                     children(
-                        { ...field, id: name },
                         {
-                            hasError: !!errors[name],
+                            ...field,
+                            id: name,
+                            "aria-invalid": !!error,
+                            "aria-describedby": error ? errorId : undefined,
+                        },
+                        {
+                            hasError: !!error,
                             isDirty: !!dirtyFields[name],
                         }
                     )
                 }
             />
-            {errors[name] && (
-                <span className="mt-1 block text-red-500 text-xs">
-                    {(errors[name] as FieldError).message}
+            {error && (
+                <span id={errorId} className="mt-1 block text-red-500 text-xs">
+                    {error.message}
                 </span>
             )}
         </div>

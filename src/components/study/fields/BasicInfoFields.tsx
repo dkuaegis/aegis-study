@@ -54,8 +54,9 @@ const BasicInfoFields = () => {
                                     ref={field.ref}
                                     id={field.id}
                                     onBlur={field.onBlur}
+                                    aria-invalid={field["aria-invalid"]}
+                                    aria-describedby={field["aria-describedby"]}
                                     className={`mt-1 border-gray-300 focus:border-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
-                                    aria-invalid={hasError}
                                 >
                                     <SelectValue placeholder="카테고리를 선택하세요" />
                                 </SelectTrigger>
@@ -88,8 +89,9 @@ const BasicInfoFields = () => {
                                     ref={field.ref}
                                     id={field.id}
                                     onBlur={field.onBlur}
+                                    aria-invalid={field["aria-invalid"]}
+                                    aria-describedby={field["aria-describedby"]}
                                     className={`mt-1 border-gray-300 focus:border-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
-                                    aria-invalid={hasError}
                                 >
                                     <SelectValue placeholder="난이도를 선택하세요" />
                                 </SelectTrigger>
@@ -125,7 +127,6 @@ const BasicInfoFields = () => {
                             maxLength={INTRODUCTION_MAX_LENGTH}
                             placeholder="스터디에 대한 자세한 소개를 작성해주세요"
                             className={`mt-1 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
-                            aria-invalid={hasError}
                         />
                     )}
                 </FormField>
