@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
 
+const SCHEDULE_MAX_LENGTH = 100;
+
 const ScheduleFields = () => {
     const {
         form: { control },
@@ -33,6 +35,7 @@ const ScheduleFields = () => {
                             render={({ field }) => (
                                 <Input
                                     {...field}
+                                    maxLength={SCHEDULE_MAX_LENGTH}
                                     id="schedule"
                                     placeholder="예: 매주 화, 목 19:00-21:00"
                                     className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
