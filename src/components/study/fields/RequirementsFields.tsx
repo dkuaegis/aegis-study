@@ -10,7 +10,7 @@ const RequirementsFields = () => {
     const {
         form: {
             control,
-            formState: { errors, isDirty },
+            formState: { errors },
         },
         requirementFieldArray,
     } = useStudyFormContext();
@@ -53,7 +53,7 @@ const RequirementsFields = () => {
                                         value.trim() !== "" ||
                                         "지원 자격 조건을 입력하세요.",
                                 }}
-                                render={({ field }) => (
+                                render={({ field, fieldState }) => (
                                     <Textarea
                                         value={field.value ?? ""}
                                         onChange={(e) =>
@@ -64,8 +64,8 @@ const RequirementsFields = () => {
                                         ref={field.ref}
                                         placeholder="지원 자격 조건을 입력하세요"
                                         className={
-                                            errors.requirements?.[index] &&
-                                            isDirty
+                                            fieldState.invalid &&
+                                            fieldState.isDirty
                                                 ? "min-h-[40px] flex-1 resize-y border-red-500 focus:border-red-500 focus:ring-red-500"
                                                 : "min-h-[40px] flex-1 resize-y border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                         }
