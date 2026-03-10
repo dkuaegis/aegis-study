@@ -51,6 +51,9 @@ const BasicInfoFields = () => {
                                 name={field.name}
                             >
                                 <SelectTrigger
+                                    ref={field.ref}
+                                    id={field.id}
+                                    onBlur={field.onBlur}
                                     className={`mt-1 border-gray-300 focus:border-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
                                     aria-invalid={hasError}
                                 >
@@ -82,6 +85,9 @@ const BasicInfoFields = () => {
                                 name={field.name}
                             >
                                 <SelectTrigger
+                                    ref={field.ref}
+                                    id={field.id}
+                                    onBlur={field.onBlur}
                                     className={`mt-1 border-gray-300 focus:border-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
                                     aria-invalid={hasError}
                                 >
