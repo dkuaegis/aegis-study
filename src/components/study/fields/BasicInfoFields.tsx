@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useStudyFormContext } from "@/hooks/useStudyForm";
 
 const INTRODUCTION_MAX_LENGTH = 1000;
+const TITLE_MAX_LENGTH = 30;
 
 const BasicInfoFields = () => {
     const { difficulties, categories } = useStudyFormContext();
@@ -27,13 +28,24 @@ const BasicInfoFields = () => {
                     name="title"
                     label="스터디명"
                     required
-                    rules={{ required: "스터디명을 입력하세요." }}
+                    rules={{
+                        required: "스터디명을 입력하세요.",
+                        maxLength: {
+                            value: TITLE_MAX_LENGTH,
+                            message: `스터디명은 ${TITLE_MAX_LENGTH}자 이내로 입력해주세요.`,
+                        },
+                    }}
                 >
                     {(field, { hasError, isDirty }) => (
                         <Textarea
                             {...field}
+                            maxLength={TITLE_MAX_LENGTH}
                             placeholder="스터디명을 입력하세요"
-                            className={`mt-1 min-h-[40px] resize-y border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
+                            className={
+                                hasError && isDirty
+                                    ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                            }
                         />
                     )}
                 </FormField>
@@ -56,7 +68,11 @@ const BasicInfoFields = () => {
                                     onBlur={field.onBlur}
                                     aria-invalid={field["aria-invalid"]}
                                     aria-describedby={field["aria-describedby"]}
-                                    className={`mt-1 border-gray-300 focus:border-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
+                                    className={
+                                        hasError && isDirty
+                                            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                                            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                    }
                                 >
                                     <SelectValue placeholder="카테고리를 선택하세요" />
                                 </SelectTrigger>
@@ -91,7 +107,11 @@ const BasicInfoFields = () => {
                                     onBlur={field.onBlur}
                                     aria-invalid={field["aria-invalid"]}
                                     aria-describedby={field["aria-describedby"]}
-                                    className={`mt-1 border-gray-300 focus:border-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
+                                    className={
+                                        hasError && isDirty
+                                            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                                            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                    }
                                 >
                                     <SelectValue placeholder="난이도를 선택하세요" />
                                 </SelectTrigger>
@@ -126,7 +146,11 @@ const BasicInfoFields = () => {
                             {...field}
                             maxLength={INTRODUCTION_MAX_LENGTH}
                             placeholder="스터디에 대한 자세한 소개를 작성해주세요"
-                            className={`mt-1 min-h-[120px] border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
+                            className={
+                                hasError && isDirty
+                                    ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                            }
                         />
                     )}
                 </FormField>
