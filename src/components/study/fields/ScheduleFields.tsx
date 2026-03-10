@@ -31,7 +31,11 @@ const ScheduleFields = () => {
                                 {...field}
                                 maxLength={SCHEDULE_MAX_LENGTH}
                                 placeholder="예: 모집후 결정, 매주 화 19시"
-                                className={`border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${hasError && isDirty ? "border-red-500" : ""}`}
+                                className={
+                                    hasError && isDirty
+                                        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                                        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                }
                             />
                         </div>
                     )}
