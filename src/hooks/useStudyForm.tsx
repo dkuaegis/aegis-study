@@ -5,7 +5,7 @@ import type {
     UseFieldArrayReturn,
     UseFormReturn,
 } from "react-hook-form";
-import { useFieldArray, useForm } from "react-hook-form";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { useCreateStudyMutation } from "@/api/createStudyApi";
 import {
     StudyCategory,
@@ -226,7 +226,7 @@ export const StudyFormProvider: React.FC<{
     const value = useStudyForm(initialValues, onComplete, isEditMode);
     return (
         <StudyFormContext.Provider value={value}>
-            {children}
+            <FormProvider {...value.form}> {children}</FormProvider>
         </StudyFormContext.Provider>
     );
 };
