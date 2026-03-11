@@ -83,7 +83,11 @@ function handleHTTPError(
             (status && errorMessages[status]) || errorMessages.default;
         throw new Error(message);
     }
-    throw error;
+    if (error instanceof Error) {
+        throw error;
+    }
+
+    throw new Error(`${errorMessages.default}: ${String(error)}`);
 }
 
 function invalidateStudyQueries(
@@ -150,7 +154,10 @@ export async function getStudyStatus(
         if (error instanceof HTTPError && error.response?.status === 404) {
             return null;
         }
-        throw error;
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error(`스터디 상태 조회 중 오류: ${String(error)}`);
     }
 }
 
