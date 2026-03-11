@@ -120,23 +120,19 @@ export async function enrollInStudy(
             }
         );
 
-        if (response.ok) {
-            const fallback: EnrollmentResponse = {
-                message: "지원이 완료되었습니다.",
-                status: "PENDING",
-            };
-            if (response.status === 204) return fallback;
-            const contentType =
-                response.headers.get("content-type")?.toLowerCase() ?? "";
-            if (!contentType.includes("application/json")) return fallback;
-            try {
-                return (await response.json()) as EnrollmentResponse;
-            } catch {
-                return fallback;
-            }
+        const fallback: EnrollmentResponse = {
+            message: "지원이 완료되었습니다.",
+            status: "PENDING",
+        };
+        if (response.status === 204) return fallback;
+        const contentType =
+            response.headers.get("content-type")?.toLowerCase() ?? "";
+        if (!contentType.startsWith("application/json")) return fallback;
+        try {
+            return (await response.json()) as EnrollmentResponse;
+        } catch {
+            return fallback;
         }
-
-        throw new Error(`Unexpected response status: ${response.status}`);
     } catch (error: unknown) {
         handleHTTPError(error, ERROR_MESSAGES.enrollment);
     }
