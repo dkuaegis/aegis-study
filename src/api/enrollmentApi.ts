@@ -96,6 +96,9 @@ function invalidateStudyQueries(
     queryClient.invalidateQueries({
         queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
     });
+    queryClient.invalidateQueries({
+        queryKey: ENROLLMENT_QUERY_KEYS.userApplication(studyId),
+    });
 }
 
 function isValidStudyId(studyId: number): boolean {
@@ -212,8 +215,8 @@ export const useStudyStatusQuery = (
 export const useUserApplicationDetailQuery = (
     studyId: number,
     enabled: boolean = false
-): UseQueryResult<UserApplicationDetail | null, Error> => {
-    return useQuery<UserApplicationDetail | null, Error>({
+): UseQueryResult<UserApplicationDetail, Error> => {
+    return useQuery<UserApplicationDetail, Error>({
         queryKey: ENROLLMENT_QUERY_KEYS.userApplication(studyId),
         queryFn: ({ signal }) => getUserApplicationDetail(studyId, signal),
         enabled: enabled && isValidStudyId(studyId),
@@ -274,7 +277,7 @@ export const useUpdateUserApplicationMutation = (
             onSuccess?.();
         },
         onError: (error: Error) => {
-            if (onError) onError(error);
+            onError?.(error);
         },
     });
 };
