@@ -276,7 +276,12 @@ export const useUpdateUserApplicationMutation = (
     return useMutation<void, Error, UpdateApplicationPayload>({
         mutationFn: (payload) => updateUserApplication(studyId, payload),
         onSuccess: () => {
-            invalidateStudyQueries(queryClient, studyId);
+            queryClient.invalidateQueries({
+                queryKey: ENROLLMENT_QUERY_KEYS.userApplication(studyId),
+            });
+            queryClient.invalidateQueries({
+                queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
+            });
             onSuccess?.();
         },
         onError: (error: Error) => {
