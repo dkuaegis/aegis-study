@@ -33,11 +33,8 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                         {(Array.isArray(study.curricula)
                             ? study.curricula
                             : []
-                        ).map((item: string, idx: number) => (
-                            <div
-                                key={`${idx}-${item.substring(0, 20)}`}
-                                className="flex items-start"
-                            >
+                        ).map((item: string) => (
+                            <div key={item} className="flex items-start">
                                 <CheckCircle className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-600" />
                                 <span className="whitespace-pre-line text-gray-700">
                                     {item}
@@ -59,9 +56,9 @@ export const StudyContent = ({ study }: StudyContentProps) => {
                         {(Array.isArray(study.qualifications)
                             ? study.qualifications
                             : []
-                        ).map((qualification: string, idx: number) => (
+                        ).map((qualification: string) => (
                             <div
-                                key={`${idx}-${qualification.substring(0, 20)}`}
+                                key={qualification}
                                 className="flex items-start"
                             >
                                 <span className="mt-2 mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-gray-400" />

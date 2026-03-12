@@ -200,7 +200,7 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
                                             </th>
                                             {sessions.map((session, idx) => (
                                                 <th
-                                                    key={`${session.sessionId}-${idx}`}
+                                                    key={session.sessionId}
                                                     className="min-w-[65px] border border-gray-200 p-3 text-center font-medium"
                                                 >
                                                     {idx + 1}회차
@@ -243,7 +243,9 @@ const AttendancePage = ({ studyId, onBack }: AttendanceProps) => {
 
                                                             return (
                                                                 <td
-                                                                    key={`${session.sessionId}-${idx}`}
+                                                                    key={
+                                                                        session.sessionId
+                                                                    }
                                                                     className="min-w-[60px] border border-gray-200 p-2 text-center"
                                                                 >
                                                                     <div className="flex flex-col items-center gap-1">
