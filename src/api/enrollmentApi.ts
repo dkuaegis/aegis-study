@@ -1,4 +1,5 @@
 import {
+    type QueryClient,
     type UseMutationResult,
     type UseQueryResult,
     useMutation,
@@ -24,7 +25,6 @@ export interface StudyStatusResponse {
     status: "PENDING" | "APPROVED" | "REJECTED";
 }
 
-// 사용자 지원서 상세 정보
 export interface UserApplicationDetail {
     studyApplicationId: number;
     status: "PENDING" | "APPROVED" | "REJECTED";
@@ -33,9 +33,80 @@ export interface UserApplicationDetail {
     studyDescription: string;
 }
 
-// 지원서 수정 페이로드
 export interface UpdateApplicationPayload {
     applicationReason: string;
+}
+
+// Constants
+const QUERY_OPTIONS = {
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+} as const;
+
+const ERROR_MESSAGES = {
+    enrollment: {
+        400: "잘못된 요청 데이터입니다.",
+        403: "지원 기간이 아닙니다.",
+        404: "스터디를 찾을 수 없습니다.",
+        409: "이미 신청된 상태입니다.",
+        default: "스터디 신청 중 오류가 발생했습니다.",
+    },
+    cancel: {
+        400: "잘못된 요청입니다.",
+        404: "스터디를 찾을 수 없습니다.",
+        default: "신청 취소 중 오류가 발생했습니다.",
+    },
+    userApplication: {
+        404: "지원서를 찾을 수 없습니다.",
+        default: "지원서 조회 중 오류가 발생했습니다.",
+    },
+    updateApplication: {
+        400: "잘못된 요청 데이터입니다.",
+        404: "지원서를 찾을 수 없습니다.",
+        default: "지원서 수정 중 오류가 발생했습니다.",
+    },
+} as const;
+
+export const ENROLLMENT_QUERY_KEYS = {
+    studyStatus: (studyId: number) => ["studyStatus", studyId] as const,
+    userApplication: (studyId: number) => ["userApplication", studyId] as const,
+} as const;
+
+// Utility Functions
+function handleHTTPError(
+    error: unknown,
+    errorMessages: Record<number | "default", string>
+): never {
+    if (error instanceof HTTPError) {
+        const status = error.response?.status;
+        const message =
+            (status && errorMessages[status]) || errorMessages.default;
+        throw new Error(message);
+    }
+    if (error instanceof Error) {
+        throw error;
+    }
+
+    throw new Error(`${errorMessages.default}: ${String(error)}`);
+}
+
+function invalidateStudyQueries(
+    queryClient: QueryClient,
+    studyId: number
+): void {
+    queryClient.invalidateQueries({ queryKey: ["studyDetail", studyId] });
+    queryClient.invalidateQueries({ queryKey: ["studies"] });
+    queryClient.invalidateQueries({ queryKey: ["userRoles"] });
+    queryClient.invalidateQueries({
+        queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
+    });
+    queryClient.invalidateQueries({
+        queryKey: ENROLLMENT_QUERY_KEYS.userApplication(studyId),
+    });
+}
+
+function isValidStudyId(studyId: number): boolean {
+    return Number.isFinite(studyId) && studyId > 0;
 }
 
 // API Functions
@@ -53,40 +124,21 @@ export async function enrollInStudy(
             }
         );
 
-        if (response.ok) {
-            const fallback: EnrollmentResponse = {
-                message: "지원이 완료되었습니다.",
-                status: "PENDING",
-            };
-            if (response.status === 204) return fallback;
-            const contentType =
-                response.headers.get("content-type")?.toLowerCase() ?? "";
-            if (!contentType.includes("application/json")) return fallback;
-            try {
-                return (await response.json()) as EnrollmentResponse;
-            } catch {
-                return fallback;
-            }
+        const fallback: EnrollmentResponse = {
+            message: "지원이 완료되었습니다.",
+            status: "PENDING",
+        };
+        if (response.status === 204) return fallback;
+        const contentType =
+            response.headers.get("content-type")?.toLowerCase() ?? "";
+        if (!contentType.startsWith("application/json")) return fallback;
+        try {
+            return (await response.json()) as EnrollmentResponse;
+        } catch {
+            return fallback;
         }
-
-        throw new Error(`Unexpected response status: ${response.status}`);
     } catch (error: unknown) {
-        if (error instanceof HTTPError) {
-            const status = error.response?.status;
-            switch (status) {
-                case 400:
-                    throw new Error("잘못된 요청 데이터입니다.");
-                case 403:
-                    throw new Error("지원 기간이 아닙니다.");
-                case 404:
-                    throw new Error("스터디를 찾을 수 없습니다.");
-                case 409:
-                    throw new Error("이미 신청된 상태입니다.");
-                default:
-                    throw new Error("스터디 신청 중 오류가 발생했습니다.");
-            }
-        }
-        throw error;
+        handleHTTPError(error, ERROR_MESSAGES.enrollment);
     }
 }
 
@@ -99,13 +151,13 @@ export async function getStudyStatus(
             .get(API_ENDPOINTS.STUDY_STATUS(studyId), { signal })
             .json<StudyStatusResponse>();
     } catch (error: unknown) {
-        // 404는 신청하지 않은 상태로 처리
-        if (error instanceof HTTPError) {
-            if (error.response?.status === 404) {
-                return null;
-            }
+        if (error instanceof HTTPError && error.response?.status === 404) {
+            return null;
         }
-        throw error;
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error(`스터디 상태 조회 중 오류: ${String(error)}`);
     }
 }
 
@@ -118,27 +170,37 @@ export async function cancelEnrollment(
             signal,
         });
     } catch (error: unknown) {
-        // HTTP 에러 처리
-        if (error instanceof HTTPError) {
-            const status = error.response?.status;
-            switch (status) {
-                case 400:
-                    throw new Error("잘못된 요청입니다.");
-                case 404:
-                    throw new Error("스터디를 찾을 수 없습니다.");
-                default:
-                    throw new Error("신청 취소 중 오류가 발생했습니다.");
-            }
-        }
-        throw error;
+        handleHTTPError(error, ERROR_MESSAGES.cancel);
     }
 }
 
-// Query Keys
-export const ENROLLMENT_QUERY_KEYS = {
-    studyStatus: (studyId: number) => ["studyStatus", studyId] as const,
-    userApplication: (studyId: number) => ["userApplication", studyId] as const,
-} as const;
+export async function getUserApplicationDetail(
+    studyId: number,
+    signal?: AbortSignal
+): Promise<UserApplicationDetail> {
+    try {
+        return await apiClient
+            .get(API_ENDPOINTS.USER_APPLICATION(studyId), { signal })
+            .json<UserApplicationDetail>();
+    } catch (error: unknown) {
+        handleHTTPError(error, ERROR_MESSAGES.userApplication);
+    }
+}
+
+export async function updateUserApplication(
+    studyId: number,
+    payload: UpdateApplicationPayload,
+    signal?: AbortSignal
+): Promise<void> {
+    try {
+        await apiClient.put(API_ENDPOINTS.USER_APPLICATION(studyId), {
+            json: payload,
+            signal,
+        });
+    } catch (error: unknown) {
+        handleHTTPError(error, ERROR_MESSAGES.updateApplication);
+    }
+}
 
 // Query Hooks
 export const useStudyStatusQuery = (
@@ -148,9 +210,20 @@ export const useStudyStatusQuery = (
     return useQuery<StudyStatusResponse | null, Error>({
         queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
         queryFn: ({ signal }) => getStudyStatus(studyId, signal),
-        enabled: enabled && Number.isFinite(studyId) && studyId > 0,
-        staleTime: 5 * 60 * 1000, // 5분
-        gcTime: 10 * 60 * 1000, // 10분
+        enabled: enabled && isValidStudyId(studyId),
+        ...QUERY_OPTIONS,
+    });
+};
+
+export const useUserApplicationDetailQuery = (
+    studyId: number,
+    enabled: boolean = false
+): UseQueryResult<UserApplicationDetail, Error> => {
+    return useQuery<UserApplicationDetail, Error>({
+        queryKey: ENROLLMENT_QUERY_KEYS.userApplication(studyId),
+        queryFn: ({ signal }) => getUserApplicationDetail(studyId, signal),
+        enabled: enabled && isValidStudyId(studyId),
+        ...QUERY_OPTIONS,
     });
 };
 
@@ -165,21 +238,11 @@ export const useEnrollInStudyMutation = (
     return useMutation<EnrollmentResponse, Error, EnrollmentPayload>({
         mutationFn: (payload) => enrollInStudy(studyId, payload),
         onSuccess: (data) => {
-            queryClient.invalidateQueries({
-                queryKey: ["studyDetail", studyId],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ["studies"],
-            });
-            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
-            // 상태 쿼리도 무효화
-            queryClient.invalidateQueries({
-                queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
-            });
-            if (onSuccess) onSuccess(data);
+            invalidateStudyQueries(queryClient, studyId);
+            onSuccess?.(data);
         },
         onError: (error: Error) => {
-            if (onError) onError(error);
+            onError?.(error);
         },
     });
 };
@@ -194,92 +257,15 @@ export const useCancelEnrollmentMutation = (
     return useMutation<void, Error, void>({
         mutationFn: () => cancelEnrollment(studyId),
         onSuccess: () => {
-            // 스터디 상세 정보 캐시 무효화
-            queryClient.invalidateQueries({
-                queryKey: ["studyDetail", studyId],
-            });
-            // 스터디 목록 캐시 무효화
-            queryClient.invalidateQueries({
-                queryKey: ["studies"],
-            });
-            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
-            // 상태 쿼리도 무효화
-            queryClient.invalidateQueries({
-                queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
-            });
-            if (onSuccess) onSuccess();
+            invalidateStudyQueries(queryClient, studyId);
+            onSuccess?.();
         },
         onError: (error: Error) => {
-            if (onError) onError(error);
+            onError?.(error);
         },
     });
 };
 
-// 사용자 지원서 상세 조회 API
-export async function getUserApplicationDetail(
-    studyId: number,
-    signal?: AbortSignal
-): Promise<UserApplicationDetail> {
-    try {
-        return await apiClient
-            .get(API_ENDPOINTS.USER_APPLICATION(studyId), { signal })
-            .json<UserApplicationDetail>();
-    } catch (error: unknown) {
-        if (error instanceof HTTPError) {
-            const status = error.response?.status;
-            switch (status) {
-                case 404:
-                    throw new Error("지원서를 찾을 수 없습니다.");
-                default:
-                    throw new Error("지원서 조회 중 오류가 발생했습니다.");
-            }
-        }
-        throw error;
-    }
-}
-
-// 사용자 지원서 수정 API
-export async function updateUserApplication(
-    studyId: number,
-    payload: UpdateApplicationPayload,
-    signal?: AbortSignal
-): Promise<void> {
-    try {
-        await apiClient.put(API_ENDPOINTS.USER_APPLICATION(studyId), {
-            json: payload,
-            signal,
-        });
-    } catch (error: unknown) {
-        if (error instanceof HTTPError) {
-            const status = error.response?.status;
-            switch (status) {
-                case 400:
-                    throw new Error("잘못된 요청 데이터입니다.");
-                case 404:
-                    throw new Error("지원서를 찾을 수 없습니다.");
-                default:
-                    throw new Error("지원서 수정 중 오류가 발생했습니다.");
-            }
-        }
-        throw error;
-    }
-}
-
-// 사용자 지원서 상세 조회 쿼리 훅
-export const useUserApplicationDetailQuery = (
-    studyId: number,
-    enabled: boolean = false
-): UseQueryResult<UserApplicationDetail | null, Error> => {
-    return useQuery<UserApplicationDetail | null, Error>({
-        queryKey: ENROLLMENT_QUERY_KEYS.userApplication(studyId),
-        queryFn: ({ signal }) => getUserApplicationDetail(studyId, signal),
-        enabled: enabled && Number.isFinite(studyId) && studyId > 0,
-        staleTime: 5 * 60 * 1000, // 5분
-        gcTime: 10 * 60 * 1000, // 10분
-    });
-};
-
-// 사용자 지원서 수정 뮤테이션 훅
 export const useUpdateUserApplicationMutation = (
     studyId: number,
     onSuccess?: () => void,
@@ -290,21 +276,16 @@ export const useUpdateUserApplicationMutation = (
     return useMutation<void, Error, UpdateApplicationPayload>({
         mutationFn: (payload) => updateUserApplication(studyId, payload),
         onSuccess: () => {
-            // 관련 쿼리들 무효화
-            queryClient.invalidateQueries({
-                queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
-            });
             queryClient.invalidateQueries({
                 queryKey: ENROLLMENT_QUERY_KEYS.userApplication(studyId),
             });
             queryClient.invalidateQueries({
-                queryKey: ["studyDetail", studyId],
+                queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
             });
-            queryClient.invalidateQueries({ queryKey: ["userRoles"] });
-            if (onSuccess) onSuccess();
+            onSuccess?.();
         },
         onError: (error: Error) => {
-            if (onError) onError(error);
+            onError?.(error);
         },
     });
 };
