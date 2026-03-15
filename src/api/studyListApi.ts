@@ -13,13 +13,13 @@ async function fetchStudies(signal?: AbortSignal): Promise<StudyListItem[]> {
         .json<StudyListItem[]>();
 }
 
-export const useStudyListQuery = (
-    onError?: (error: HTTPError) => void
-): UseQueryResult<StudyListItem[], HTTPError> => {
+export const useStudyListQuery = (): UseQueryResult<
+    StudyListItem[],
+    HTTPError
+> => {
     return useQuery<StudyListItem[], HTTPError>({
         queryKey: STUDIES_QUERY_KEY,
         queryFn: ({ signal }) => fetchStudies(signal),
         ...QUERY_OPTIONS_SLOW,
-        ...(onError && { onError }),
     });
 };
