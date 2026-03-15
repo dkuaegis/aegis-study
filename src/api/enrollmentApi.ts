@@ -9,6 +9,9 @@ import {
 import { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
+import { handleHTTPError } from "@/lib/apiUtils";
+import { isValidId } from "@/lib/utils";
+import { QUERY_OPTIONS_SLOW } from "./queryOptions";
 
 // Types
 export interface EnrollmentPayload {
@@ -36,12 +39,6 @@ export interface UserApplicationDetail {
 export interface UpdateApplicationPayload {
     applicationReason: string;
 }
-
-// Constants
-const QUERY_OPTIONS = {
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-} as const;
 
 const ERROR_MESSAGES = {
     enrollment: {
@@ -72,24 +69,6 @@ export const ENROLLMENT_QUERY_KEYS = {
     userApplication: (studyId: number) => ["userApplication", studyId] as const,
 } as const;
 
-// Utility Functions
-function handleHTTPError(
-    error: unknown,
-    errorMessages: Record<number | "default", string>
-): never {
-    if (error instanceof HTTPError) {
-        const status = error.response?.status;
-        const message =
-            (status && errorMessages[status]) || errorMessages.default;
-        throw new Error(message);
-    }
-    if (error instanceof Error) {
-        throw error;
-    }
-
-    throw new Error(`${errorMessages.default}: ${String(error)}`);
-}
-
 function invalidateStudyQueries(
     queryClient: QueryClient,
     studyId: number
@@ -103,10 +82,6 @@ function invalidateStudyQueries(
     queryClient.invalidateQueries({
         queryKey: ENROLLMENT_QUERY_KEYS.userApplication(studyId),
     });
-}
-
-function isValidStudyId(studyId: number): boolean {
-    return Number.isFinite(studyId) && studyId > 0;
 }
 
 // API Functions
@@ -210,8 +185,8 @@ export const useStudyStatusQuery = (
     return useQuery<StudyStatusResponse | null, Error>({
         queryKey: ENROLLMENT_QUERY_KEYS.studyStatus(studyId),
         queryFn: ({ signal }) => getStudyStatus(studyId, signal),
-        enabled: enabled && isValidStudyId(studyId),
-        ...QUERY_OPTIONS,
+        enabled: enabled && isValidId(studyId),
+        ...QUERY_OPTIONS_SLOW,
     });
 };
 
@@ -222,8 +197,8 @@ export const useUserApplicationDetailQuery = (
     return useQuery<UserApplicationDetail, Error>({
         queryKey: ENROLLMENT_QUERY_KEYS.userApplication(studyId),
         queryFn: ({ signal }) => getUserApplicationDetail(studyId, signal),
-        enabled: enabled && isValidStudyId(studyId),
-        ...QUERY_OPTIONS,
+        enabled: enabled && isValidId(studyId),
+        ...QUERY_OPTIONS_SLOW,
     });
 };
 

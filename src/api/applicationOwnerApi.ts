@@ -6,9 +6,11 @@ import {
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
-import { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
+import { handleHTTPError } from "@/lib/apiUtils";
+import { isValidId } from "@/lib/utils";
+import { QUERY_OPTIONS_FAST, QUERY_OPTIONS_SLOW } from "./queryOptions";
 
 // Types
 export interface ApplicationApiResponse {
@@ -29,6 +31,35 @@ export interface UpdateApplicationStatusPayload {
     status: "APPROVED" | "REJECTED";
 }
 
+// constants
+const ERROR_MESSAGES = {
+    fetchApplications: {
+        403: "스터디장이 아닙니다.",
+        404: "지원서를 찾을 수 없습니다.",
+        default: "지원자 목록을 불러오는 중 오류가 발생했습니다.",
+    },
+    fetchApplicationText: {
+        403: "스터디장이 아닙니다.",
+        404: "지원서를 찾을 수 없습니다.",
+        default: "지원서를 불러오는 중 오류가 발생했습니다.",
+    },
+    updateStatus: {
+        403: "스터디장이 아닙니다.",
+        404: "지원서를 찾을 수 없습니다.",
+        default: "지원서 상태 변경 중 오류가 발생했습니다.",
+    },
+    approve: {
+        403: "스터디장이 아닙니다.",
+        404: "지원서를 찾을 수 없습니다.",
+        default: "지원서 승인 중 오류가 발생했습니다.",
+    },
+    reject: {
+        403: "스터디장이 아닙니다.",
+        404: "지원서를 찾을 수 없습니다.",
+        default: "지원서 거절 중 오류가 발생했습니다.",
+    },
+} as const;
+
 // Query Keys
 export const APPLICATION_QUERY_KEYS = {
     studyApplications: (studyId: number) =>
@@ -37,32 +68,17 @@ export const APPLICATION_QUERY_KEYS = {
         ["applicationText", studyId, applicationId] as const,
 } as const;
 
-// Fetch Functions
+// API Functions
 export async function fetchStudyApplications(
     studyId: number,
     signal?: AbortSignal
 ): Promise<ApplicationApiResponse[]> {
     try {
-        const res = await apiClient
+        return await apiClient
             .get(API_ENDPOINTS.STUDY_APPLICATIONS(studyId), { signal })
             .json<ApplicationApiResponse[]>();
-        return res;
-    } catch (err: unknown) {
-        const name = (err as { name?: string })?.name;
-        if (
-            name === "AbortError" ||
-            name === "CanceledError" ||
-            name === "CancelledError"
-        ) {
-            throw err as Error;
-        }
-        if (err instanceof HTTPError) {
-            const message = getApplicationActionErrorMessage(
-                err.response.status
-            );
-            throw new Error(message);
-        }
-        throw new Error("지원자 목록을 불러오는 중 오류가 발생했습니다.");
+    } catch (error: unknown) {
+        handleHTTPError(error, ERROR_MESSAGES.fetchApplications);
     }
 }
 
@@ -72,31 +88,13 @@ export async function fetchApplicationText(
     signal?: AbortSignal
 ): Promise<ApplicationTextResponse> {
     try {
-        const res = await apiClient
+        return await apiClient
             .get(API_ENDPOINTS.APPLICATION_DETAIL(studyId, applicationId), {
                 signal,
             })
             .json<ApplicationTextResponse>();
-        return res;
-    } catch (err: unknown) {
-        if (err instanceof HTTPError) {
-            const message = getApplicationActionErrorMessage(
-                err.response.status
-            );
-            throw new Error(message);
-        }
-        throw new Error("지원서를 불러오는 중 오류가 발생했습니다.");
-    }
-}
-
-export function getApplicationActionErrorMessage(statusCode: number): string {
-    switch (statusCode) {
-        case 403:
-            return "스터디장이 아닙니다.";
-        case 404:
-            return "지원서를 찾을 수 없습니다.";
-        default:
-            return "지원서 처리 중 오류가 발생했습니다.";
+    } catch (error: unknown) {
+        handleHTTPError(error, ERROR_MESSAGES.fetchApplicationText);
     }
 }
 
@@ -114,14 +112,8 @@ export async function updateApplicationStatus(
                 signal,
             }
         );
-    } catch (err: unknown) {
-        if (err instanceof HTTPError) {
-            const message = getApplicationActionErrorMessage(
-                err.response.status
-            );
-            throw new Error(message);
-        }
-        throw new Error("지원서 상태 변경 중 오류가 발생했습니다.");
+    } catch (error: unknown) {
+        handleHTTPError(error, ERROR_MESSAGES.updateStatus);
     }
 }
 
@@ -137,14 +129,8 @@ export async function approveApplication(
                 signal,
             }
         );
-    } catch (err: unknown) {
-        if (err instanceof HTTPError) {
-            const message = getApplicationActionErrorMessage(
-                err.response.status
-            );
-            throw new Error(message);
-        }
-        throw new Error("지원서 승인 중 오류가 발생했습니다.");
+    } catch (error: unknown) {
+        handleHTTPError(error, ERROR_MESSAGES.approve);
     }
 }
 
@@ -160,14 +146,8 @@ export async function rejectApplication(
                 signal,
             }
         );
-    } catch (err: unknown) {
-        if (err instanceof HTTPError) {
-            const message = getApplicationActionErrorMessage(
-                err.response.status
-            );
-            throw new Error(message);
-        }
-        throw new Error("지원서 거절 중 오류가 발생했습니다.");
+    } catch (error: unknown) {
+        handleHTTPError(error, ERROR_MESSAGES.reject);
     }
 }
 
@@ -187,8 +167,7 @@ export const useStudyApplicationsQuery = (
     options?: StudyApplicationsQueryOptions
 ): UseQueryResult<ApplicationApiResponse[], Error> => {
     const { enabled: optEnabled, ...rest } = options ?? {};
-    const enabled =
-        Number.isFinite(studyId) && studyId > 0 && (optEnabled ?? true);
+    const enabled = isValidId(studyId) && (optEnabled ?? true);
     return useQuery<
         ApplicationApiResponse[],
         Error,
@@ -198,9 +177,7 @@ export const useStudyApplicationsQuery = (
         queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
         queryFn: ({ signal }) => fetchStudyApplications(studyId, signal),
         enabled,
-        staleTime: 30_000, // 30초
-        gcTime: 5 * 60_000, // 5분
-        refetchOnWindowFocus: false,
+        ...QUERY_OPTIONS_FAST,
         ...rest,
     });
 };
@@ -217,15 +194,8 @@ export const useApplicationTextQuery = (
         ),
         queryFn: ({ signal }) =>
             fetchApplicationText(studyId, applicationId, signal),
-        enabled:
-            enabled &&
-            Number.isFinite(studyId) &&
-            studyId > 0 &&
-            Number.isFinite(applicationId) &&
-            applicationId > 0,
-        staleTime: 5 * 60_000, // 5분
-        gcTime: 10 * 60_000, // 10분
-        refetchOnWindowFocus: false,
+        enabled: enabled && isValidId(studyId) && isValidId(applicationId),
+        ...QUERY_OPTIONS_SLOW,
     });
 };
 
@@ -253,10 +223,10 @@ export const useUpdateApplicationStatusMutation = (
                 queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
             });
             queryClient.invalidateQueries({ queryKey: ["userRoles"] });
-            if (onSuccess) onSuccess();
+            onSuccess?.();
         },
         onError: (error: Error) => {
-            if (onError) onError(error);
+            onError?.(error);
         },
     });
 };
@@ -276,10 +246,10 @@ export const useApproveApplicationMutation = (
                 queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
             });
             queryClient.invalidateQueries({ queryKey: ["userRoles"] });
-            if (onSuccess) onSuccess();
+            onSuccess?.();
         },
         onError: (error: Error) => {
-            if (onError) onError(error);
+            onError?.(error);
         },
     });
 };
@@ -299,10 +269,10 @@ export const useRejectApplicationMutation = (
                 queryKey: APPLICATION_QUERY_KEYS.studyApplications(studyId),
             });
             queryClient.invalidateQueries({ queryKey: ["userRoles"] });
-            if (onSuccess) onSuccess();
+            onSuccess?.();
         },
         onError: (error: Error) => {
-            if (onError) onError(error);
+            onError?.(error);
         },
     });
 };

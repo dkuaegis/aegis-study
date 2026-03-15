@@ -3,6 +3,7 @@ import type { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import type { StudyListItem } from "@/types/study";
+import { QUERY_OPTIONS_SLOW } from "./queryOptions";
 
 export const STUDIES_QUERY_KEY = ["studies"] as const;
 
@@ -12,15 +13,13 @@ async function fetchStudies(signal?: AbortSignal): Promise<StudyListItem[]> {
         .json<StudyListItem[]>();
 }
 
-export const useStudyListQuery = (
-    onError?: (error: HTTPError) => void
-): UseQueryResult<StudyListItem[], HTTPError> => {
+export const useStudyListQuery = (): UseQueryResult<
+    StudyListItem[],
+    HTTPError
+> => {
     return useQuery<StudyListItem[], HTTPError>({
         queryKey: STUDIES_QUERY_KEY,
         queryFn: ({ signal }) => fetchStudies(signal),
-        ...(onError && { onError }),
-        staleTime: 60_000,
-        gcTime: 5 * 60_000,
-        refetchOnWindowFocus: false,
+        ...QUERY_OPTIONS_SLOW,
     });
 };
