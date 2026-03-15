@@ -6,12 +6,12 @@ import {
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
+import { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
+import { handleHTTPError } from "@/lib/apiUtils";
 import { isValidId } from "@/lib/utils";
 import { QUERY_OPTIONS_SLOW } from "./queryOptions";
-import { handleHTTPError } from "@/lib/apiUtils";
-import { HTTPError } from "ky";
 
 // Types
 export interface EnrollmentPayload {
