@@ -6,11 +6,12 @@ import {
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
-import { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import { isValidId } from "@/lib/utils";
 import { QUERY_OPTIONS_SLOW } from "./queryOptions";
+import { handleHTTPError } from "@/lib/apiUtils";
+import { HTTPError } from "ky";
 
 // Types
 export interface EnrollmentPayload {
@@ -67,24 +68,6 @@ export const ENROLLMENT_QUERY_KEYS = {
     studyStatus: (studyId: number) => ["studyStatus", studyId] as const,
     userApplication: (studyId: number) => ["userApplication", studyId] as const,
 } as const;
-
-// Utility Functions
-function handleHTTPError(
-    error: unknown,
-    errorMessages: Record<number | "default", string>
-): never {
-    if (error instanceof HTTPError) {
-        const status = error.response?.status;
-        const message =
-            (status && errorMessages[status]) || errorMessages.default;
-        throw new Error(message);
-    }
-    if (error instanceof Error) {
-        throw error;
-    }
-
-    throw new Error(`${errorMessages.default}: ${String(error)}`);
-}
 
 function invalidateStudyQueries(
     queryClient: QueryClient,

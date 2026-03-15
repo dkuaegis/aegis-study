@@ -6,11 +6,11 @@ import {
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
-import { HTTPError } from "ky";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import { QUERY_OPTIONS_FAST, QUERY_OPTIONS_SLOW } from "./queryOptions";
 import { isValidId } from "@/lib/utils";
+import { handleHTTPError } from "@/lib/apiUtils";
 
 // Types
 export interface ApplicationApiResponse {
@@ -67,23 +67,6 @@ export const APPLICATION_QUERY_KEYS = {
     applicationText: (studyId: number, applicationId: number) =>
         ["applicationText", studyId, applicationId] as const,
 } as const;
-
-//Utility Functions
-function handleHTTPError(
-    error: unknown,
-    errorMessages: Record<number | "default", string>
-): never {
-    if (error instanceof HTTPError) {
-        const status = error.response.status;
-        const message =
-            (status && errorMessages[status]) || errorMessages.default;
-        throw new Error(message);
-    }
-    if (error instanceof Error) {
-        throw error;
-    }
-    throw new Error(`${errorMessages.default}: ${String(error)}`);
-}
 
 // API Functions
 export async function fetchStudyApplications(
