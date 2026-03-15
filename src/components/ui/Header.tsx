@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "./button";
 
 const NAV_LINKS = [
-    { href: "https://homepage.dkuaegis.org", label: "HOME" },
+    { href: "https://dkuaegis.org", label: "HOME" },
     { href: "https://mypage.dkuaegis.org", label: "MYPAGE" },
 ] as const;
 
