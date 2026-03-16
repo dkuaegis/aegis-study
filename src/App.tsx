@@ -1,5 +1,6 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import useAuth from "./hooks/useAuth";
+import { useGoogleAnalytics } from "./hooks/useGoogleAnalytics";
 import CreateStudyPage from "./pages/CreateStudyPage";
 import LoginPage from "./pages/LoginPage";
 import StudyListPage from "./pages/StudyListPage";
@@ -12,6 +13,7 @@ import StudyMembersWrapper from "./pages/wrappers/StudyMemberWrapper";
 const App = () => {
     const { isAuthenticated, isLoading, isPending } = useAuth();
     const navigate = useNavigate();
+    useGoogleAnalytics();
 
     // 로딩 중에는 로딩 화면 표시
     if (isLoading) {
