@@ -23,17 +23,18 @@ const getPageTitle = (pathname: string): string => {
     return pathname;
 };
 
-export const useGoogleAnalytics = () => {
+export const useGoogleAnalytics = (enabled = true) => {
     const location = useLocation();
 
     useEffect(() => {
+        if (!enabled) return;
         if (typeof gtag === "undefined") return;
 
         const pageTitle = getPageTitle(location.pathname);
 
         gtag("event", "page_view", {
-            page_path: location.pathname + location.search,
+            page_path: location.pathname,
             page_title: pageTitle,
         });
-    }, [location]);
+    }, [enabled, location]);
 };
