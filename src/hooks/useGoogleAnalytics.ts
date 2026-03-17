@@ -35,5 +35,5 @@ export const useGoogleAnalytics = (enabled = true) => {
             page_path: location.pathname,
             page_title: pageTitle,
         });
-    }, [enabled, location]);
+    }, [enabled, location.pathname]);
 };
