@@ -10,7 +10,6 @@ declare function gtag(
 const PAGE_TITLES: Record<string, string> = {
     "/": "스터디 목록",
     "/create": "스터디 만들기",
-    "/login": "로그인",
 };
 
 const getPageTitle = (pathname: string): string => {
