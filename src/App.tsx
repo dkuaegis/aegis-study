@@ -13,8 +13,10 @@ import StudyMembersWrapper from "./pages/wrappers/StudyMemberWrapper";
 const App = () => {
     const { isAuthenticated, isLoading, isPending } = useAuth();
     const navigate = useNavigate();
-    const shouldTrackPageView = !isLoading && !isPending && isAuthenticated;
-    useGoogleAnalytics(shouldTrackPageView);
+    const shouldTrackPageView = !isLoading;
+    const authState =
+        !isPending && isAuthenticated ? "LOGGED_IN" : "LOGGED_OUT";
+    useGoogleAnalytics(shouldTrackPageView, authState);
 
     // 로딩 중에는 로딩 화면 표시
     if (isLoading) {

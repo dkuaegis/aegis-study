@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
+type AuthState = "LOGGED_IN" | "LOGGED_OUT";
+
 declare function gtag(
     command: "event",
     action: string,
@@ -22,18 +24,25 @@ const getPageTitle = (pathname: string): string => {
     return pathname;
 };
 
-export const useGoogleAnalytics = (enabled = true) => {
+export const useGoogleAnalytics = (
+    enabled = true,
+    authState: AuthState = "LOGGED_IN"
+) => {
     const location = useLocation();
 
     useEffect(() => {
         if (!enabled) return;
         if (typeof gtag === "undefined") return;
 
-        const pageTitle = getPageTitle(location.pathname);
+        const pageTitle =
+            authState === "LOGGED_OUT"
+                ? "로그인"
+                : getPageTitle(location.pathname);
 
         gtag("event", "page_view", {
             page_path: location.pathname,
             page_title: pageTitle,
+            auth_state: authState,
         });
-    }, [enabled, location.pathname]);
+    }, [enabled, location.pathname, authState]);
 };
