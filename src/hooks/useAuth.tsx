@@ -30,12 +30,15 @@ export const useAuth = () => {
                     } else {
                         setUnauthorized();
                     }
+                    return data;
                 } else {
                     setUnauthorized();
+                    throw new Error("Authentication check failed");
                 }
             } catch (error) {
                 console.error("Auth check failed:", error);
                 setUnauthorized();
+                throw error;
             }
         },
         ...QUERY_OPTIONS_SLOW,
