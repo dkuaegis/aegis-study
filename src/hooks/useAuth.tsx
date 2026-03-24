@@ -1,4 +1,5 @@
-import { useCallback, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_OPTIONS_SLOW } from "@/api/queryOptions";
 import { apiClient } from "@/lib/apiClient";
 import { API_ENDPOINTS } from "@/lib/apiEndpoints";
 import { AuthStatus, useAuthStore } from "@/stores/useAuthStore";
@@ -12,33 +13,33 @@ export const useAuth = () => {
         setLoading,
     } = useAuthStore();
 
-    const checkAuth = useCallback(async () => {
-        setLoading();
-        try {
-            const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH);
+    const { refetch } = useQuery({
+        queryKey: ["auth"],
+        queryFn: async () => {
+            setLoading();
+            try {
+                const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH);
 
-            if (response.ok) {
-                const data = await response.json<{ status: string }>();
+                if (response.ok) {
+                    const data = await response.json<{ status: string }>();
 
-                if (data.status === "COMPLETED") {
-                    setAuthenticated();
-                } else if (data.status === "PENDING") {
-                    setPending();
+                    if (data.status === "COMPLETED") {
+                        setAuthenticated();
+                    } else if (data.status === "PENDING") {
+                        setPending();
+                    } else {
+                        setUnauthorized();
+                    }
                 } else {
                     setUnauthorized();
                 }
-            } else {
+            } catch (error) {
+                console.error("Auth check failed:", error);
                 setUnauthorized();
             }
-        } catch (error) {
-            console.error("Auth check failed:", error);
-            setUnauthorized();
-        }
-    }, [setAuthenticated, setUnauthorized, setPending, setLoading]); // Zustand 액션들은 안정적임
-
-    useEffect(() => {
-        checkAuth();
-    }, [checkAuth]);
+        },
+        ...QUERY_OPTIONS_SLOW,
+    });
 
     return {
         status,
@@ -46,7 +47,7 @@ export const useAuth = () => {
         isAuthenticated: status === AuthStatus.AUTHENTICATED,
         isUnauthorized: status === AuthStatus.UNAUTHORIZED,
         isPending: status === AuthStatus.PENDING,
-        checkAuth,
+        checkAuth: refetch,
     };
 };
 
