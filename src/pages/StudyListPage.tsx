@@ -57,6 +57,12 @@ const StudyList = ({
                                 스터디 목록을 불러오는데 실패했습니다.
                             </div>
                         </div>
+                    ) : studies.length === 0 ? (
+                        <div className="col-span-full flex items-center justify-center py-8">
+                            <div className="text-gray-500">
+                                개설된 스터디가 없습니다.
+                            </div>
+                        </div>
                     ) : (
                         studies.map((study: StudyListItem) => (
                             <Card
