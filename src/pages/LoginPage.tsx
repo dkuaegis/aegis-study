@@ -21,7 +21,6 @@ const ICONS: IconConfig[] = [
 ];
 
 const ANIMATION_CONFIG = {
-    INITIAL_DELAY: 0.3,
     CARD_DURATION: 0.5,
     TITLE_DURATION: 0.6,
     TEXT_DURATION: 0.5,
@@ -44,7 +43,7 @@ const LoginPage = () => {
     const cardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const tl = gsap.timeline({ delay: ANIMATION_CONFIG.INITIAL_DELAY });
+        const tl = gsap.timeline();
 
         // Set initial states
         gsap.set(
@@ -68,7 +67,7 @@ const LoginPage = () => {
                     duration: ANIMATION_CONFIG.TITLE_DURATION,
                     ease: "power2.out",
                 },
-                "-=0.2"
+                "<"
             )
             .to(
                 subtitleRef.current,
@@ -78,7 +77,7 @@ const LoginPage = () => {
                     duration: ANIMATION_CONFIG.TEXT_DURATION,
                     ease: "power2.out",
                 },
-                "-=0.3"
+                "<"
             )
             .to(
                 buttonRef.current,
@@ -88,7 +87,7 @@ const LoginPage = () => {
                     duration: ANIMATION_CONFIG.TEXT_DURATION,
                     ease: "power2.out",
                 },
-                "-=0.5"
+                "<"
             )
             .to(
                 iconsRef.current,
@@ -100,7 +99,7 @@ const LoginPage = () => {
                     stagger: ANIMATION_CONFIG.ICON_STAGGER,
                     ease: "back.out(1.4)",
                 },
-                "-=0.2"
+                "<"
             );
 
         return () => {
