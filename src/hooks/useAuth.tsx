@@ -42,6 +42,8 @@ export const useAuth = () => {
             }
         },
         ...QUERY_OPTIONS_SLOW,
+        retry: 0,
+        enabled: status === AuthStatus.LOADING,
     });
 
     return {
