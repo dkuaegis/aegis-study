@@ -35,7 +35,6 @@ export const useAuth = () => {
                     return data;
                 } else {
                     if (response.status === 401) {
-                        setUnauthorized();
                         const error = new Error("Unauthorized");
                         error.name = "AuthError";
                         throw error;
