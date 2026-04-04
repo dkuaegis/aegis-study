@@ -18,7 +18,9 @@ export const useAuth = () => {
         queryFn: async () => {
             setLoading();
             try {
-                const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH);
+                const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH, {
+                    throwHttpErrors: false,
+                });
 
                 if (response.ok) {
                     const data = await response.json<{ status: string }>();
@@ -32,19 +34,16 @@ export const useAuth = () => {
                     }
                     return data;
                 } else {
-                    // 401 오류는 인증 실패로 간주
                     if (response.status === 401) {
                         setUnauthorized();
                         const error = new Error("Unauthorized");
                         error.name = "AuthError";
                         throw error;
                     }
-                    // 다른 HTTP 오류는 재시도 가능
                     throw new Error("Authentication check failed");
                 }
             } catch (error) {
                 console.error("Auth check failed:", error);
-                // AuthError(401)가 아닌 경우만 로그아웃 처리
                 if (!(error instanceof Error && error.name === "AuthError")) {
                     setUnauthorized();
                 }
