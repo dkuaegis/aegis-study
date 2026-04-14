@@ -18,7 +18,9 @@ export const useAuth = () => {
         queryFn: async () => {
             setLoading();
             try {
-                const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH);
+                const response = await apiClient.get(API_ENDPOINTS.CHECK_AUTH, {
+                    throwHttpErrors: false,
+                });
 
                 if (response.ok) {
                     const data = await response.json<{ status: string }>();
@@ -32,17 +34,30 @@ export const useAuth = () => {
                     }
                     return data;
                 } else {
-                    setUnauthorized();
+                    if (response.status === 401) {
+                        const error = new Error("Unauthorized");
+                        error.name = "AuthError";
+                        throw error;
+                    }
                     throw new Error("Authentication check failed");
                 }
             } catch (error) {
                 console.error("Auth check failed:", error);
-                setUnauthorized();
+                if (!(error instanceof Error && error.name === "AuthError")) {
+                    setUnauthorized();
+                }
                 throw error;
             }
         },
         ...QUERY_OPTIONS_SLOW,
-        retry: 0,
+        retry: (failureCount, error) => {
+            // 401(AuthError)은 재시도하지 않음
+            if (error instanceof Error && error.name === "AuthError") {
+                return false;
+            }
+            // 다른 오류는 2번까지 재시도
+            return failureCount < 2;
+        },
         enabled: status === AuthStatus.LOADING,
     });
 
