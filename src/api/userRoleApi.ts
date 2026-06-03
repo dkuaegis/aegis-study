@@ -9,20 +9,20 @@ import { QUERY_OPTIONS_SLOW } from "./queryOptions";
 export const USER_ROLES_QUERY_KEY = ["userRoles"] as const;
 
 async function fetchUserStudyRoles(
-    signal?: AbortSignal
+  signal?: AbortSignal
 ): Promise<UserStudyRoles> {
-    return apiClient
-        .get(`${API_ENDPOINTS.STUDIES}/roles`, { signal })
-        .json<UserStudyRoles>();
+  return apiClient
+    .get(`${API_ENDPOINTS.STUDIES}/roles`, { signal })
+    .json<UserStudyRoles>();
 }
 
 export const useUserStudyRolesQuery = (): UseQueryResult<
-    UserStudyRoles,
-    HTTPError
+  UserStudyRoles,
+  HTTPError
 > => {
-    return useQuery<UserStudyRoles, HTTPError>({
-        queryKey: USER_ROLES_QUERY_KEY,
-        queryFn: ({ signal }) => fetchUserStudyRoles(signal),
-        ...QUERY_OPTIONS_SLOW,
-    });
+  return useQuery<UserStudyRoles, HTTPError>({
+    queryKey: USER_ROLES_QUERY_KEY,
+    queryFn: ({ signal }) => fetchUserStudyRoles(signal),
+    ...QUERY_OPTIONS_SLOW,
+  });
 };

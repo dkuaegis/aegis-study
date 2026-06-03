@@ -8,23 +8,23 @@ import App from "./App.tsx";
 import { ToastProvider } from "./components/ui/useToast.tsx";
 
 const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            retry: 1,
-            staleTime: 1000 * 60 * 5,
-        },
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 1000 * 60 * 5,
     },
+  },
 });
 
 // biome-ignore lint/style/noNonNullAssertion: DOM element is guaranteed to exist in index.html
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <BrowserRouter>
-            <QueryClientProvider client={queryClient}>
-                <ToastProvider>
-                    <App />
-                </ToastProvider>
-            </QueryClientProvider>
-        </BrowserRouter>
-    </StrictMode>
+  <StrictMode>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider>
+          <App />
+        </ToastProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
+  </StrictMode>
 );

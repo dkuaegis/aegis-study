@@ -4,45 +4,43 @@ import { useLocation } from "react-router-dom";
 type AuthState = "LOGGED_IN" | "LOGGED_OUT";
 
 declare function gtag(
-    command: "event",
-    action: string,
-    params?: Record<string, unknown>
+  command: "event",
+  action: string,
+  params?: Record<string, unknown>
 ): void;
 
 const PAGE_TITLES: Record<string, string> = {
-    "/": "스터디 목록",
-    "/create": "스터디 만들기",
+  "/": "스터디 목록",
+  "/create": "스터디 만들기",
 };
 
 const getPageTitle = (pathname: string): string => {
-    if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname];
-    if (pathname.startsWith("/detail/")) return "스터디 상세";
-    if (pathname.startsWith("/edit/")) return "스터디 수정";
-    if (pathname.startsWith("/applications/")) return "신청 현황";
-    if (pathname.startsWith("/members/")) return "스터디 멤버";
-    if (pathname.startsWith("/attendance/")) return "출석 관리";
-    return pathname;
+  if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname];
+  if (pathname.startsWith("/detail/")) return "스터디 상세";
+  if (pathname.startsWith("/edit/")) return "스터디 수정";
+  if (pathname.startsWith("/applications/")) return "신청 현황";
+  if (pathname.startsWith("/members/")) return "스터디 멤버";
+  if (pathname.startsWith("/attendance/")) return "출석 관리";
+  return pathname;
 };
 
 export const useGoogleAnalytics = (
-    enabled = true,
-    authState: AuthState = "LOGGED_IN"
+  enabled = true,
+  authState: AuthState = "LOGGED_IN"
 ) => {
-    const location = useLocation();
+  const location = useLocation();
 
-    useEffect(() => {
-        if (!enabled) return;
-        if (typeof gtag === "undefined") return;
+  useEffect(() => {
+    if (!enabled) return;
+    if (typeof gtag === "undefined") return;
 
-        const pageTitle =
-            authState === "LOGGED_OUT"
-                ? "로그인"
-                : getPageTitle(location.pathname);
+    const pageTitle =
+      authState === "LOGGED_OUT" ? "로그인" : getPageTitle(location.pathname);
 
-        gtag("event", "page_view", {
-            page_path: location.pathname,
-            page_title: pageTitle,
-            auth_state: authState,
-        });
-    }, [enabled, location.pathname, authState]);
+    gtag("event", "page_view", {
+      page_path: location.pathname,
+      page_title: pageTitle,
+      auth_state: authState,
+    });
+  }, [enabled, location.pathname, authState]);
 };
