@@ -43,9 +43,11 @@ export function useExternalBrowser() {
     const currentUrl = window.location.href;
 
     if (isAndroid) {
+      const urlObj = new URL(currentUrl);
+      const intentBody = urlObj.host + urlObj.pathname + urlObj.search;
       location.href =
         "intent://" +
-        currentUrl.replace(/https?:\/\//i, "") +
+        intentBody +
         "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" +
         encodeURIComponent(currentUrl) +
         ";end;";
