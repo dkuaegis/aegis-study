@@ -38,20 +38,29 @@ export function useExternalBrowser() {
 
     const ua = navigator.userAgent.toLowerCase();
     const isAndroid = ua.includes("android");
-
-    if (!isAndroid) {
-      return;
-    }
+    const isIOS = /iphone|ipad|ipod/.test(ua);
 
     const currentUrl = window.location.href;
 
-    location.href =
-      "intent://" +
-      currentUrl.replace(/https?:\/\//i, "") +
-      "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" +
-      encodeURIComponent(currentUrl) +
-      ";end;";
-  }, [isInAppBrowser]);
+    if (isAndroid) {
+      const urlObj = new URL(currentUrl);
+      const intentBody = urlObj.host + urlObj.pathname + urlObj.search;
+      location.href =
+        "intent://" +
+        intentBody +
+        "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" +
+        encodeURIComponent(currentUrl) +
+        ";end;";
+      return;
+    }
+
+    if (isIOS && browserName === "카카오톡") {
+      location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(currentUrl)}`;
+      return;
+    }
+
+    // iOS 기타 인앱 브라우저: 자동 전환 불가, 안내 페이지 표시
+  }, [isInAppBrowser, browserName]);
 
   return { isInAppBrowser, browserName, openInDefaultBrowser };
 }
