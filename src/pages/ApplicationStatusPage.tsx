@@ -1,5 +1,6 @@
-import Lottie from "lottie-react";
+import lottie from "lottie-web";
 import { CheckCircle, Clock, User, XCircle } from "lucide-react";
+import { useEffect, useRef } from "react";
 import fireData from "@/assets/Fire Element Effect Animation.json";
 import ApplicationCard from "@/components/study/ApplicationCard";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +15,24 @@ interface ApplicationStatusProps {
   studyId: number;
   onBack: () => void;
 }
+
+const FireLottie = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const animation = lottie.loadAnimation({
+      container: containerRef.current,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: fireData,
+    });
+    return () => {
+      animation.destroy();
+    };
+  }, []);
+  return <div ref={containerRef} style={{ width: 300, height: 300 }} />;
+};
 
 const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
   // 사용자 역할 확인
@@ -83,12 +102,7 @@ const ApplicationStatusPage = ({ studyId, onBack }: ApplicationStatusProps) => {
         <div className="flex flex-1 items-center justify-center px-6">
           <div className="mx-auto max-w-md text-center">
             <div className="mb-8">
-              <Lottie
-                loop
-                autoplay
-                animationData={fireData}
-                style={{ width: 300, height: 300 }}
-              />
+              <FireLottie />
             </div>
             <p className="font-medium text-gray-600 text-xl">
               선착순 모집 스터디입니다.
