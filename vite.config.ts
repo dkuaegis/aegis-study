@@ -61,6 +61,18 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+          query: ["@tanstack/react-query"],
+          ui: [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-select",
+            "@radix-ui/react-alert-dialog",
+            "@radix-ui/react-radio-group",
+          ],
+        },
+      },
       onLog(level, log, defaultHandler) {
         if (
           log.code === "EVAL" &&
