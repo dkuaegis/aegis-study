@@ -1,6 +1,5 @@
 import { ArrowLeft, X } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "./button";
 
 const NAV_LINKS = [
@@ -115,4 +114,4 @@ const Header: React.FC<HeaderProps> = ({ onBack }) => {
   );
 };
 
-export default Header;
+export default React.memo(Header);
