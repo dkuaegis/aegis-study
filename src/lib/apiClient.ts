@@ -6,7 +6,7 @@ export const apiClient = ky.create({
   credentials: "include",
   hooks: {
     afterResponse: [
-      async (_request, _options, response) => {
+      async (_request, _options, response, _state) => {
         if (response.status === 401) {
           useAuthStore.getState().setUnauthorized();
         }

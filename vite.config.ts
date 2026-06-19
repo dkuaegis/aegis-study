@@ -62,15 +62,16 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ["react", "react-dom", "react-router-dom"],
-          query: ["@tanstack/react-query"],
-          ui: [
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-select",
-            "@radix-ui/react-alert-dialog",
-            "@radix-ui/react-radio-group",
-          ],
+        manualChunks(id) {
+          if (id.includes("node_modules/react-dom") || id.includes("node_modules/react-router")) {
+            return "vendor";
+          }
+          if (id.includes("node_modules/@tanstack/react-query")) {
+            return "query";
+          }
+          if (id.includes("node_modules/@radix-ui")) {
+            return "ui";
+          }
         },
       },
       onLog(level, log, defaultHandler) {

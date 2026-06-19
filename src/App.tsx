@@ -7,19 +7,19 @@ import LoginPage from "./pages/LoginPage";
 const StudyListPage = lazy(() => import("./pages/StudyListPage"));
 const CreateStudyPage = lazy(() => import("./pages/CreateStudyPage"));
 const ApplicationStatusWrapper = lazy(
-  () => import("./pages/wrappers/ApplicationStatusWrapper"),
+  () => import("./pages/wrappers/ApplicationStatusWrapper")
 );
 const AttendanceWrapper = lazy(
-  () => import("./pages/wrappers/AttendanceWrapper"),
+  () => import("./pages/wrappers/AttendanceWrapper")
 );
 const EditStudyWrapper = lazy(
-  () => import("./pages/wrappers/EditStudyWrapper"),
+  () => import("./pages/wrappers/EditStudyWrapper")
 );
 const StudyDetailWrapper = lazy(
-  () => import("./pages/wrappers/StudyDetailWrapper"),
+  () => import("./pages/wrappers/StudyDetailWrapper")
 );
 const StudyMembersWrapper = lazy(
-  () => import("./pages/wrappers/StudyMemberWrapper"),
+  () => import("./pages/wrappers/StudyMemberWrapper")
 );
 
 const App = () => {
