@@ -25,10 +25,24 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
     onViewStudyDetail(study.id);
   }, [onViewStudyDetail, study.id]);
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onViewStudyDetail(study.id);
+      }
+    },
+    [onViewStudyDetail, study.id],
+  );
+
   return (
     <Card
-      className="w-full min-w-[250px] cursor-pointer border-gray-200 transition-shadow hover:shadow-md"
+      className="w-full min-w-[250px] cursor-pointer border-gray-200 transition-shadow hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
+      aria-label={study.title}
     >
       <CardContent className="p-6">
         <div className="space-y-3">
