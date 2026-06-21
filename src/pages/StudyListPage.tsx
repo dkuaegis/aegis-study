@@ -11,6 +11,44 @@ import {
   type StudyListItem,
 } from "@/types/study";
 
+function SkeletonLine({ className }: { className?: string }) {
+  return (
+    <div className={`rounded bg-gray-200 animate-pulse ${className ?? ""}`} />
+  );
+}
+
+function StudyCardSkeleton() {
+  return (
+    <div className="h-[280px] w-full min-w-[250px] rounded-xl border bg-card p-6 shadow-sm">
+      <div className="flex h-full flex-col space-y-3">
+        <SkeletonLine className="h-5 w-16" />
+        <SkeletonLine className="h-6 w-3/4" />
+        <div className="flex-1 space-y-3 text-sm">
+          <div className="flex items-center">
+            <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
+            <SkeletonLine className="h-4 w-20" />
+          </div>
+          <div className="flex items-center">
+            <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
+            <SkeletonLine className="h-4 w-32" />
+          </div>
+          <div className="flex items-center">
+            <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
+            <SkeletonLine className="h-4 w-16" />
+          </div>
+          <div className="flex items-center">
+            <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
+            <SkeletonLine className="h-4 w-24" />
+          </div>
+        </div>
+        <div className="flex justify-end">
+          <SkeletonLine className="h-5 w-20" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface StudyCardProps {
   study: StudyListItem;
   onViewStudyDetail: (studyId: number) => void;
@@ -37,15 +75,15 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
 
   return (
     <Card
-      className="w-full min-w-[250px] cursor-pointer border-gray-200 transition-shadow hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      className="h-[280px] w-full min-w-[250px] cursor-pointer border-gray-200 transition-shadow hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="button"
       aria-label={study.title}
     >
-      <CardContent className="p-6">
-        <div className="space-y-3">
+      <CardContent className="flex h-full flex-col p-6">
+        <div className="flex flex-1 flex-col space-y-3">
           <div>
             <Badge
               variant="secondary"
@@ -59,21 +97,21 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
             </Badge>
           </div>
 
-          <h3 className="font-semibold text-gray-900 text-lg leading-tight">
+          <h3 className="line-clamp-2 font-semibold text-gray-900 text-lg leading-tight">
             {study.title}
           </h3>
 
-          <div className="space-y-3 text-gray-600 text-sm">
+          <div className="flex-1 space-y-3 text-gray-600 text-sm">
             <div className="flex items-center">
-              <BarChart3 className="mr-2 h-4 w-4" />
+              <BarChart3 className="mr-2 h-4 w-4 shrink-0" />
               <span>{StudyLevelLabels[study.level]}</span>
             </div>
             <div className="flex items-center">
-              <Clock className="mr-2 h-4 w-4" />
-              <span>{study.schedule}</span>
+              <Clock className="mr-2 h-4 w-4 shrink-0" />
+              <span className="line-clamp-1">{study.schedule}</span>
             </div>
             <div className="flex items-center">
-              <Users className="mr-2 h-4 w-4" />
+              <Users className="mr-2 h-4 w-4 shrink-0" />
               <span>
                 {study.maxParticipants === 0
                   ? "제한 없음"
@@ -81,7 +119,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
               </span>
             </div>
             <div className="flex items-center">
-              <User className="mr-2 h-4 w-4" />
+              <User className="mr-2 h-4 w-4 shrink-0" />
               <span>{study.instructor}</span>
             </div>
           </div>
@@ -137,38 +175,7 @@ const StudyList = memo(
             {loading ? (
               <div className="col-span-full grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={`skeleton-${String(i)}`}
-                    className="w-full min-w-[250px] rounded-xl border bg-card py-6 shadow-sm"
-                  >
-                    <div className="px-6">
-                      <div className="space-y-3">
-                        <div className="h-5 w-16 rounded-md bg-gray-200 animate-pulse" />
-                        <div className="h-6 w-3/4 rounded-md bg-gray-200 animate-pulse" />
-                        <div className="space-y-3 text-sm">
-                          <div className="flex items-center">
-                            <div className="mr-2 h-4 w-4 rounded bg-gray-200 animate-pulse" />
-                            <div className="h-4 w-20 rounded bg-gray-200 animate-pulse" />
-                          </div>
-                          <div className="flex items-center">
-                            <div className="mr-2 h-4 w-4 rounded bg-gray-200 animate-pulse" />
-                            <div className="h-4 w-32 rounded bg-gray-200 animate-pulse" />
-                          </div>
-                          <div className="flex items-center">
-                            <div className="mr-2 h-4 w-4 rounded bg-gray-200 animate-pulse" />
-                            <div className="h-4 w-16 rounded bg-gray-200 animate-pulse" />
-                          </div>
-                          <div className="flex items-center">
-                            <div className="mr-2 h-4 w-4 rounded bg-gray-200 animate-pulse" />
-                            <div className="h-4 w-24 rounded bg-gray-200 animate-pulse" />
-                          </div>
-                        </div>
-                        <div className="flex justify-end">
-                          <div className="h-5 w-20 rounded border bg-gray-100 animate-pulse" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <StudyCardSkeleton key={`skeleton-${String(i)}`} />
                 ))}
               </div>
             ) : error ? (
