@@ -61,6 +61,22 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (
+            id.includes("node_modules/react-dom") ||
+            id.includes("node_modules/react-router")
+          ) {
+            return "vendor";
+          }
+          if (id.includes("node_modules/@tanstack/react-query")) {
+            return "query";
+          }
+          if (id.includes("node_modules/@radix-ui")) {
+            return "ui";
+          }
+        },
+      },
       onLog(level, log, defaultHandler) {
         if (
           log.code === "EVAL" &&
