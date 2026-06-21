@@ -1,19 +1,22 @@
 import { BarChart3, Clock, User, Users } from "lucide-react";
-import { memo, useCallback } from "react";
+import { memo } from "react";
 import { useStudyListQuery } from "@/api/studyListApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/ui/Header";
+import { cn } from "@/lib/utils";
 import {
   StudyCategoryLabels,
   StudyLevelLabels,
   type StudyListItem,
 } from "@/types/study";
 
+const SKELETON_COUNT = 6;
+
 function SkeletonLine({ className }: { className?: string }) {
   return (
-    <div className={`rounded bg-gray-200 animate-pulse ${className ?? ""}`} />
+    <div className={cn("rounded bg-gray-200 animate-pulse", className)} />
   );
 }
 
@@ -59,19 +62,16 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
     study.participantCount < study.maxParticipants ||
     study.maxParticipants === 0;
 
-  const handleClick = useCallback(() => {
+  const handleClick = () => {
     onViewStudyDetail(study.id);
-  }, [onViewStudyDetail, study.id]);
+  };
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        onViewStudyDetail(study.id);
-      }
-    },
-    [onViewStudyDetail, study.id]
-  );
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onViewStudyDetail(study.id);
+    }
+  };
 
   return (
     <Card
@@ -142,67 +142,68 @@ interface StudyListMainProps {
   onViewStudyDetail: (studyId: number) => void;
 }
 
-const StudyList = memo(
-  ({ onCreateStudy, onViewStudyDetail }: StudyListMainProps) => {
-    const {
-      data: studies = [],
-      isLoading: loading,
-      error,
-    } = useStudyListQuery();
+const StudyList = ({
+  onCreateStudy,
+  onViewStudyDetail,
+}: StudyListMainProps) => {
+  const {
+    data: studies = [],
+    isLoading: loading,
+    error,
+  } = useStudyListQuery();
 
-    return (
-      <div className="flex min-h-screen flex-col bg-gray-50">
-        <Header />
-        <div className="mb-6 flex w-full justify-end px-6 pt-6">
-          <Button
-            onClick={onCreateStudy}
-            className="group relative overflow-hidden bg-blue-600 text-white transition-colors hover:bg-blue-700"
+  return (
+    <div className="flex min-h-screen flex-col bg-gray-50">
+      <Header />
+      <div className="mb-6 flex w-full justify-end px-6 pt-6">
+        <Button
+          onClick={onCreateStudy}
+          className="group relative overflow-hidden bg-blue-600 text-white transition-colors hover:bg-blue-700"
+        >
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
           >
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
-            >
-              <span
-                aria-hidden="true"
-                className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
-              />
-            </span>
-            <span className="relative z-10">스터디 개설하기</span>
-          </Button>
-        </div>
-        <main className="mx-auto max-w-none items-center px-6 pb-6 md:px-12 lg:px-24">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {loading ? (
-              <div className="col-span-full grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <StudyCardSkeleton key={`skeleton-${String(i)}`} />
-                ))}
-              </div>
-            ) : error ? (
-              <div className="col-span-full flex items-center justify-center py-8">
-                <div className="text-red-500">
-                  스터디 목록을 불러오는데 실패했습니다.
-                </div>
-              </div>
-            ) : studies.length === 0 ? (
-              <div className="col-span-full flex items-center justify-center py-8">
-                <div className="text-gray-500">개설된 스터디가 없습니다.</div>
-              </div>
-            ) : (
-              studies.map((study: StudyListItem) => (
-                <StudyCard
-                  key={study.id}
-                  study={study}
-                  onViewStudyDetail={onViewStudyDetail}
-                />
-              ))
-            )}
-          </div>
-        </main>
+              className="h-56 w-56 scale-0 transform rounded-full bg-white opacity-0 transition-opacity transition-transform duration-500 ease-out group-hover:scale-100 group-hover:opacity-20 motion-reduce:transform-none motion-reduce:transition-none"
+            />
+          </span>
+          <span className="relative z-10">스터디 개설하기</span>
+        </Button>
       </div>
-    );
-  }
-);
+      <main className="mx-auto max-w-none items-center px-6 pb-6 md:px-12 lg:px-24">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {loading ? (
+            <div className="col-span-full grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+                <StudyCardSkeleton key={`skeleton-${String(i)}`} />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="col-span-full flex items-center justify-center py-8">
+              <div className="text-red-500">
+                스터디 목록을 불러오는데 실패했습니다.
+              </div>
+            </div>
+          ) : studies.length === 0 ? (
+            <div className="col-span-full flex items-center justify-center py-8">
+              <div className="text-gray-500">개설된 스터디가 없습니다.</div>
+            </div>
+          ) : (
+            studies.map((study: StudyListItem) => (
+              <StudyCard
+                key={study.id}
+                study={study}
+                onViewStudyDetail={onViewStudyDetail}
+              />
+            ))
+          )}
+        </div>
+      </main>
+    </div>
+  );
+};
 
 StudyList.displayName = "StudyList";
 
