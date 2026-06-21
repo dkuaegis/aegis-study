@@ -1,25 +1,22 @@
-import ky, {
-  type KyRequest,
-  type KyResponse,
-  type NormalizedOptions,
-} from "ky";
+import ky, { type AfterResponseHook } from "ky";
 import { useAuthStore } from "@/stores/useAuthStore";
+
+const handle401: AfterResponseHook = async (
+  _request,
+  _options,
+  response,
+  _state
+) => {
+  if (response.status === 401) {
+    useAuthStore.getState().setUnauthorized();
+  }
+  return response;
+};
 
 export const apiClient = ky.create({
   prefixUrl: import.meta.env.VITE_API_URL,
   credentials: "include",
   hooks: {
-    afterResponse: [
-      async (
-        _request: KyRequest,
-        _options: NormalizedOptions,
-        response: KyResponse
-      ) => {
-        if (response.status === 401) {
-          useAuthStore.getState().setUnauthorized();
-        }
-        return response;
-      },
-    ],
+    afterResponse: [handle401],
   },
 });
