@@ -32,7 +32,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
         onViewStudyDetail(study.id);
       }
     },
-    [onViewStudyDetail, study.id],
+    [onViewStudyDetail, study.id]
   );
 
   return (
