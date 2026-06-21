@@ -135,8 +135,41 @@ const StudyList = memo(
         <main className="mx-auto max-w-none items-center px-6 pb-6 md:px-12 lg:px-24">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {loading ? (
-              <div className="col-span-full flex items-center justify-center py-8">
-                <div className="text-gray-500">로딩 중...</div>
+              <div className="col-span-full grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={`skeleton-${String(i)}`}
+                    className="w-full min-w-[250px] rounded-xl border bg-card py-6 shadow-sm"
+                  >
+                    <div className="px-6">
+                      <div className="space-y-3">
+                        <div className="h-5 w-16 rounded-md bg-gray-200 animate-pulse" />
+                        <div className="h-6 w-3/4 rounded-md bg-gray-200 animate-pulse" />
+                        <div className="space-y-3 text-sm">
+                          <div className="flex items-center">
+                            <div className="mr-2 h-4 w-4 rounded bg-gray-200 animate-pulse" />
+                            <div className="h-4 w-20 rounded bg-gray-200 animate-pulse" />
+                          </div>
+                          <div className="flex items-center">
+                            <div className="mr-2 h-4 w-4 rounded bg-gray-200 animate-pulse" />
+                            <div className="h-4 w-32 rounded bg-gray-200 animate-pulse" />
+                          </div>
+                          <div className="flex items-center">
+                            <div className="mr-2 h-4 w-4 rounded bg-gray-200 animate-pulse" />
+                            <div className="h-4 w-16 rounded bg-gray-200 animate-pulse" />
+                          </div>
+                          <div className="flex items-center">
+                            <div className="mr-2 h-4 w-4 rounded bg-gray-200 animate-pulse" />
+                            <div className="h-4 w-24 rounded bg-gray-200 animate-pulse" />
+                          </div>
+                        </div>
+                        <div className="flex justify-end">
+                          <div className="h-5 w-20 rounded border bg-gray-100 animate-pulse" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : error ? (
               <div className="col-span-full flex items-center justify-center py-8">
