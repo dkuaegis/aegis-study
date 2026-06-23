@@ -15,9 +15,7 @@ import {
 const SKELETON_COUNT = 6;
 
 function SkeletonLine({ className }: { className?: string }) {
-  return (
-    <div className={cn("rounded bg-gray-200 animate-pulse", className)} />
-  );
+  return <div className={cn("rounded bg-gray-200 animate-pulse", className)} />;
 }
 
 function StudyCardSkeleton() {
@@ -149,11 +147,7 @@ const StudyList = ({
   onCreateStudy,
   onViewStudyDetail,
 }: StudyListMainProps) => {
-  const {
-    data: studies = [],
-    isLoading: loading,
-    error,
-  } = useStudyListQuery();
+  const { data: studies = [], isLoading: loading, error } = useStudyListQuery();
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
@@ -178,11 +172,9 @@ const StudyList = ({
       <main className="mx-auto max-w-none items-center px-6 pb-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {loading ? (
-            <div className="col-span-full grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-                <StudyCardSkeleton key={`skeleton-${String(i)}`} />
-              ))}
-            </div>
+            Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+              <StudyCardSkeleton key={`skeleton-${String(i)}`} />
+            ))
           ) : error ? (
             <div className="col-span-full flex items-center justify-center py-8">
               <div className="text-red-500">
