@@ -120,12 +120,15 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center justify-between">
-            <div className="flex items-center text-gray-600 text-sm">
+          <div className="flex shrink-0 items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center text-gray-600 text-sm">
               <User className="mr-2 h-4 w-4 shrink-0" />
-              <span>{study.instructor}</span>
+              <span className="truncate">{study.instructor}</span>
             </div>
-            <Badge variant="outline" className="border-gray-300 text-gray-600">
+            <Badge
+              variant="outline"
+              className="shrink-0 border-gray-300 text-gray-600"
+            >
               #{StudyCategoryLabels[study.category]}
             </Badge>
           </div>
