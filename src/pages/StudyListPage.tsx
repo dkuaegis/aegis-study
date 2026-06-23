@@ -75,7 +75,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
 
   return (
     <Card
-      className="h-[280px] w-full min-w-[250px] cursor-pointer border-gray-200 transition-shadow hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      className="h-[280px] w-full min-w-[250px] cursor-pointer overflow-hidden border-gray-200 transition-shadow hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
@@ -124,7 +124,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="mt-auto flex justify-end">
             <Badge variant="outline" className="border-gray-300 text-gray-600">
               #{StudyCategoryLabels[study.category]}
             </Badge>
