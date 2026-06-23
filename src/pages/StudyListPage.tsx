@@ -20,7 +20,7 @@ function SkeletonLine({ className }: { className?: string }) {
 
 function StudyCardSkeleton() {
   return (
-    <div className="h-[280px] w-full min-w-[250px] rounded-xl border bg-card">
+    <div className="flex h-[280px] w-full min-w-[250px] flex-col gap-6 rounded-xl border bg-card py-6 shadow-sm">
       <div className="flex h-full flex-col p-6">
         <div className="flex flex-1 flex-col space-y-3">
           <SkeletonLine className="h-5 w-16" />
@@ -171,7 +171,7 @@ const StudyList = ({
           <span className="relative z-10">스터디 개설하기</span>
         </Button>
       </div>
-      <main className="mx-auto max-w-none items-center px-6 pb-6 md:px-12 lg:px-24">
+      <main className="mx-auto max-w-7xl items-center px-6 pb-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {loading ? (
             Array.from({ length: SKELETON_COUNT }).map((_, i) => (
