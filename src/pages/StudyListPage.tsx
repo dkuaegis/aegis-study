@@ -20,30 +20,32 @@ function SkeletonLine({ className }: { className?: string }) {
 
 function StudyCardSkeleton() {
   return (
-    <div className="h-[280px] w-full min-w-[250px] rounded-xl border bg-card p-6 shadow-sm">
-      <div className="flex h-full flex-col space-y-3">
-        <SkeletonLine className="h-5 w-16" />
-        <SkeletonLine className="h-6 w-3/4" />
-        <div className="flex-1 space-y-3 text-sm">
-          <div className="flex items-center">
-            <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
-            <SkeletonLine className="h-4 w-20" />
+    <div className="h-[280px] w-full min-w-[250px] rounded-xl border bg-card shadow-sm">
+      <div className="flex h-full flex-col p-6">
+        <div className="flex flex-1 flex-col space-y-3">
+          <SkeletonLine className="h-5 w-16" />
+          <SkeletonLine className="h-6 w-3/4" />
+          <div className="flex-1 space-y-3 text-sm">
+            <div className="flex items-center">
+              <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
+              <SkeletonLine className="h-4 w-20" />
+            </div>
+            <div className="flex items-center">
+              <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
+              <SkeletonLine className="h-4 w-32" />
+            </div>
+            <div className="flex items-center">
+              <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
+              <SkeletonLine className="h-4 w-16" />
+            </div>
           </div>
-          <div className="flex items-center">
-            <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
-            <SkeletonLine className="h-4 w-32" />
+          <div className="flex shrink-0 items-center justify-between gap-2">
+            <div className="flex items-center text-sm">
+              <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
+              <SkeletonLine className="h-4 w-16" />
+            </div>
+            <SkeletonLine className="h-5 w-20" />
           </div>
-          <div className="flex items-center">
-            <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
-            <SkeletonLine className="h-4 w-16" />
-          </div>
-          <div className="flex items-center">
-            <SkeletonLine className="mr-2 h-4 w-4 shrink-0" />
-            <SkeletonLine className="h-4 w-24" />
-          </div>
-        </div>
-        <div className="flex justify-end">
-          <SkeletonLine className="h-5 w-20" />
         </div>
       </div>
     </div>
