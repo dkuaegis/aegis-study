@@ -20,7 +20,7 @@ function SkeletonLine({ className }: { className?: string }) {
 
 function StudyCardSkeleton() {
   return (
-    <div className="h-[280px] w-full min-w-[250px] rounded-xl border bg-card shadow-sm">
+    <div className="h-[280px] w-full min-w-[250px] rounded-xl border bg-card">
       <div className="flex h-full flex-col p-6">
         <div className="flex flex-1 flex-col space-y-3">
           <SkeletonLine className="h-5 w-16" />
@@ -75,7 +75,7 @@ const StudyCard = memo(({ study, onViewStudyDetail }: StudyCardProps) => {
 
   return (
     <Card
-      className="relative h-[280px] w-full min-w-[250px] cursor-pointer overflow-hidden border-gray-200 transition-shadow hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      className="relative h-[280px] w-full min-w-[250px] cursor-pointer overflow-hidden border-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
